@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/shopkeeper_navigation"
+    app:startDestination="@id/item_home">
+
+    <fragment
+        android:id="@+id/item_home"
+        android:name="com.hstan.autoservify.ui.shopkeeper.ShopkeeperDashboardFragment"
+        android:label="item_home"
+        tools:layout="@layout/fragment_shopkeeper_dashboard" />
+    <fragment
+        android:id="@+id/item_cart"
+        android:name="com.hstan.autoservify.ui.main.home.OrdersFragment"
+        android:label="item_cart"
+        tools:layout="@layout/fragment_orders" />
+    <fragment
+        android:id="@+id/item_manage_parts"
+        android:name="com.hstan.autoservify.ui.shopkeeper.ShopkeeperPartsFragment"
+        android:label="item_manage_parts"
+        tools:layout="@layout/fragment_shopkeeper_parts" />
+    <fragment
+        android:id="@+id/item_manage_services"
+        android:name="com.hstan.autoservify.ui.shopkeeper.ShopkeeperServicesFragment"
+        android:label="item_manage_services"
+        tools:layout="@layout/fragment_shopkeeper_services" />
+    <fragment
+        android:id="@+id/item_profile"
+        android:name="com.hstan.autoservify.ui.main.home.Profile.ProfileFragment"
+        android:label="profileFragment"
+        tools:layout="@layout/fragment_profile" />
+</navigation>

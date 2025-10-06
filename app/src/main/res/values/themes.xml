@@ -1,0 +1,15 @@
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.AutoServify" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+
+
+        <item name="android:fontFamily">@font/outfit</item>
+    </style>
+
+    <style name="Theme.AutoServify" parent="Base.Theme.AutoServify" />
+
+    <style name="ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">#79928F8F</item>
+    </style>
+</resources>

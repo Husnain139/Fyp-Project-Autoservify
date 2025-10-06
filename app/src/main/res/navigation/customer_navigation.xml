@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/customer_navigation"
+    app:startDestination="@id/item_home">
+
+    <fragment
+        android:id="@+id/item_home"
+        android:name="com.hstan.autoservify.ui.customer.CustomerHomeFragment"
+        android:label="item_home"
+        tools:layout="@layout/fragment_customer_home" />
+    <fragment
+        android:id="@+id/item_search"
+        android:name="com.hstan.autoservify.ui.main.home.SearchFragment"
+        android:label="item_search"
+        tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/item_cart"
+        android:name="com.hstan.autoservify.ui.main.home.OrdersFragment"
+        android:label="item_cart"
+        tools:layout="@layout/fragment_orders" />
+    <fragment
+        android:id="@+id/item_profile"
+        android:name="com.hstan.autoservify.ui.main.home.Profile.ProfileFragment"
+        android:label="profileFragment"
+        tools:layout="@layout/fragment_profile" />
+</navigation>
