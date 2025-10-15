@@ -35,7 +35,17 @@ class AppointmentsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         setupRecyclerView()
+        setupFAB()
         loadShopkeeperAppointments()
+    }
+
+    private fun setupFAB() {
+        val fab = findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.fabCreateManualAppointment)
+        fab.setOnClickListener {
+            val intent = android.content.Intent(this, com.hstan.autoservify.ui.orders.ManualOrderServiceActivity::class.java)
+            intent.putExtra("ENTRY_MODE", "SERVICE")
+            startActivity(intent)
+        }
     }
 
     private fun setupRecyclerView() {
@@ -129,6 +139,12 @@ class AppointmentsActivity : AppCompatActivity() {
         val intent = android.content.Intent(this, com.hstan.autoservify.ui.orders.AppointmentDetailActivity::class.java)
         intent.putExtra(com.hstan.autoservify.ui.orders.AppointmentDetailActivity.EXTRA_APPOINTMENT, com.google.gson.Gson().toJson(appointment))
         startActivity(intent)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Refresh appointments when returning from manual entry activity
+        loadShopkeeperAppointments()
     }
 
     override fun onSupportNavigateUp(): Boolean {

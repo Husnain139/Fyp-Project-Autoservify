@@ -2,6 +2,7 @@ package com.hstan.autoservify.ui.orders
 
 import android.content.Intent
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -17,6 +18,8 @@ class OrderAdapter(
     private val onCancelClick: ((Any) -> Unit)? = null
 ) : RecyclerView.Adapter<OrderViewHolder>() {
 
+    private val processedOrderGroups = mutableSetOf<String>() // Track which order groups we've already shown
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrderViewHolder {
         val binding = ItemOrderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return OrderViewHolder(binding)
@@ -31,12 +34,44 @@ class OrderAdapter(
         }
     }
 
+    private fun findRelatedOrders(order: Order): List<Order> {
+        return items.filterIsInstance<Order>().filter {
+            it.orderDate == order.orderDate &&
+            it.userName == order.userName &&
+            it.userEmail == order.userEmail &&
+            it.isManualEntry == true
+        }
+    }
+
     private fun bindOrder(holder: OrderViewHolder, order: Order) {
-        holder.binding.orderItemTitle.text = order.item?.title ?: "Unknown Item"
-        holder.binding.orderQty.text = "Qty: ${order.quantity}"
-        holder.binding.orderPrice.text = "Rs. ${order.item?.price ?: 0}"
+        // Check if this is a multi-part manual order
+        val relatedOrders = if (order.isManualEntry) findRelatedOrders(order) else listOf(order)
+        val isMultiPart = relatedOrders.size > 1
+
+        if (isMultiPart) {
+            // Show first part's info with multi-item indicator
+            holder.binding.orderItemTitle.text = order.item?.title ?: "Unknown Item"
+            holder.binding.orderQty.text = "${relatedOrders.size} items"
+            
+            // Calculate total price for all parts
+            val totalPrice = relatedOrders.sumOf { (it.item?.price ?: 0) * it.quantity }
+            holder.binding.orderPrice.text = "Rs. $totalPrice"
+        } else {
+            holder.binding.orderItemTitle.text = order.item?.title ?: "Unknown Item"
+            holder.binding.orderQty.text = "Qty: ${order.quantity}"
+            holder.binding.orderPrice.text = "Rs. ${order.item?.price ?: 0}"
+        }
+
         holder.binding.orderStatus.text = order.status.ifBlank { "pending" }
         holder.binding.orderDate.text = order.orderDate.ifBlank { "No date" }
+
+        // Show manual order badge if this is a manual entry
+        if (order.isManualEntry) {
+            holder.binding.manualOrderBadge.visibility = View.VISIBLE
+            holder.binding.manualOrderBadge.text = "Manual Order"
+        } else {
+            holder.binding.manualOrderBadge.visibility = View.GONE
+        }
 
         Glide.with(holder.itemView.context)
             .load(order.item?.image)
@@ -44,25 +79,27 @@ class OrderAdapter(
             .error(R.drawable.logo)
             .into(holder.binding.orderItemImage)
 
-        holder.binding.orderView.setOnClickListener { 
+        // Setup click listeners
+        val clickListener = View.OnClickListener {
             onViewClick?.invoke(order)
             
-            // Navigate to OrderDetailActivity
             val context = holder.itemView.context
             val intent = Intent(context, OrderDetailActivity::class.java)
-            intent.putExtra("order_data", Gson().toJson(order))
+            
+            if (isMultiPart) {
+                // Pass list of order IDs for multi-part order
+                val orderIds = relatedOrders.map { it.id }
+                intent.putStringArrayListExtra("related_order_ids", ArrayList(orderIds))
+            } else {
+                // Single order - pass as before
+                intent.putExtra("order_data", Gson().toJson(order))
+            }
             context.startActivity(intent)
         }
+        
+        holder.binding.orderView.setOnClickListener(clickListener)
+        holder.itemView.setOnClickListener(clickListener)
         holder.binding.orderCancel.setOnClickListener { onCancelClick?.invoke(order) }
-        holder.itemView.setOnClickListener { 
-            onViewClick?.invoke(order)
-            
-            // Navigate to OrderDetailActivity
-            val context = holder.itemView.context
-            val intent = Intent(context, OrderDetailActivity::class.java)
-            intent.putExtra("order_data", Gson().toJson(order))
-            context.startActivity(intent)
-        }
     }
 
     private fun bindAppointment(holder: OrderViewHolder, appointment: Appointment) {
@@ -71,6 +108,14 @@ class OrderAdapter(
         holder.binding.orderPrice.text = "Bill: Rs. ${appointment.bill.ifBlank { "0" }}"
         holder.binding.orderStatus.text = appointment.status.ifBlank { "Pending" }
         holder.binding.orderDate.text = "Customer: ${appointment.userName}"
+
+        // Show manual service badge if this is a manual entry
+        if (appointment.isManualEntry) {
+            holder.binding.manualOrderBadge.visibility = View.VISIBLE
+            holder.binding.manualOrderBadge.text = "Manual Service"
+        } else {
+            holder.binding.manualOrderBadge.visibility = View.GONE
+        }
 
         Glide.with(holder.itemView.context)
             .load(R.drawable.logo) // Appointment has no image field

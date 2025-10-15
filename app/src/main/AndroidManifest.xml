@@ -28,6 +28,9 @@
             android:exported="false" />
         <activity
             android:name=".ui.orders.AddAppointmentPartsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.orders.ManualOrderServiceActivity"
             android:exported="false" /> <!-- Shops -->
         <activity
             android:name=".ui.main.Shops.AddShopActivity"

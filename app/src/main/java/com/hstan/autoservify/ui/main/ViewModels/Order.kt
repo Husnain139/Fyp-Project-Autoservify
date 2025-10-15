@@ -17,4 +17,5 @@ class Order {
     var status: String = ""        // e.g., "pending", "paid", "shipped", "delivered", "cancelled"
     var orderDate: String = ""     // store as ISO string or display-ready date
     var bookingId: String? = null  // Link this order to an appointment (for spare parts used in service)
+    var isManualEntry: Boolean = false  // Flag to indicate if this is a manual entry by shopkeeper
 }

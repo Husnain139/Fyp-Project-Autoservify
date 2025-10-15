@@ -1,5 +1,6 @@
 package com.hstan.autoservify.ui.shopkeeper
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
@@ -35,7 +36,17 @@ class OrdersActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         setupRecyclerView()
+        setupFAB()
         loadShopkeeperOrders()
+    }
+
+    private fun setupFAB() {
+        val fab = findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.fabCreateManualOrder)
+        fab.setOnClickListener {
+            val intent = Intent(this, com.hstan.autoservify.ui.orders.ManualOrderServiceActivity::class.java)
+            intent.putExtra("ENTRY_MODE", "ORDER")
+            startActivity(intent)
+        }
     }
 
     private fun setupRecyclerView() {
@@ -121,6 +132,12 @@ class OrdersActivity : AppCompatActivity() {
             recyclerView.visibility = View.VISIBLE
             emptyStateLayout.visibility = View.GONE
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Refresh orders when returning from manual entry activity
+        loadShopkeeperOrders()
     }
 
     override fun onSupportNavigateUp(): Boolean {

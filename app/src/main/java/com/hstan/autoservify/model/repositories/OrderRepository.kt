@@ -50,4 +50,18 @@ class OrderRepository {
             .whereEqualTo("bookingId", bookingId)
             .snapshots()
             .map { it.toObjects(Order::class.java) }
+
+    suspend fun getOrderById(orderId: String): Result<Order> {
+        return try {
+            val document = orderCollection.document(orderId).get().await()
+            val order = document.toObject(Order::class.java)
+            if (order != null) {
+                Result.success(order)
+            } else {
+                Result.failure(Exception("Order not found"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

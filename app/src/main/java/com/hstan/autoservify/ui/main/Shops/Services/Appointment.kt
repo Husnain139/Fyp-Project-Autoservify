@@ -15,5 +15,6 @@ class Appointment(
     var appointmentDate: String = "",
     var userEmail: String = "",
     var userFCMToken: String = "",
-    var bill: String = ""
+    var bill: String = "",
+    var isManualEntry: Boolean = false  // Flag to indicate if this is a manual entry by shopkeeper
 )
