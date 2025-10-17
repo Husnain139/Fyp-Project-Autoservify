@@ -37,6 +37,10 @@ class ShopkeeperDashboardFragment : Fragment() {
     // Data loading state management
     private var isDataLoaded = false
     private var isDataLoading = false
+    
+    // Sales calculation variables
+    private var todayOrdersAmount = 0
+    private var todayAppointmentsAmount = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -246,9 +250,14 @@ class ShopkeeperDashboardFragment : Fragment() {
                 
                 // Load orders and calculate statistics
                 orderRepository.getShopOrders(shopId).collect { orders ->
-                    // Today's sales (orders placed today)
-                    val todaySales = orders.count { order ->
+                    // Filter today's orders
+                    val todayOrders = orders.filter { order ->
                         order.orderDate.contains(today)
+                    }
+                    
+                    // Calculate total amount from today's orders
+                    todayOrdersAmount = todayOrders.sumOf { order ->
+                        (order.item?.price ?: 0) * order.quantity
                     }
                     
                     // Orders pending (orders with "pending" or "Order Placed" status)
@@ -257,8 +266,8 @@ class ShopkeeperDashboardFragment : Fragment() {
                         order.status.contains("Order Placed", ignoreCase = true)
                     }
                     
-                    // Update UI
-                    binding.salesCount.text = todaySales.toString()
+                    // Update UI with total sales amount
+                    updateTotalSales()
                     binding.ordersPendingCount.text = pendingOrders.toString()
                 }
                 
@@ -272,10 +281,21 @@ class ShopkeeperDashboardFragment : Fragment() {
                         appointmentShopId.isNotEmpty() && appointmentShopId == currentShopId
                     }
                     
-                    val totalAppointments = validAppointments.size
+                    // Filter today's appointments
+                    val todayAppointments = validAppointments.filter { appointment ->
+                        appointment.appointmentDate == today
+                    }
                     
-                    // Update UI with filtered appointments count
-                    binding.appointmentsPendingCount.text = totalAppointments.toString()
+                    // Calculate total amount from today's appointments
+                    todayAppointmentsAmount = todayAppointments.sumOf { appointment ->
+                        appointment.bill.toIntOrNull() ?: 0
+                    }
+                    
+                    // Update UI with today's appointment count
+                    binding.appointmentsPendingCount.text = todayAppointments.size.toString()
+                    
+                    // Update total sales with appointments amount
+                    updateTotalSales()
                 }
                 
                 // For now, set a default review score (you can implement actual review system later)
@@ -283,7 +303,7 @@ class ShopkeeperDashboardFragment : Fragment() {
                 
             } catch (e: Exception) {
                 // Handle error, set default values
-                binding.salesCount.text = "0"
+                binding.salesCount.text = "Rs 0"
                 binding.ordersPendingCount.text = "0"
                 binding.appointmentsPendingCount.text = "0"
                 binding.averageReview.text = "4.8"
@@ -291,6 +311,11 @@ class ShopkeeperDashboardFragment : Fragment() {
                 e.printStackTrace()
             }
         }
+    }
+    
+    private fun updateTotalSales() {
+        val totalSales = todayOrdersAmount + todayAppointmentsAmount
+        binding.salesCount.text = "Rs $totalSales"
     }
 
     private fun loadRecentOrders(shopId: String) {

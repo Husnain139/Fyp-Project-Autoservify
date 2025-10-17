@@ -102,20 +102,20 @@
                         <!-- Number -->
                         <TextView
                             android:id="@+id/sales_count"
-                            android:layout_width="wrap_content"
+                            android:layout_width="52dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="6dp"
+                            android:fontFamily="sans-serif"
                             android:text="4"
                             android:textColor="#1C1B1F"
                             android:textSize="28sp"
-                            android:textStyle="bold"
-                            android:fontFamily="sans-serif"
-                            android:layout_marginBottom="6dp" />
+                            android:textStyle="bold" />
 
                         <!-- Label -->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Today's Sales"
+                            android:text="Sales Amount"
                             android:textColor="#49454F"
                             android:textSize="11sp"
                             android:fontFamily="sans-serif"
