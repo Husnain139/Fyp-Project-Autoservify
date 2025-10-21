@@ -59,7 +59,7 @@ class ShopkeeperServicesFragment : Fragment() {
             onEditClick = { service ->
                 // Open edit service activity
                 val intent = Intent(requireContext(), Add_Service_Activity::class.java)
-                intent.putExtra("serviceData", com.google.gson.Gson().toJson(service))
+                intent.putExtra("service_data", com.google.gson.Gson().toJson(service))
                 startActivity(intent)
             },
             onDeleteClick = { service ->

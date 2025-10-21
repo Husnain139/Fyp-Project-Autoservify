@@ -99,6 +99,72 @@
             android:inputType="number" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- Inventory Management Checkbox -->
+    <CheckBox
+        android:id="@+id/manageInventoryCheckbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:text="Manage Inventory"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Sp_priceInputLayout" />
+
+    <!-- Inventory Fields Container -->
+    <LinearLayout
+        android:id="@+id/inventoryFieldsContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/manageInventoryCheckbox">
+
+        <!-- Quantity Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/quantityInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Available Quantity"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/quantityInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Low Stock Limit Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/lowStockLimitInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Low Stock Alert Threshold"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/lowStockLimitInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:text="10"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
     <Button
         android:id="@+id/submitButton"
         android:layout_width="0dp"
@@ -114,6 +180,6 @@
         app:backgroundTint="@null"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Sp_priceInputLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/inventoryFieldsContainer" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,6 +11,10 @@
             android:id="@+id/orders"
             android:icon="@drawable/order"
             android:title="Your Orders" />
+        <item
+            android:id="@+id/check_stock"
+            android:icon="@drawable/baseline_inventory_24"
+            android:title="Check Stock" />
     </group>
 
 

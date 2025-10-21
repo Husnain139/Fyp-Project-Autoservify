@@ -56,4 +56,33 @@ class PartsCraftRepository {
             .limit(limit.toLong())
             .snapshots()
             .map { it.toObjects(PartsCraft::class.java) }
+
+    // Update part quantity (for inventory management)
+    suspend fun updatePartQuantity(partId: String, newQuantity: Int): Result<Boolean> {
+        return try {
+            PartsCraftCollection.document(partId)
+                .update("quantity", newQuantity)
+                .await()
+            Result.success(true)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    // Decrease part quantity atomically (for order processing)
+    suspend fun decreasePartQuantity(partId: String, decreaseBy: Int): Result<Boolean> {
+        return try {
+            val firestore = FirebaseFirestore.getInstance()
+            firestore.runTransaction { transaction ->
+                val docRef = PartsCraftCollection.document(partId)
+                val snapshot = transaction.get(docRef)
+                val currentQuantity = snapshot.getLong("quantity")?.toInt() ?: 0
+                val newQuantity = maxOf(0, currentQuantity - decreaseBy) // Prevent negative
+                transaction.update(docRef, "quantity", newQuantity)
+            }.await()
+            Result.success(true)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

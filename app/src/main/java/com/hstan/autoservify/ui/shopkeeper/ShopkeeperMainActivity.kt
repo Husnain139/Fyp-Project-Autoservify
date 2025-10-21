@@ -45,6 +45,12 @@ class ShopkeeperMainActivity : AppCompatActivity(), NavigationView.OnNavigationI
             }
         }
 
+        // Profile icon click listener
+        val profileIcon = findViewById<ImageView>(R.id.right_icon)
+        profileIcon.setOnClickListener {
+            navigateToFragment(R.id.item_profile)
+        }
+
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
             ?: return
@@ -66,6 +72,10 @@ class ShopkeeperMainActivity : AppCompatActivity(), NavigationView.OnNavigationI
             }
             R.id.orders -> {
                 navigateToFragment(R.id.item_cart)
+            }
+            R.id.check_stock -> {
+                val intent = Intent(this, com.hstan.autoservify.ui.inventory.CheckStockActivity::class.java)
+                startActivity(intent)
             }
             R.id.profile -> {
                 navigateToFragment(R.id.item_profile)

@@ -53,7 +53,7 @@ class ServicesActivity : AppCompatActivity() {
             onEditClick = { service ->
                 // Navigate to edit activity
                 val intent = Intent(this, Add_Service_Activity::class.java)
-                intent.putExtra("serviceData", Gson().toJson(service))
+                intent.putExtra("service_data", Gson().toJson(service))
                 startActivity(intent)
             },
             onDeleteClick = { service ->

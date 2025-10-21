@@ -31,9 +31,9 @@ class DashboardOrderAdapter(
         holder.binding.orderStatus.text = order.status.replaceFirstChar { it.uppercase() }
         holder.binding.orderDate.text = order.orderDate
         
-        // Hide edit/cancel buttons - shopkeeper can only view for dashboard
-        holder.binding.orderView.visibility = View.VISIBLE
-        holder.binding.orderCancel.visibility = View.GONE
+        // Hide cancel and delete buttons - dashboard is view-only
+        holder.binding.orderCancelButton.visibility = View.GONE
+        holder.binding.orderDelete.visibility = View.GONE
         
         // Set click listener
         holder.itemView.setOnClickListener {

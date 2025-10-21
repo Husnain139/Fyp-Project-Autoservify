@@ -7,6 +7,9 @@ class PartsCraft {
     var image:String=""
     var price:Int=0
     var shopId:String=""  // The shop this spare part belongs to
+    var manageInventory: Boolean = false  // Flag to enable inventory management
+    var quantity: Int = 0  // Available stock quantity
+    var lowStockLimit: Int = 10  // Global default threshold for low stock alert
     
     // Empty constructor for Firebase
     constructor()

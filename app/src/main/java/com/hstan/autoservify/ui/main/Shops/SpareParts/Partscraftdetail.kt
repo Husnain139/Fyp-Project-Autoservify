@@ -3,6 +3,7 @@ package com.hstan.autoservify.ui.main.Shops.SpareParts
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
@@ -44,12 +45,32 @@ class Partscraftdetail :  AppCompatActivity() {
         binding.spDesc.text = partCraft.description ?: "No description"  
 		binding.spPrice.text = "Rs ${partCraft.price}"
 
+        // Show inventory status if managed
+        if (partCraft.manageInventory) {
+            binding.inventoryStatusContainer.visibility = View.VISIBLE
+            binding.availableStock.text = "Available Stock: ${partCraft.quantity} units"
+            
+            // Disable Add to Cart if out of stock
+            if (partCraft.quantity == 0) {
+                binding.AddtoCartButton.isEnabled = false
+                binding.AddtoCartButton.text = "Out of Stock"
+                binding.AddtoCartButton.alpha = 0.5f
+            }
+        } else {
+            binding.inventoryStatusContainer.visibility = View.GONE
+        }
 
 //        binding.productImage.setImageResource(partCraft.image.toInt())
 
 
         binding.AddtoCartButton.setOnClickListener {
             try {
+                // Check stock before proceeding
+                if (partCraft.manageInventory && partCraft.quantity == 0) {
+                    Toast.makeText(this, "This item is out of stock", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                
                 val intent = Intent(this, CreateOrderActivity::class.java)
                 val partJson = Gson().toJson(partCraft)
                 intent.putExtra("data", partJson)

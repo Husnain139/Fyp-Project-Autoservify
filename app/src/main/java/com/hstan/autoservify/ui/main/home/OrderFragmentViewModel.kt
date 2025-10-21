@@ -74,10 +74,27 @@ class OrderFragmentViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 isUpdating.value = true
-                order.status = "cancelled"
+                order.status = "Canceled"
                 val result = ordersRepository.updateOrder(order)
                 if (result.isFailure) {
                     failureMessage.value = result.exceptionOrNull()?.message
+                }
+            } finally {
+                isUpdating.value = false
+            }
+        }
+    }
+
+    fun deleteOrder(order: Order) {
+        viewModelScope.launch {
+            try {
+                isUpdating.value = true
+                val result = ordersRepository.deleteOrder(order.id)
+                if (result.isFailure) {
+                    failureMessage.value = result.exceptionOrNull()?.message
+                } else {
+                    // Order deleted successfully - the Flow will auto-update
+                    println("ViewModel: Order ${order.id} deleted successfully")
                 }
             } finally {
                 isUpdating.value = false

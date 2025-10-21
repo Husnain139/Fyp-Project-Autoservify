@@ -63,6 +63,37 @@
         app:layout_constraintStart_toStartOf="@+id/sp_desc"
         app:layout_constraintTop_toBottomOf="@+id/sp_desc" />
 
+    <!-- Inventory Status Section -->
+    <LinearLayout
+        android:id="@+id/inventoryStatusContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/sp_price"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sp_price">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Inventory Status: Managed"
+            android:textSize="14sp"
+            android:textColor="#666666"
+            android:textStyle="italic" />
+
+        <TextView
+            android:id="@+id/availableStock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Available Stock: 0 units"
+            android:textSize="14sp"
+            android:textColor="@color/black" />
+
+    </LinearLayout>
+
     <Button
         android:id="@+id/AddtoCart_button"
         android:layout_width="0dp"
@@ -76,6 +107,6 @@
         app:backgroundTint="@null"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/sp_desc"
-        app:layout_constraintTop_toBottomOf="@+id/sp_price" />
+        app:layout_constraintTop_toBottomOf="@+id/inventoryStatusContainer" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

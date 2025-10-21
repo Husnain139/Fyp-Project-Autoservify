@@ -8,12 +8,21 @@ import kotlinx.coroutines.tasks.await
 
 class OrderRepository {
     val orderCollection = FirebaseFirestore.getInstance().collection("orders")
+    private val partsCraftRepository = PartsCraftRepository()
 
     suspend fun saveOrder(order: Order): Result<Boolean> {
         return try {
             val document = orderCollection.document()
             order.id = document.id
             document.set(order).await()
+            
+            // Automatically decrease stock if inventory is managed
+            order.item?.let { item ->
+                if (item.manageInventory && item.id.isNotEmpty()) {
+                    partsCraftRepository.decreasePartQuantity(item.id, order.quantity)
+                }
+            }
+            
             Result.success(true)
         } catch (e: Exception) {
             Result.failure(e)
@@ -60,6 +69,26 @@ class OrderRepository {
             } else {
                 Result.failure(Exception("Order not found"))
             }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun deleteOrder(orderId: String): Result<Boolean> {
+        return try {
+            orderCollection.document(orderId).delete().await()
+            Result.success(true)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun cancelOrder(order: Order): Result<Boolean> {
+        return try {
+            order.status = "Canceled"
+            val document = orderCollection.document(order.id)
+            document.set(order).await()
+            Result.success(true)
         } catch (e: Exception) {
             Result.failure(e)
         }

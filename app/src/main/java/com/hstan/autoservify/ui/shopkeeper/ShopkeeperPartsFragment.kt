@@ -55,7 +55,7 @@ class ShopkeeperPartsFragment : Fragment() {
             onEditClick = { partsCraft ->
                 // Open edit parts activity
                 val intent = Intent(requireContext(), Addpartscraft::class.java)
-                intent.putExtra("partsCraftData", com.google.gson.Gson().toJson(partsCraft))
+                intent.putExtra("partscraft_data", com.google.gson.Gson().toJson(partsCraft))
                 startActivity(intent)
             },
             onDeleteClick = { partsCraft ->

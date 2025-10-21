@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -51,6 +52,14 @@ class Addpartscraft : AppCompatActivity() {
                 binding.editTextText3.setText(part.description)
                 binding.editTextText4.setText(part.price.toString())
                 
+                // Pre-fill inventory fields
+                binding.manageInventoryCheckbox.isChecked = part.manageInventory
+                if (part.manageInventory) {
+                    binding.inventoryFieldsContainer.visibility = View.VISIBLE
+                    binding.quantityInput.setText(part.quantity.toString())
+                    binding.lowStockLimitInput.setText(part.lowStockLimit.toString())
+                }
+                
                 // Load existing image
                 if (part.image.isNotEmpty()) {
                     Glide.with(this)
@@ -58,6 +67,11 @@ class Addpartscraft : AppCompatActivity() {
                         .into(binding.spImage)
                 }
             }
+        }
+
+        // Setup checkbox listener for inventory management
+        binding.manageInventoryCheckbox.setOnCheckedChangeListener { _, isChecked ->
+            binding.inventoryFieldsContainer.visibility = if (isChecked) View.VISIBLE else View.GONE
         }
 
         // Observe add operations
@@ -127,6 +141,29 @@ class Addpartscraft : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            // Get inventory management values
+            val manageInventory = binding.manageInventoryCheckbox.isChecked
+            var quantity = 0
+            var lowStockLimit = 10
+
+            if (manageInventory) {
+                val quantityText = binding.quantityInput.text.toString().trim()
+                val lowStockLimitText = binding.lowStockLimitInput.text.toString().trim()
+
+                if (quantityText.isEmpty() || lowStockLimitText.isEmpty()) {
+                    Toast.makeText(this, "Please fill in inventory fields", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+                quantity = quantityText.toIntOrNull() ?: 0
+                lowStockLimit = lowStockLimitText.toIntOrNull() ?: 10
+
+                if (quantity < 0 || lowStockLimit < 0) {
+                    Toast.makeText(this, "Quantity and low stock limit must be non-negative", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+            }
+
             if (isEditMode && partsCraftToEdit != null) {
                 // Update existing parts craft
                 val updatedPartsCraft = PartsCraft().apply {
@@ -137,6 +174,10 @@ class Addpartscraft : AppCompatActivity() {
                     this.shopId = partsCraftToEdit!!.shopId  // Keep existing shopId
                     // Keep existing image if no new image selected
                     this.image = if (uri != null) "" else partsCraftToEdit!!.image
+                    // Update inventory fields
+                    this.manageInventory = manageInventory
+                    this.quantity = quantity
+                    this.lowStockLimit = lowStockLimit
                 }
 
                 if (uri == null) {
@@ -153,6 +194,10 @@ class Addpartscraft : AppCompatActivity() {
                 partsCraft.title = title
                 partsCraft.price = price
                 partsCraft.description = description
+                // Set inventory fields
+                partsCraft.manageInventory = manageInventory
+                partsCraft.quantity = quantity
+                partsCraft.lowStockLimit = lowStockLimit
                 
                 // Set shopId from current user's profile
                 lifecycleScope.launch {

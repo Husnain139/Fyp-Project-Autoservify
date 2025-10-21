@@ -47,6 +47,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <ImageView
+                android:id="@+id/inventory_managed_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="4dp"
+                android:src="@drawable/baseline_inventory_24"
+                android:background="@android:color/white"
+                android:padding="2dp"
+                android:visibility="gone"
+                app:tint="#6750A4"
+                app:layout_constraintStart_toStartOf="@id/Sp_pic"
+                app:layout_constraintTop_toTopOf="@id/Sp_pic" />
+
             <TextView
                 android:id="@+id/Sp_Title"
                 android:layout_width="0dp"
@@ -93,6 +107,24 @@
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/Sp_Price"
                 app:layout_constraintTop_toBottomOf="@id/Sp_Price" />
+
+            <TextView
+                android:id="@+id/stockStatusBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Out of Stock"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:background="@drawable/status_badge_background"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="@id/Sp_Price"
+                app:layout_constraintTop_toBottomOf="@id/sp_rating" />
 
             <ImageView
                 android:id="@+id/edit_sp"

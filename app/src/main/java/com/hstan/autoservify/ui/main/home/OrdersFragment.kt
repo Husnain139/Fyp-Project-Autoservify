@@ -69,6 +69,22 @@ class OrdersFragment : Fragment() {
                                 Toast.makeText(context, "Failed to cancel item", Toast.LENGTH_SHORT).show()
                             }
                         }
+                    },
+                    onDeleteClick = { item ->
+                        try {
+                            when (item) {
+                                is Order -> viewModel.deleteOrder(item)
+                                is Appointment -> {
+                                    // Appointments don't support delete, only cancel
+                                    Toast.makeText(context, "Use cancel for appointments", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        } catch (e: Exception) {
+                            println("Error deleting item: ${e.message}")
+                            if (isAdded && context != null) {
+                                Toast.makeText(context, "Failed to delete item", Toast.LENGTH_SHORT).show()
+                            }
+                        }
                     }
                 )
                 println("OrdersFragment: Adapter initialized")

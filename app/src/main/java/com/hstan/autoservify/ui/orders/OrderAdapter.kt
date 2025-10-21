@@ -15,7 +15,8 @@ import com.hstan.autoservify.ui.main.Shops.Services.Appointment
 class OrderAdapter(
     private var items: List<Any>, // can be Order or Appointment
     private val onViewClick: ((Any) -> Unit)? = null,
-    private val onCancelClick: ((Any) -> Unit)? = null
+    private val onCancelClick: ((Any) -> Unit)? = null,
+    private val onDeleteClick: ((Any) -> Unit)? = null
 ) : RecyclerView.Adapter<OrderViewHolder>() {
 
     private val processedOrderGroups = mutableSetOf<String>() // Track which order groups we've already shown
@@ -48,18 +49,21 @@ class OrderAdapter(
         val relatedOrders = if (order.isManualEntry) findRelatedOrders(order) else listOf(order)
         val isMultiPart = relatedOrders.size > 1
 
+        // Show Customer Name at the top
+        holder.binding.orderItemTitle.text = order.userName.ifBlank { "Customer" }
+
         if (isMultiPart) {
-            // Show first part's info with multi-item indicator
-            holder.binding.orderItemTitle.text = order.item?.title ?: "Unknown Item"
-            holder.binding.orderQty.text = "${relatedOrders.size} items"
+            // Show all part names horizontally (comma-separated)
+            val partNames = relatedOrders.mapNotNull { it.item?.title }.joinToString(", ")
+            holder.binding.orderQty.text = partNames.ifBlank { "${relatedOrders.size} items" }
             
             // Calculate total price for all parts
             val totalPrice = relatedOrders.sumOf { (it.item?.price ?: 0) * it.quantity }
             holder.binding.orderPrice.text = "Rs. $totalPrice"
         } else {
-            holder.binding.orderItemTitle.text = order.item?.title ?: "Unknown Item"
-            holder.binding.orderQty.text = "Qty: ${order.quantity}"
-            holder.binding.orderPrice.text = "Rs. ${order.item?.price ?: 0}"
+            // Single item - show part name and quantity
+            holder.binding.orderQty.text = "${order.item?.title ?: "Unknown Item"} (Qty: ${order.quantity})"
+            holder.binding.orderPrice.text = "Rs. ${(order.item?.price ?: 0) * order.quantity}"
         }
 
         holder.binding.orderStatus.text = order.status.ifBlank { "pending" }
@@ -97,9 +101,9 @@ class OrderAdapter(
             context.startActivity(intent)
         }
         
-        holder.binding.orderView.setOnClickListener(clickListener)
         holder.itemView.setOnClickListener(clickListener)
-        holder.binding.orderCancel.setOnClickListener { onCancelClick?.invoke(order) }
+        holder.binding.orderCancelButton.setOnClickListener { onCancelClick?.invoke(order) }
+        holder.binding.orderDelete.setOnClickListener { onDeleteClick?.invoke(order) }
     }
 
     private fun bindAppointment(holder: OrderViewHolder, appointment: Appointment) {
@@ -122,16 +126,6 @@ class OrderAdapter(
             .placeholder(R.drawable.logo)
             .into(holder.binding.orderItemImage)
 
-        holder.binding.orderView.setOnClickListener { 
-            onViewClick?.invoke(appointment)
-            
-            // Navigate to AppointmentDetailActivity
-            val context = holder.itemView.context
-            val intent = Intent(context, AppointmentDetailActivity::class.java)
-            intent.putExtra(AppointmentDetailActivity.EXTRA_APPOINTMENT, Gson().toJson(appointment))
-            context.startActivity(intent)
-        }
-        holder.binding.orderCancel.setOnClickListener { onCancelClick?.invoke(appointment) }
         holder.itemView.setOnClickListener { 
             onViewClick?.invoke(appointment)
             
@@ -141,6 +135,8 @@ class OrderAdapter(
             intent.putExtra(AppointmentDetailActivity.EXTRA_APPOINTMENT, Gson().toJson(appointment))
             context.startActivity(intent)
         }
+        holder.binding.orderCancelButton.setOnClickListener { onCancelClick?.invoke(appointment) }
+        holder.binding.orderDelete.setOnClickListener { onDeleteClick?.invoke(appointment) }
     }
 
     fun updateData(newItems: List<Any>) {

@@ -32,6 +32,25 @@ class PartsCraftAdapter(
         holder.binding.SpDesc.text = part.description
         holder.binding.SpPrice.text = "Rs. ${part.price}"
 
+        // Show inventory icon if inventory is managed (for shopkeeper view)
+        if (showEditDeleteButtons && part.manageInventory) {
+            holder.binding.inventoryManagedIcon.visibility = View.VISIBLE
+        } else {
+            holder.binding.inventoryManagedIcon.visibility = View.GONE
+        }
+
+        // Check if part is out of stock (inventory managed and quantity is 0)
+        val isOutOfStock = part.manageInventory && part.quantity == 0
+        
+        // Show out of stock badge for customer view
+        if (!showEditDeleteButtons && isOutOfStock) {
+            holder.binding.stockStatusBadge.visibility = View.VISIBLE
+            // Apply gray overlay effect
+            holder.itemView.alpha = 0.5f
+        } else {
+            holder.binding.stockStatusBadge.visibility = View.GONE
+            holder.itemView.alpha = 1.0f
+        }
 
         Glide.with(context)
             .load(part.image)
@@ -39,11 +58,17 @@ class PartsCraftAdapter(
             .error(com.hstan.autoservify.R.drawable.logo)
             .into(holder.binding.SpPic)
 
-        // Item click listener
-        holder.itemView.setOnClickListener {
-            val intent = Intent(context, Partscraftdetail::class.java)
-            intent.putExtra("data", Gson().toJson(part))
-            context.startActivity(intent)
+        // Item click listener - disable if out of stock for customers
+        if (!showEditDeleteButtons && isOutOfStock) {
+            holder.itemView.setOnClickListener(null)
+            holder.itemView.isClickable = false
+        } else {
+            holder.itemView.isClickable = true
+            holder.itemView.setOnClickListener {
+                val intent = Intent(context, Partscraftdetail::class.java)
+                intent.putExtra("data", Gson().toJson(part))
+                context.startActivity(intent)
+            }
         }
 
         // Show/hide edit and delete buttons based on user role

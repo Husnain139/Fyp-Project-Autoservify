@@ -79,9 +79,12 @@
             android:exported="false" /> <!-- Shopkeeper Orders Activity -->
         <activity
             android:name=".ui.shopkeeper.OrdersActivity"
-            android:exported="false" /> <!-- Shopkeeper Appointments Activity -->
+            android:exported="false" />         <!-- Shopkeeper Appointments Activity -->
         <activity
             android:name=".ui.shopkeeper.AppointmentsActivity"
+            android:exported="false" /> <!-- Inventory Management -->
+        <activity
+            android:name=".ui.inventory.CheckStockActivity"
             android:exported="false" /> <!-- Main Activity (Splash/Redirect) -->
         <activity
             android:name=".ui.main.home.MainActivity"

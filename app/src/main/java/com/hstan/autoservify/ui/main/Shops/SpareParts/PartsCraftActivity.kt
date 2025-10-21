@@ -48,7 +48,7 @@ class PartsCraftActivity : AppCompatActivity() {
             onEditClick = { partsCraft ->
                 // Navigate to edit activity
                 val intent = Intent(this, Addpartscraft::class.java)
-                intent.putExtra("partsCraftData", Gson().toJson(partsCraft))
+                intent.putExtra("partscraft_data", Gson().toJson(partsCraft))
                 startActivity(intent)
             },
             onDeleteClick = { partsCraft ->

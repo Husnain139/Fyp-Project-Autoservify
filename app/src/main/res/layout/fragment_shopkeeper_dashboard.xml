@@ -102,14 +102,16 @@
                         <!-- Number -->
                         <TextView
                             android:id="@+id/sales_count"
-                            android:layout_width="52dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="6dp"
                             android:fontFamily="sans-serif"
                             android:text="4"
                             android:textColor="#1C1B1F"
-                            android:textSize="28sp"
-                            android:textStyle="bold" />
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:maxLines="1"
+                            android:ellipsize="end" />
 
                         <!-- Label -->
                         <TextView
@@ -161,10 +163,12 @@
                             android:layout_height="wrap_content"
                             android:text="7"
                             android:textColor="#1C1B1F"
-                            android:textSize="28sp"
+                            android:textSize="24sp"
                             android:textStyle="bold"
                             android:fontFamily="sans-serif"
-                            android:layout_marginBottom="6dp" />
+                            android:layout_marginBottom="6dp"
+                            android:maxLines="1"
+                            android:ellipsize="end" />
 
                         <!-- Label -->
                         <TextView

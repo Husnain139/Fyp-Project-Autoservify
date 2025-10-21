@@ -28,9 +28,9 @@ class DashboardAppointmentAdapter(
         holder.binding.orderStatus.text = appointment.status
         holder.binding.orderDate.text = "${appointment.appointmentDate} ${appointment.appointmentTime}"
         
-        // Hide edit/cancel buttons for dashboard view
-        holder.binding.orderView.visibility = View.VISIBLE
-        holder.binding.orderCancel.visibility = View.GONE
+        // Hide cancel and delete buttons - dashboard is view-only
+        holder.binding.orderCancelButton.visibility = View.GONE
+        holder.binding.orderDelete.visibility = View.GONE
         
         // Set click listener
         holder.itemView.setOnClickListener {
