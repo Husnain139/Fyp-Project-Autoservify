@@ -45,6 +45,12 @@ class CustomerMainActivity : AppCompatActivity(), NavigationView.OnNavigationIte
             }
         }
 
+        // Profile icon click listener
+        val profileIcon = findViewById<ImageView>(R.id.right_icon)
+        profileIcon.setOnClickListener {
+            navigateToFragment(R.id.item_profile)
+        }
+
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
             ?: return

@@ -102,7 +102,7 @@
                         <!-- Number -->
                         <TextView
                             android:id="@+id/sales_count"
-                            android:layout_width="52dp"
+                            android:layout_width="42dp"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="6dp"
                             android:fontFamily="sans-serif"
