@@ -10,6 +10,8 @@ import kotlinx.coroutines.launch
 
 class ServiceViewModel : ViewModel() {
 
+
+
     private val repository = ServiceRepository()
 
     private val _services = MutableLiveData<List<Service>>()
@@ -58,7 +60,7 @@ class ServiceViewModel : ViewModel() {
             }
         }
     }
-
+//hussnain
     // 🆕 Load services for a specific shop (role-based access)
     fun loadServicesByShopId(shopId: String) {
         viewModelScope.launch {
