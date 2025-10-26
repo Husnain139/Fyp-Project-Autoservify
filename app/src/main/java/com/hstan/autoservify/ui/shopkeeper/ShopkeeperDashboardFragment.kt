@@ -239,16 +239,16 @@ class ShopkeeperDashboardFragment : Fragment() {
     }
 
     private fun loadDashboardStats(shopId: String) {
+        val orderRepository = OrderRepository()
+        val appointmentRepository = AppointmentRepository()
+        
+        // Get today's date for filtering
+        val today = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
+            .format(java.util.Date())
+        
+        // Launch orders collection in separate coroutine
         lifecycleScope.launch {
             try {
-                val orderRepository = OrderRepository()
-                val appointmentRepository = AppointmentRepository()
-                
-                // Get today's date for filtering
-                val today = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
-                    .format(java.util.Date())
-                
-                // Load orders and calculate statistics
                 orderRepository.getShopOrders(shopId).collect { orders ->
                     // Filter today's orders
                     val todayOrders = orders.filter { order ->
@@ -270,47 +270,70 @@ class ShopkeeperDashboardFragment : Fragment() {
                     updateTotalSales()
                     binding.ordersPendingCount.text = pendingOrders.toString()
                 }
-                
-                // Load appointments and calculate statistics
-                appointmentRepository.getShopAppointments(shopId).collect { appointments ->
-                    // Filter appointments that actually match our shopId (in case of data inconsistencies)
-                    // Also handle null/empty shopId values from old data
-                    val validAppointments = appointments.filter { appointment ->
-                        val appointmentShopId = appointment.shopId?.trim() ?: ""
-                        val currentShopId = shopId.trim()
-                        appointmentShopId.isNotEmpty() && appointmentShopId == currentShopId
-                    }
-                    
-                    // Filter today's appointments
-                    val todayAppointments = validAppointments.filter { appointment ->
-                        appointment.appointmentDate == today
-                    }
-                    
-                    // Calculate total amount from today's appointments
-                    todayAppointmentsAmount = todayAppointments.sumOf { appointment ->
-                        appointment.bill.toIntOrNull() ?: 0
-                    }
-                    
-                    // Update UI with today's appointment count
-                    binding.appointmentsPendingCount.text = todayAppointments.size.toString()
-                    
-                    // Update total sales with appointments amount
-                    updateTotalSales()
-                }
-                
-                // For now, set a default review score (you can implement actual review system later)
-                binding.averageReview.text = "4.8"
-                
             } catch (e: Exception) {
-                // Handle error, set default values
-                binding.salesCount.text = "Rs 0"
-                binding.ordersPendingCount.text = "0"
-                binding.appointmentsPendingCount.text = "0"
-                binding.averageReview.text = "4.8"
-                println("Error loading dashboard stats: ${e.message}")
+                println("ShopkeeperDashboard: Error loading orders: ${e.message}")
                 e.printStackTrace()
+                binding.ordersPendingCount.text = "0"
             }
         }
+        
+        // Launch appointments collection in separate coroutine
+        lifecycleScope.launch {
+            try {
+                appointmentRepository.getShopAppointments(shopId).collect { appointments ->
+                    try {
+                        println("ShopkeeperDashboard: Received ${appointments.size} appointments from Firestore")
+                        
+                        // Filter appointments that actually match our shopId (in case of data inconsistencies)
+                        // Also handle null/empty shopId values from old data
+                        val validAppointments = appointments.filter { appointment ->
+                            val appointmentShopId = appointment.shopId?.trim() ?: ""
+                            val currentShopId = shopId.trim()
+                            appointmentShopId.isNotEmpty() && appointmentShopId == currentShopId
+                        }
+                        
+                        println("ShopkeeperDashboard: ${validAppointments.size} valid appointments for this shop")
+                        
+                        // Filter today's appointments for sales calculation
+                        val todayAppointments = validAppointments.filter { appointment ->
+                            appointment.appointmentDate == today
+                        }
+                        
+                        // Calculate total amount from today's appointments
+                        todayAppointmentsAmount = todayAppointments.sumOf { appointment ->
+                            appointment.bill.toIntOrNull() ?: 0
+                        }
+                        
+                        // Update UI with total booked appointments count (not just today's)
+                        // Count all appointments that are not cancelled
+                        val totalBookedAppointments = validAppointments.filter { appointment ->
+                            !appointment.status.contains("cancelled", ignoreCase = true) &&
+                            !appointment.status.contains("canceled", ignoreCase = true)
+                        }
+                        
+                        println("ShopkeeperDashboard: ${totalBookedAppointments.size} total booked appointments")
+                        
+                        // Always show a number, even if 0
+                        binding.appointmentsPendingCount.text = totalBookedAppointments.size.toString()
+                        
+                        // Update total sales with appointments amount
+                        updateTotalSales()
+                    } catch (e: Exception) {
+                        println("ShopkeeperDashboard: Error processing appointments: ${e.message}")
+                        e.printStackTrace()
+                        // Show 0 on error
+                        binding.appointmentsPendingCount.text = "0"
+                    }
+                }
+            } catch (e: Exception) {
+                println("ShopkeeperDashboard: Error loading appointments: ${e.message}")
+                e.printStackTrace()
+                binding.appointmentsPendingCount.text = "0"
+            }
+        }
+        
+        // Set default review score (you can implement actual review system later)
+        binding.averageReview.text = "4.8"
     }
     
     private fun updateTotalSales() {
