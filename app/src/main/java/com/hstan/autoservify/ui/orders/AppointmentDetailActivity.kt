@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.hstan.autoservify.databinding.ActivityAppointmentDetailBinding
+import com.hstan.autoservify.model.repositories.AppointmentRepository
 import com.hstan.autoservify.model.repositories.AuthRepository
 import com.hstan.autoservify.model.repositories.OrderRepository
 import com.hstan.autoservify.model.repositories.ServiceRepository
@@ -24,6 +25,7 @@ class AppointmentDetailActivity : AppCompatActivity() {
     private val orderRepository = OrderRepository()
     private val authRepository = AuthRepository()
     private val serviceRepository = ServiceRepository()
+    private val appointmentRepository = AppointmentRepository()
     private lateinit var sparePartsAdapter: AppointmentSparePartsAdapter
     private val spareParts = mutableListOf<Order>()
     private var servicePrice: Double = 0.0
@@ -60,6 +62,14 @@ class AppointmentDetailActivity : AppCompatActivity() {
 
         binding.createOrderButton.setOnClickListener {
             openAddPartsActivity()
+        }
+
+        binding.confirmButton.setOnClickListener {
+            updateAppointmentStatus("Confirmed")
+        }
+
+        binding.markDeliveredButton.setOnClickListener {
+            updateAppointmentStatus("Completed")
         }
     }
 
@@ -177,16 +187,84 @@ class AppointmentDetailActivity : AppCompatActivity() {
                     result.onSuccess { userProfile ->
                         if (userProfile.userType == "shop_owner") {
                             binding.createOrderButton.visibility = View.VISIBLE
+                            updateStatusButtonsVisibility()
                         } else {
                             binding.createOrderButton.visibility = View.GONE
+                            binding.statusButtonsContainer.visibility = View.GONE
                         }
                     }.onFailure {
                         binding.createOrderButton.visibility = View.GONE
+                        binding.statusButtonsContainer.visibility = View.GONE
                     }
                 }
             } catch (e: Exception) {
                 println("Error checking user type: ${e.message}")
                 binding.createOrderButton.visibility = View.GONE
+                binding.statusButtonsContainer.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun updateStatusButtonsVisibility() {
+        // Show status buttons based on current status
+        val status = appointment.status.lowercase()
+        binding.statusButtonsContainer.visibility = View.VISIBLE
+        
+        when {
+            status.contains("pending") || status.isBlank() -> {
+                // Show only confirm button
+                binding.confirmButton.visibility = View.VISIBLE
+                binding.markDeliveredButton.visibility = View.GONE
+            }
+            status.contains("confirmed") || status.contains("in progress") -> {
+                // Show only mark as delivered button
+                binding.confirmButton.visibility = View.GONE
+                binding.markDeliveredButton.visibility = View.VISIBLE
+            }
+            status.contains("completed") || status.contains("delivered") -> {
+                // Hide both buttons
+                binding.statusButtonsContainer.visibility = View.GONE
+            }
+            else -> {
+                // Show both by default
+                binding.confirmButton.visibility = View.VISIBLE
+                binding.markDeliveredButton.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun updateAppointmentStatus(newStatus: String) {
+        lifecycleScope.launch {
+            try {
+                appointment.status = newStatus
+                // Use appointment.id if available, otherwise use appointmentId
+                val id = appointment.id.ifEmpty { appointment.appointmentId }
+                val result = appointmentRepository.updateAppointmentStatus(id, newStatus)
+                
+                result.onSuccess {
+                    Toast.makeText(
+                        this@AppointmentDetailActivity,
+                        "Status updated to $newStatus",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    
+                    // Update UI
+                    setupUI()
+                    updateStatusButtonsVisibility()
+                }.onFailure { exception ->
+                    Toast.makeText(
+                        this@AppointmentDetailActivity,
+                        "Failed to update status: ${exception.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            } catch (e: Exception) {
+                println("Error updating appointment status: ${e.message}")
+                Toast.makeText(
+                    this@AppointmentDetailActivity,
+                    "Error updating status",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }

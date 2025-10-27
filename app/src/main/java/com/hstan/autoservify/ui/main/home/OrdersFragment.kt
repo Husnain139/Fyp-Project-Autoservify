@@ -1,20 +1,29 @@
 package com.hstan.autoservify.ui.main.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.chip.Chip
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.tabs.TabLayout
 import com.hstan.autoservify.databinding.FragmentOrdersBinding
 import com.hstan.autoservify.ui.main.ViewModels.Order
 import com.hstan.autoservify.ui.main.Shops.Services.Appointment
 import com.hstan.autoservify.ui.orders.OrderAdapter
+import com.hstan.autoservify.ui.orders.ManualOrderServiceActivity
 import com.hstan.autoservify.model.repositories.AuthRepository
 import com.hstan.autoservify.model.AppUser
+import com.hstan.autoservify.R
 import kotlinx.coroutines.launch
 
 class OrdersFragment : Fragment() {
@@ -25,11 +34,30 @@ class OrdersFragment : Fragment() {
     private lateinit var viewModel: OrderFragmentViewModel
     private lateinit var adapter: OrderAdapter
 
-    // one list to display both orders + appointments
-    private val items = ArrayList<Any>()  // Any = Order OR Appointment
+    private val allOrders = ArrayList<Order>()
+    private val allAppointments = ArrayList<Appointment>()
     
-    // Flag to prevent multiple simultaneous data loads
     private var isDataLoaded = false
+    private var currentTab = 0 // 0 = Orders, 1 = Appointments
+    private var currentOrderStatusFilter = "Not Confirmed"
+    private var currentAppointmentStatusFilter = "Not Confirmed"
+    private var isShopkeeper = false
+
+    // Views
+    private lateinit var tabLayout: TabLayout
+    private lateinit var orderFilterChipsContainer: View
+    private lateinit var appointmentFilterChipsContainer: View
+    private lateinit var chipOrderNotConfirmed: Chip
+    private lateinit var chipOrderInProcess: Chip
+    private lateinit var chipOrderCompleted: Chip
+    private lateinit var chipAppointmentNotConfirmed: Chip
+    private lateinit var chipAppointmentInProcess: Chip
+    private lateinit var chipAppointmentCompleted: Chip
+    private lateinit var emptyStateLayout: LinearLayout
+    private lateinit var emptyStateIcon: ImageView
+    private lateinit var emptyStateTitle: TextView
+    private lateinit var emptyStateMessage: TextView
+    private lateinit var fab: FloatingActionButton
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,65 +71,28 @@ class OrdersFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         try {
-            println("OrdersFragment: onViewCreated called")
-            // Initialize ViewModel first - ensure we use the fragment scope
+            // Initialize ViewModel
             if (!::viewModel.isInitialized) {
                 viewModel = ViewModelProvider(this)[OrderFragmentViewModel::class.java]
-                println("OrdersFragment: ViewModel initialized")
-            } else {
-                println("OrdersFragment: ViewModel already initialized")
             }
 
-            // init adapter (you will need to make OrderAdapter handle both Order & Appointment types)
-            if (!::adapter.isInitialized) {
-                adapter = OrderAdapter(
-                    emptyList(),
-                    onViewClick = { /* navigate to detail screen if needed */ },
-                    onCancelClick = { item ->
-                        try {
-                            when (item) {
-                                is Order -> viewModel.cancelOrder(item)
-                                is Appointment -> viewModel.cancelAppointment(item)
-                            }
-                        } catch (e: Exception) {
-                            println("Error cancelling item: ${e.message}")
-                            if (isAdded && context != null) {
-                                Toast.makeText(context, "Failed to cancel item", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    },
-                    onDeleteClick = { item ->
-                        try {
-                            when (item) {
-                                is Order -> viewModel.deleteOrder(item)
-                                is Appointment -> {
-                                    // Appointments don't support delete, only cancel
-                                    Toast.makeText(context, "Use cancel for appointments", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        } catch (e: Exception) {
-                            println("Error deleting item: ${e.message}")
-                            if (isAdded && context != null) {
-                                Toast.makeText(context, "Failed to delete item", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    }
-                )
-                println("OrdersFragment: Adapter initialized")
-            } else {
-                println("OrdersFragment: Adapter already initialized")
-            }
+            // Initialize views
+            initViews()
 
-            // Ensure RecyclerView is properly set up
-            if (binding.recyclerview.layoutManager == null) {
-                binding.recyclerview.layoutManager = LinearLayoutManager(context)
-                println("OrdersFragment: LayoutManager set")
-            }
-            
-            if (binding.recyclerview.adapter == null) {
-                binding.recyclerview.adapter = adapter
-                println("OrdersFragment: Adapter set to RecyclerView")
-            }
+            // Check user type
+            checkUserType()
+
+            // Setup tabs
+            setupTabs()
+
+            // Setup filter chips
+            setupFilterChips()
+
+            // Setup RecyclerView
+            setupRecyclerView()
+
+            // Setup FAB
+            setupFAB()
         } catch (e: Exception) {
             println("Error in onViewCreated: ${e.message}")
             e.printStackTrace()
@@ -109,27 +100,16 @@ class OrdersFragment : Fragment() {
             return
         }
 
-        // Use viewLifecycleOwner for proper lifecycle management
-        viewLifecycleOwner.lifecycleScope.launch {
-            try {
-                viewModel.failureMessage.collect { msg ->
-                    msg?.let { 
-                        if (isAdded && context != null) {
-                            Toast.makeText(context, it, Toast.LENGTH_SHORT).show() 
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                println("Error collecting failure messages: ${e.message}")
-            }
-        }
-
-        // observe orders
+        // Observe orders
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 viewModel.orders.collect { list ->
-                    if (isAdded) {
-                        refreshData(list, viewModel.appointments.value)
+                    if (isAdded && list != null) {
+                        allOrders.clear()
+                        allOrders.addAll(list)
+                        if (currentTab == 0) {
+                            filterAndDisplayData()
+                        }
                     }
                 }
             } catch (e: Exception) {
@@ -137,12 +117,16 @@ class OrdersFragment : Fragment() {
             }
         }
 
-        // observe appointments
+        // Observe appointments
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 viewModel.appointments.collect { list ->
-                    if (isAdded) {
-                        refreshData(viewModel.orders.value, list)
+                    if (isAdded && list != null) {
+                        allAppointments.clear()
+                        allAppointments.addAll(list)
+                        if (currentTab == 1) {
+                            filterAndDisplayData()
+                        }
                     }
                 }
             } catch (e: Exception) {
@@ -150,60 +134,235 @@ class OrdersFragment : Fragment() {
             }
         }
 
-        // Load orders based on user role (only once per view creation)
-        println("OrdersFragment: isDataLoaded = $isDataLoaded")
+        // Load orders based on user role
         if (!isDataLoaded) {
-            try {
-                println("OrdersFragment: Loading orders for user")
-                loadOrdersForUser()
-                isDataLoaded = true
-            } catch (e: Exception) {
-                println("OrdersFragment: Error loading orders for user: ${e.message}")
-                e.printStackTrace()
-                isDataLoaded = false // Reset flag on error
-                if (isAdded && context != null) {
-                    Toast.makeText(context, "Failed to load orders", Toast.LENGTH_SHORT).show()
-                }
-            }
-        } else {
-            println("OrdersFragment: Data already loaded, skipping")
+            loadOrdersForUser()
+            isDataLoaded = true
         }
     }
 
-    private fun refreshData(orderList: List<Order>?, appointmentList: List<Appointment>?) {
-        try {
-            println("OrdersFragment: refreshData called - Orders: ${orderList?.size}, Appointments: ${appointmentList?.size}")
-            
-            // Safety check for fragment lifecycle
-            if (!isAdded || _binding == null) {
-                println("OrdersFragment: Fragment not ready for data refresh")
-                return
+    private fun initViews() {
+        tabLayout = binding.tabLayout
+        orderFilterChipsContainer = binding.orderFilterChipsContainer
+        appointmentFilterChipsContainer = binding.appointmentFilterChipsContainer
+        chipOrderNotConfirmed = binding.chipOrderNotConfirmed
+        chipOrderInProcess = binding.chipOrderInProcess
+        chipOrderCompleted = binding.chipOrderCompleted
+        chipAppointmentNotConfirmed = binding.chipAppointmentNotConfirmed
+        chipAppointmentInProcess = binding.chipAppointmentInProcess
+        chipAppointmentCompleted = binding.chipAppointmentCompleted
+        emptyStateLayout = binding.emptyStateLayout
+        emptyStateIcon = binding.emptyStateIcon
+        emptyStateTitle = binding.emptyStateTitle
+        emptyStateMessage = binding.emptyStateMessage
+        fab = binding.fabCreateManual
+    }
+
+    private fun checkUserType() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val authRepository = AuthRepository()
+                val currentUser = authRepository.getCurrentUser()
+                if (currentUser != null) {
+                    val result = authRepository.getUserProfile(currentUser.uid)
+                    if (result.isSuccess) {
+                        val userProfile = result.getOrThrow()
+                        isShopkeeper = userProfile.userType == "shop_owner"
+                        updateShopkeeperUI()
+                    }
+                }
+            } catch (e: Exception) {
+                println("Error checking user type: ${e.message}")
             }
-            
-            items.clear()
-            orderList?.let { 
-                items.addAll(it)
-                println("OrdersFragment: Orders loaded: ${it.size} items")
+        }
+    }
+
+    private fun updateShopkeeperUI() {
+        if (isShopkeeper) {
+            fab.visibility = View.VISIBLE
+            // Show appropriate filter chips based on current tab
+            updateFilterChipsVisibility()
+        } else {
+            fab.visibility = View.GONE
+            orderFilterChipsContainer.visibility = View.GONE
+            appointmentFilterChipsContainer.visibility = View.GONE
+        }
+    }
+
+    private fun updateFilterChipsVisibility() {
+        when (currentTab) {
+            0 -> { // Orders tab
+                orderFilterChipsContainer.visibility = if (isShopkeeper) View.VISIBLE else View.GONE
+                appointmentFilterChipsContainer.visibility = View.GONE
             }
-            appointmentList?.let { 
-                items.addAll(it)
-                println("OrdersFragment: Appointments loaded: ${it.size} items")
+            1 -> { // Appointments tab
+                orderFilterChipsContainer.visibility = View.GONE
+                appointmentFilterChipsContainer.visibility = if (isShopkeeper) View.VISIBLE else View.GONE
             }
-            println("OrdersFragment: Total items in adapter: ${items.size}")
-            
-            // Ensure adapter is initialized before updating
-            if (::adapter.isInitialized && ::viewModel.isInitialized) {
-                adapter.updateData(items)
-                println("OrdersFragment: Adapter updated successfully")
-            } else {
-                println("OrdersFragment: Adapter or ViewModel not initialized yet")
+        }
+    }
+
+    private fun setupTabs() {
+        tabLayout.addTab(tabLayout.newTab().setText("Orders"))
+        tabLayout.addTab(tabLayout.newTab().setText("Appointments"))
+
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                currentTab = tab?.position ?: 0
+                updateUIForTab()
+                filterAndDisplayData()
             }
-        } catch (e: Exception) {
-            println("OrdersFragment: Error refreshing data: ${e.message}")
-            e.printStackTrace()
-            if (isAdded && context != null) {
-                Toast.makeText(context, "Error updating orders", Toast.LENGTH_SHORT).show()
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
+        })
+    }
+
+    private fun setupFilterChips() {
+        // Order filter chips
+        chipOrderNotConfirmed.setOnClickListener {
+            currentOrderStatusFilter = "Not Confirmed"
+            filterAndDisplayData()
+        }
+
+        chipOrderInProcess.setOnClickListener {
+            currentOrderStatusFilter = "In Process"
+            filterAndDisplayData()
+        }
+
+        chipOrderCompleted.setOnClickListener {
+            currentOrderStatusFilter = "Completed"
+            filterAndDisplayData()
+        }
+
+        // Appointment filter chips
+        chipAppointmentNotConfirmed.setOnClickListener {
+            currentAppointmentStatusFilter = "Not Confirmed"
+            filterAndDisplayData()
+        }
+
+        chipAppointmentInProcess.setOnClickListener {
+            currentAppointmentStatusFilter = "In Process"
+            filterAndDisplayData()
+        }
+
+        chipAppointmentCompleted.setOnClickListener {
+            currentAppointmentStatusFilter = "Completed"
+            filterAndDisplayData()
+        }
+    }
+
+    private fun setupRecyclerView() {
+        adapter = OrderAdapter(
+            emptyList(),
+            onViewClick = { /* handled by adapter */ },
+            onCancelClick = { item ->
+                when (item) {
+                    is Order -> viewModel.cancelOrder(item)
+                    is Appointment -> viewModel.cancelAppointment(item)
+                }
+            },
+            onDeleteClick = { item ->
+                if (isShopkeeper) {
+                    when (item) {
+                        is Order -> viewModel.deleteOrder(item)
+                        is Appointment -> {
+                            Toast.makeText(context, "Use cancel for appointments", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
             }
+        )
+        binding.recyclerview.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = this@OrdersFragment.adapter
+        }
+    }
+
+    private fun setupFAB() {
+        fab.setOnClickListener {
+            val intent = Intent(requireContext(), ManualOrderServiceActivity::class.java)
+            intent.putExtra("ENTRY_MODE", if (currentTab == 0) "ORDER" else "SERVICE")
+            startActivity(intent)
+        }
+    }
+
+    private fun updateUIForTab() {
+        // Show/hide appropriate filter chips based on tab
+        updateFilterChipsVisibility()
+        updateEmptyStateMessages()
+    }
+
+    private fun updateEmptyStateMessages() {
+        when (currentTab) {
+            0 -> {
+                emptyStateIcon.setImageResource(R.drawable.baseline_shopping_cart_24)
+                emptyStateTitle.text = "No Orders"
+                emptyStateMessage.text = "Orders will appear here"
+            }
+            1 -> {
+                emptyStateIcon.setImageResource(R.drawable.baseline_event_24)
+                emptyStateTitle.text = "No Appointments"
+                emptyStateMessage.text = "Appointments will appear here"
+            }
+        }
+    }
+
+    private fun filterAndDisplayData() {
+        val filteredData: List<Any> = when (currentTab) {
+            0 -> if (isShopkeeper) filterOrders() else allOrders.toList()
+            1 -> if (isShopkeeper) filterAppointments() else allAppointments.toList()
+            else -> emptyList()
+        }
+
+        adapter.updateData(filteredData)
+        updateEmptyState(filteredData.isEmpty())
+    }
+
+    private fun filterOrders(): List<Order> {
+        return when (currentOrderStatusFilter) {
+            "Not Confirmed" -> allOrders.filter {
+                it.status.contains("pending", ignoreCase = true) ||
+                it.status.contains("order placed", ignoreCase = true)
+            }
+            "In Process" -> allOrders.filter {
+                it.status.contains("processing", ignoreCase = true) ||
+                it.status.contains("shipped", ignoreCase = true) ||
+                it.status.contains("confirmed", ignoreCase = true)
+            }
+            "Completed" -> allOrders.filter {
+                it.status.contains("delivered", ignoreCase = true) ||
+                it.status.contains("completed", ignoreCase = true)
+            }
+            else -> allOrders
+        }
+    }
+
+    private fun filterAppointments(): List<Appointment> {
+        return when (currentAppointmentStatusFilter) {
+            "Not Confirmed" -> allAppointments.filter {
+                it.status.contains("pending", ignoreCase = true) ||
+                it.status.isBlank()
+            }
+            "In Process" -> allAppointments.filter {
+                it.status.contains("confirmed", ignoreCase = true) ||
+                it.status.contains("in progress", ignoreCase = true)
+            }
+            "Completed" -> allAppointments.filter {
+                it.status.contains("delivered", ignoreCase = true) ||
+                it.status.contains("completed", ignoreCase = true)
+            }
+            else -> allAppointments
+        }
+    }
+
+    private fun updateEmptyState(isEmpty: Boolean) {
+        if (isEmpty) {
+            binding.recyclerview.visibility = View.GONE
+            emptyStateLayout.visibility = View.VISIBLE
+        } else {
+            binding.recyclerview.visibility = View.VISIBLE
+            emptyStateLayout.visibility = View.GONE
         }
     }
 
@@ -219,77 +378,35 @@ class OrdersFragment : Fragment() {
                         val userProfile = result.getOrThrow()
                         when (userProfile.userType) {
                             "customer" -> {
-                                // Load orders and appointments for this customer
-                                println("Loading data for customer: ${userProfile.uid}")
                                 viewModel.loadCustomerOrders(userProfile.uid)
-                                viewModel.readAppointments() // Load all appointments for now
+                                viewModel.readAppointments()
                             }
                             "shop_owner" -> {
-                                // Load orders AND appointments for this shop owner's shop
                                 val shopId = userProfile.shopId
                                 if (!shopId.isNullOrEmpty()) {
-                                    println("Loading data for shop: $shopId")
                                     viewModel.loadShopOrders(shopId)
-                                    viewModel.loadShopAppointments(shopId) // 🆕 Use shop-specific method
+                                    viewModel.loadShopAppointments(shopId)
                                 } else {
-                                    // Shop owner but no shopId, load all orders/appointments
-                                    println("Shop owner with no shopId, loading all data")
                                     viewModel.readOrders()
                                     viewModel.readAppointments()
                                 }
                             }
                             else -> {
-                                // Unknown user type, load all
-                                println("Unknown user type: ${userProfile.userType}, loading all data")
                                 viewModel.readOrders()
                                 viewModel.readAppointments()
                             }
                         }
-                    } else {
-                        // If profile not found, try to load as customer
-                        println("Profile not found, loading as customer: ${currentUser.uid}")
-                        viewModel.loadCustomerOrders(currentUser.uid)
-                        viewModel.readAppointments() // Load all appointments for now
                     }
-                } else {
-                    // No user logged in, load all data
-                    println("No user logged in, loading all data")
-                    viewModel.readOrders()
-                    viewModel.readAppointments()
                 }
             } catch (e: Exception) {
-                println("Error in loadOrdersForUser: ${e.message}")
-                e.printStackTrace()
-                // Fallback to loading all data
-                try {
-                    viewModel.readOrders()
-                    viewModel.readAppointments()
-                } catch (fallbackError: Exception) {
-                    println("Fallback also failed: ${fallbackError.message}")
-                    if (isAdded && context != null) {
-                        Toast.makeText(context, "Failed to load orders", Toast.LENGTH_SHORT).show()
-                    }
-                }
+                println("Error loading orders: ${e.message}")
             }
         }
     }
     
     override fun onDestroyView() {
         super.onDestroyView()
-        println("OrdersFragment: onDestroyView called")
         _binding = null
-        // Reset flag when view is destroyed
         isDataLoaded = false
-        println("OrdersFragment: Data loaded flag reset")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        println("OrdersFragment: onResume called")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        println("OrdersFragment: onPause called")
     }
 }

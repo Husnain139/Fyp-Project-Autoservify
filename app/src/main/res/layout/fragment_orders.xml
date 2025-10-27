@@ -1,14 +1,246 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.orders.OrdersFragment">
+    android:background="#FEFBFF"
+    tools:context=".ui.main.home.OrdersFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/item_order" />
+        android:orientation="vertical">
 
-</FrameLayout>
+        <!-- Header Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:padding="20dp"
+            android:elevation="2dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Orders &amp; Appointments"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                android:textColor="#1C1B1F"
+                android:fontFamily="sans-serif-medium" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Manage your bookings"
+                android:textSize="14sp"
+                android:textColor="#79747E"
+                android:layout_marginTop="4dp" />
+
+        </LinearLayout>
+
+        <!-- Tab Layout -->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:elevation="2dp"
+            app:tabMode="fixed"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="#6750A4"
+            app:tabIndicatorHeight="3dp"
+            app:tabSelectedTextColor="#6750A4"
+            app:tabTextColor="#79747E"
+            app:tabTextAppearance="@style/TabTextAppearance"
+            app:tabIndicatorFullWidth="true" />
+
+        <!-- Order Status Filter Chips (shown only for Orders tab and shopkeeper) -->
+        <HorizontalScrollView
+            android:id="@+id/orderFilterChipsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:scrollbars="none"
+            android:visibility="gone">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/orderStatusChipGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:selectionRequired="true"
+                app:chipSpacingHorizontal="8dp">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipOrderNotConfirmed"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Not Confirmed"
+                    android:checked="true"
+                    app:chipBackgroundColor="@color/chip_bg_selector"
+                    app:chipStrokeColor="@color/chip_stroke_selector"
+                    app:chipStrokeWidth="1dp"
+                    android:textColor="@color/chip_text_selector" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipOrderInProcess"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="In Process"
+                    app:chipBackgroundColor="@color/chip_bg_selector"
+                    app:chipStrokeColor="@color/chip_stroke_selector"
+                    app:chipStrokeWidth="1dp"
+                    android:textColor="@color/chip_text_selector" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipOrderCompleted"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Completed"
+                    app:chipBackgroundColor="@color/chip_bg_selector"
+                    app:chipStrokeColor="@color/chip_stroke_selector"
+                    app:chipStrokeWidth="1dp"
+                    android:textColor="@color/chip_text_selector" />
+
+            </com.google.android.material.chip.ChipGroup>
+
+        </HorizontalScrollView>
+
+        <!-- Appointment Status Filter Chips (shown only for Appointments tab and shopkeeper) -->
+        <HorizontalScrollView
+            android:id="@+id/appointmentFilterChipsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:scrollbars="none"
+            android:visibility="gone">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/appointmentStatusChipGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:selectionRequired="true"
+                app:chipSpacingHorizontal="8dp">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipAppointmentNotConfirmed"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Not Confirmed"
+                    android:checked="true"
+                    app:chipBackgroundColor="@color/chip_bg_selector"
+                    app:chipStrokeColor="@color/chip_stroke_selector"
+                    app:chipStrokeWidth="1dp"
+                    android:textColor="@color/chip_text_selector" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipAppointmentInProcess"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="In Process"
+                    app:chipBackgroundColor="@color/chip_bg_selector"
+                    app:chipStrokeColor="@color/chip_stroke_selector"
+                    app:chipStrokeWidth="1dp"
+                    android:textColor="@color/chip_text_selector" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipAppointmentCompleted"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Completed"
+                    app:chipBackgroundColor="@color/chip_bg_selector"
+                    app:chipStrokeColor="@color/chip_stroke_selector"
+                    app:chipStrokeWidth="1dp"
+                    android:textColor="@color/chip_text_selector" />
+
+            </com.google.android.material.chip.ChipGroup>
+
+        </HorizontalScrollView>
+
+        <!-- Content RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="80dp"
+            android:clipToPadding="false"
+            tools:listitem="@layout/item_order" />
+
+        <!-- Empty State -->
+        <LinearLayout
+            android:id="@+id/emptyStateLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone"
+            android:padding="32dp">
+
+            <ImageView
+                android:id="@+id/emptyStateIcon"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/baseline_shopping_cart_24"
+                android:alpha="0.3"
+                app:tint="#79747E"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:id="@+id/emptyStateTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No Orders Yet"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#49454F"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/emptyStateMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Orders will appear here"
+                android:textSize="14sp"
+                android:textColor="#79747E"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Floating Action Button (only for shopkeeper) -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabCreateManual"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:src="@android:drawable/ic_input_add"
+        android:contentDescription="Create Manual Entry"
+        android:visibility="gone"
+        app:tint="@android:color/white"
+        app:backgroundTint="#6750A4" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

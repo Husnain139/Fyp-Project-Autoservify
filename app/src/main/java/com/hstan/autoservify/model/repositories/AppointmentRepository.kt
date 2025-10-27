@@ -33,6 +33,16 @@ class AppointmentRepository {
         }
     }
 
+    suspend fun updateAppointmentStatus(appointmentId: String, status: String): Result<Boolean> {
+        return try {
+            val document = appointmentCollection.document(appointmentId)
+            document.update("status", status).await()
+            Result.success(true)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     fun getAppointments() =
         appointmentCollection.snapshots().map { it.toObjects(Appointment::class.java) }
 
