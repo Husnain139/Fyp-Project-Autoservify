@@ -1,108 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+
 
     <androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/Service"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:cardCornerRadius="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="4dp">
-
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="4dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="wrap_content">
 
+            <!-- TOP IMAGE -->
             <ImageView
                 android:id="@+id/Service_pic"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:contentDescription="Shopimg"
-                android:src="@drawable/logo"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="178dp"
+                android:layout_height="178dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/servpic"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+
+
+            <!-- TITLE -->
             <TextView
                 android:id="@+id/Service_Title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="Service Title"
-                android:textColor="@color/black"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="12dp"
+                android:text="Change Brake Pads"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/Service_pic"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:textColor="@color/black"
+                app:layout_constraintTop_toBottomOf="@id/Service_pic"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
+            <!-- SUBTITLE -->
             <TextView
                 android:id="@+id/Serv_desc"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:text="desc"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="12dp"
+                android:text="Brake System"
                 android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/Service_Title"
-                app:layout_constraintTop_toBottomOf="@+id/Service_Title" />
+                android:textColor="#808080"
+                app:layout_constraintTop_toBottomOf="@id/Service_Title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
+            <!-- PRICE -->
             <TextView
                 android:id="@+id/Serv_Price"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:text="Price..."
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/Serv_desc"
-                app:layout_constraintTop_toBottomOf="@+id/Serv_desc" />
-
-            <TextView
-                android:id="@+id/service_rating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="⭐4.5"
-                android:textColor="#FDD835"
-                android:textSize="14sp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="₹__"
+                android:textSize="15sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@id/Serv_Price"
-                app:layout_constraintTop_toBottomOf="@id/Serv_Price" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/Serv_desc" />
 
+            <!-- EDIT TEXT -->
             <ImageView
                 android:id="@+id/edit_serv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
                 android:src="@drawable/baseline_edit_24"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- DELETE ICON -->
             <ImageView
                 android:id="@+id/sp_del"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
                 android:src="@drawable/baseline_delete_24"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/edit_serv" />
 
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>

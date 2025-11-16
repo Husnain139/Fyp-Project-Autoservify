@@ -11,9 +11,9 @@ class CloudinaryUploadHelper {
     companion object {
         fun initializeCloudinary(context: Context) {
             val config = mapOf(
-                "cloud_name" to "dxte8zkjp", // Replace with your Cloudinary cloud name
-                "api_key" to System.getenv("CLOUDINARY_API_KEY"),
-                "api_secret" to System.getenv("CLOUDINARY_API_SECRET")
+                "cloud_name" to "dlhixad3n",
+                "api_key" to System.getenv("742872245591719"),
+                "api_secret" to System.getenv("5wTKcbrF0wyWhmO9FQIQtxxYWPI")
             )
             MediaManager.init(context, config)
         }

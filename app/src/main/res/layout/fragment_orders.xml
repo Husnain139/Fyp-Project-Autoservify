@@ -49,10 +49,10 @@
             android:elevation="2dp"
             app:tabMode="fixed"
             app:tabGravity="fill"
-            app:tabIndicatorColor="#6750A4"
+            app:tabIndicatorColor="@color/Primary_color"
             app:tabIndicatorHeight="3dp"
-            app:tabSelectedTextColor="#6750A4"
-            app:tabTextColor="#79747E"
+            app:tabSelectedTextColor="@color/Primary_color"
+            app:tabTextColor="@color/black"
             app:tabTextAppearance="@style/TabTextAppearance"
             app:tabIndicatorFullWidth="true" />
 
@@ -240,7 +240,7 @@
         android:src="@android:drawable/ic_input_add"
         android:contentDescription="Create Manual Entry"
         android:visibility="gone"
-        app:tint="@android:color/white"
-        app:backgroundTint="#6750A4" />
+        android:backgroundTint="@color/Primary_color"
+        app:tint="@android:color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

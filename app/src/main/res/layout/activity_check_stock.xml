@@ -35,8 +35,9 @@
             android:layout_gravity="center"
             android:layout_marginStart="16dp"
             android:text="Check Stock"
-            android:textSize="20sp"
+            android:textSize="24sp"
             android:textStyle="bold"
+            android:fontFamily="@font/outfit"
             android:textColor="@color/black" />
     </LinearLayout>
 
@@ -125,7 +126,7 @@
                     android:layout_height="120dp"
                     android:src="@drawable/baseline_inventory_24"
                     android:alpha="0.3"
-                    app:tint="#666666"
+                    app:tint="@color/Primary_color"
                     android:contentDescription="No stock issues" />
 
                 <TextView
@@ -134,7 +135,7 @@
                     android:layout_marginTop="16dp"
                     android:text="All stock levels are good!"
                     android:textSize="16sp"
-                    android:textColor="#666666"
+                    android:textColor="@color/Light_primary"
                     android:textAlignment="center" />
 
                 <TextView
@@ -143,7 +144,7 @@
                     android:layout_marginTop="8dp"
                     android:text="No items are out of stock or low on stock."
                     android:textSize="14sp"
-                    android:textColor="#999999"
+                    android:textColor="@color/Light_primary"
                     android:textAlignment="center" />
 
             </LinearLayout>

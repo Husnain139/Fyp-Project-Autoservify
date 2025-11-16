@@ -73,7 +73,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Abc@gmai.com"
-                    android:textColor="#999999"
+                    android:textColor="@color/Primary_color"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -109,9 +109,9 @@
                 android:paddingHorizontal="12dp">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/accounticon" />
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/pp" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -138,9 +138,9 @@
                 android:paddingHorizontal="12dp">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/order_icon" />
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/order1" />
 
                 <TextView
                     android:layout_width="0dp"

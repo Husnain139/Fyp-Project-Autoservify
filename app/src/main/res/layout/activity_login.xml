@@ -22,7 +22,9 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="Password" />
+            android:hint="Password"
+            android:background="@drawable/input_bg"
+            android:textColorHint="@color/Light_primary"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -40,7 +42,9 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="Email" />
+            android:hint="Email"
+            android:background="@drawable/input_bg"
+            android:textColorHint="@color/Light_primary"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -49,14 +53,15 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         android:fontFamily="@font/outfit"
-        android:text="Lets Sign you in"
+        android:text="Welcome Back 👋"
         android:textColor="#101010"
-        android:textSize="37sp"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -66,9 +71,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/outfit"
-        android:text="Welcome Back"
-        android:textColor="#0D0D0D"
-        android:textSize="28sp"
+        android:text="Sign to your account"
+        android:textColor="@color/Light_primary"
+        android:textSize="16sp"
         android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="@+id/textView"
         app:layout_constraintStart_toStartOf="@+id/textView"
@@ -90,12 +95,12 @@
         android:id="@+id/loginbutton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="48dp"
         android:background="@drawable/custom_button"
         android:backgroundTint="@null"
-        app:backgroundTint="@null"
         android:text="Login"
         android:textSize="16sp"
+        app:backgroundTint="@null"
         app:layout_constraintEnd_toEndOf="@+id/forgetPassword"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/password"
@@ -120,8 +125,7 @@
         android:text="Don’t have an account ?   "
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/textView4"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/textView4"
+        app:layout_constraintStart_toStartOf="@+id/loginbutton"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <TextView
@@ -133,6 +137,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/textView5"
+        app:layout_constraintEnd_toEndOf="@+id/loginbutton"
         app:layout_constraintStart_toEndOf="@+id/textView5" />
 
 

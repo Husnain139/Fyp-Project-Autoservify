@@ -1,8 +1,10 @@
 package com.hstan.autoservify.ui.main.Shops.Services
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -47,12 +49,20 @@ class Add_Service_Activity : AppCompatActivity() {
                 price.setText(service.price.toString())
             }
         }
+        val backArrow = findViewById<ImageView>(R.id.backArrow)
+        backArrow.setOnClickListener {
+            val intent = Intent(this, ServicesActivity::class.java)
+            startActivity(intent)
+            finish() // optional: closes the current activity
+        }
+
 
         addBtn.setOnClickListener {
             if (name.text.isNullOrBlank() || desc.text.isNullOrBlank() || price.text.isNullOrBlank()) {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
 
             if (isEditMode && serviceToEdit != null) {
                 // Update existing service
@@ -92,6 +102,8 @@ class Add_Service_Activity : AppCompatActivity() {
                 }
             }
         }
+
+
 
         // ✅ Observe save result
         viewModel.isSuccessfullySaved.observe(this) { success ->

@@ -57,8 +57,10 @@ class AppointmentRepository {
     fun getRecentShopAppointments(shopId: String, limit: Int = 3) =
         appointmentCollection
             .whereEqualTo("shopId", shopId)
-            .orderBy("createdAt", Query.Direction.DESCENDING)
             .limit(limit.toLong())
             .snapshots()
             .map { it.toObjects(Appointment::class.java) }
+
+
+
 }

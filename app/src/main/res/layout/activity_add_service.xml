@@ -7,18 +7,29 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.Shops.Services.Add_Service_Activity">
 
+    <ImageView
+        android:id="@+id/backArrow"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/arroww2" />
+
     <TextView
         android:id="@+id/textView6"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/outfit"
         android:text="Add Service"
-        android:textAlignment="center"
-        android:textSize="34sp"
+        android:textAlignment="textStart"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/backArrow"
+        app:layout_constraintTop_toBottomOf="@+id/backArrow" />
 
     <ImageView
         android:id="@+id/srvImage"
@@ -29,7 +40,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6"
-        app:srcCompat="@drawable/baseline_add_photo_alternate_24" />
+        app:srcCompat="@drawable/addimage" />
 
 
     <com.google.android.material.textfield.TextInputLayout
@@ -38,9 +49,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="72dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:hint="Service Name"
+        android:textColorHint="@color/Light_primary"
+        app:hintTextColor="@color/Light_primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,8 +63,9 @@
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:backgroundTint="@android:color/transparent"
-            android:inputType="text" />
+            android:background="@drawable/input_bg"
+            android:inputType="text"
+            android:textColorHint="@color/Light_primary" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -63,6 +77,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:hint="Service Description"
+        android:textColorHint="@color/Light_primary"
+        app:hintTextColor="@color/Light_primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/nameInputLayout">
@@ -71,7 +87,8 @@
             android:id="@+id/descript"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:backgroundTint="@android:color/transparent"
+            android:background="@drawable/input_bg"
+            android:textColorHint="@color/Light_primary"
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -85,6 +102,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:hint="Service Price"
+        android:textColorHint="@color/Light_primary"
+        app:hintTextColor="@color/Light_primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/descriptInputLayout">
@@ -93,15 +112,16 @@
             android:id="@+id/price1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:backgroundTint="@android:color/transparent"
-            android:inputType="number" />
+            android:inputType="number"
+            android:background="@drawable/input_bg"
+            android:textColorHint="@color/Light_primary"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/AddService_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/custom_button"
         android:backgroundTint="@null"
         android:text="Add Service"

@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -41,19 +41,19 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
                         android:text="Adding parts for:"
-                        android:textSize="14sp"
                         android:textColor="#666666"
-                        android:layout_marginBottom="4dp" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/serviceNameText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Service Name"
-                        android:textStyle="bold"
+                        android:textColor="@color/black"
                         android:textSize="18sp"
-                        android:textColor="@color/black" />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 

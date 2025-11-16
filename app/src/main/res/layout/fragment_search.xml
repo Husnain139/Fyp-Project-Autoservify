@@ -45,6 +45,7 @@
                 android:id="@+id/chip_shops"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/light_gray"
                 android:text="Shops"
                 android:layout_marginEnd="8dp"
                 android:checkable="true"

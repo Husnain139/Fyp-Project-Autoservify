@@ -31,7 +31,6 @@ class ServiceAdapter(
         holder.binding.ServiceTitle.text = service.name
         holder.binding.ServDesc.text = service.description
         holder.binding.ServPrice.text = "Rs. ${service.price}"
-        holder.binding.serviceRating.text = "⭐ ${service.rating}"
 
         Glide.with(holder.itemView.context)
             .load(R.drawable.logo)

@@ -53,6 +53,8 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
+
+
         binding.signupTxt.setOnClickListener {
             startActivity(Intent(this, SignupActivity::class.java))
             finish()

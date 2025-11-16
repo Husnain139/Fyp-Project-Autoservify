@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Focused (when user taps or navigates to it) -->
+    <item android:state_focused="true" android:color="@color/Light_primary" />
+    <!-- Checked -->
+    <item android:state_checked="true" android:color="@color/Primary_color" />
+    <!-- Default (unchecked) -->
+    <item android:color="@color/white" />
+</selector>

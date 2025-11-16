@@ -1,6 +1,7 @@
 package com.hstan.autoservify.ui.auth
 
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -52,6 +53,12 @@ class ResetPasswordActivity : AppCompatActivity() {
         binding.signupTxt.setOnClickListener {
             finish()
         }
+        binding.backArrow.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish() // optional: closes current activity
+        }
+
 
         // Reset password button
         binding.loginbtn.setOnClickListener {
@@ -66,6 +73,7 @@ class ResetPasswordActivity : AppCompatActivity() {
             viewModel.resetPassword(email)
         }
     }
+
 
     private fun showLoading() {
         binding.loadingOverlay.visibility = View.VISIBLE

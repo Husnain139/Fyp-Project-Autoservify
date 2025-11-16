@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hstan.autoservify.R
 import com.hstan.autoservify.databinding.FragmentShopkeeperServicesBinding
@@ -68,7 +69,7 @@ class ShopkeeperServicesFragment : Fragment() {
         )
         
         binding.servicesRecyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = GridLayoutManager(context, 2)
             adapter = this@ShopkeeperServicesFragment.adapter
         }
         

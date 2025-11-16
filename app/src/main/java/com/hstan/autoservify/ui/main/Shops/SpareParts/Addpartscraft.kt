@@ -18,6 +18,7 @@ import com.google.gson.Gson
 import com.hstan.autoservify.databinding.ActivityAddpartscraftBinding
 import com.hstan.autoservify.ui.main.Shops.SpareParts.PartsCraft
 import com.hstan.autoservify.model.repositories.AuthRepository
+import com.hstan.autoservify.ui.auth.LoginActivity
 import kotlinx.coroutines.launch
 
 class Addpartscraft : AppCompatActivity() {
@@ -74,6 +75,11 @@ class Addpartscraft : AppCompatActivity() {
             binding.inventoryFieldsContainer.visibility = if (isChecked) View.VISIBLE else View.GONE
         }
 
+        binding.backArrow.setOnClickListener {
+            val intent = Intent(this, PartsCraftActivity::class.java)
+            startActivity(intent)
+            finish() // optional: closes current activity
+        }
         // Observe add operations
         lifecycleScope.launch {
             addViewModel.isSuccessfullySaved.collect {

@@ -5,6 +5,9 @@
     <color name="gray">#FF808080</color>
     <color name="light_gray">#FFE0E0E0</color>
     <color name="design_default_color_primary">#FF2196F3</color>
+
+    <color name="Primary_color">#01353B</color>
+    <color name="Light_primary">#7F999C</color>
     
     <!-- Order Detail Activity Colors -->
     <color name="background_light">#FFF5F5F5</color>

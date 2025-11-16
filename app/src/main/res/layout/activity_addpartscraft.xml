@@ -7,30 +7,41 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.Shops.SpareParts.Addpartscraft">
 
+    <ImageView
+        android:id="@+id/backArrow"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/arroww2" />
+
     <TextView
         android:id="@+id/textView6"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Add Spare-Part"
-        android:textAlignment="center"
-        android:textSize="34sp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/outfit"
+        android:text="Add Spare Parts"
+        android:textAlignment="textStart"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/backArrow"
+        app:layout_constraintTop_toBottomOf="@+id/backArrow" />
 
     <ImageView
         android:id="@+id/spImage"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:background="#F5F5F5"
-        android:scaleType="centerCrop"
-        android:src="@drawable/baseline_add_photo_alternate_24"
         android:contentDescription="Add Spare Part Image"
+        android:scaleType="centerCrop"
+        android:src="@drawable/addimage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
@@ -43,6 +54,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:textColorHint="@color/Light_primary"
+        app:hintTextColor="@color/Light_primary"
         android:hint="Spare Part Name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -52,8 +65,9 @@
             android:id="@+id/ename"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@android:color/transparent"
-            android:inputType="text" />
+            android:inputType="text"
+            android:background="@drawable/input_bg"
+            android:textColorHint="@color/Light_primary"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -64,6 +78,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:textColorHint="@color/Light_primary"
+        app:hintTextColor="@color/Light_primary"
         android:hint="Description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -73,8 +89,9 @@
             android:id="@+id/editTextText3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@android:color/transparent"
-            android:inputType="textMultiLine" />
+            android:inputType="textMultiLine"
+            android:background="@drawable/input_bg"
+            android:textColorHint="@color/Light_primary"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Price -->
@@ -86,6 +103,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:textColorHint="@color/Light_primary"
+        app:hintTextColor="@color/Light_primary"
         android:hint="Spare Part Price"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -95,8 +114,9 @@
             android:id="@+id/editTextText4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@android:color/transparent"
-            android:inputType="number" />
+            android:inputType="number"
+            android:background="@drawable/input_bg"
+            android:textColorHint="@color/Light_primary"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Inventory Management Checkbox -->

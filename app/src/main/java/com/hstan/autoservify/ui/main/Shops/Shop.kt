@@ -10,4 +10,5 @@ class Shop {
     var ownerId: String = "" // The user ID who owns this shop
     var ownerName: String = ""
     var createdAt: Long = System.currentTimeMillis()
+    var imageUrl: String = ""
 }

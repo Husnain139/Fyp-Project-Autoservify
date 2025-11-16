@@ -54,6 +54,13 @@ class SignupActivity : AppCompatActivity() {
             finish()
         }
 
+        binding.backArrow.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish() // optional: closes current activity
+        }
+
+
         // Sign up button click
         binding.loginbutton.setOnClickListener {
             val email = binding.email.editText?.text.toString()

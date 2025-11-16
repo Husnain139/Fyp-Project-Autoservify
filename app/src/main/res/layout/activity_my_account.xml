@@ -33,6 +33,7 @@
             android:layout_gravity="center"
             android:layout_marginStart="16dp"
             android:text="My Account"
+            android:fontFamily="@font/outfit"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@color/black" />
@@ -66,7 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="Change Picture"
-            android:textColor="#7B5CC9"
+            android:textColor="@color/Primary_color"
             android:textStyle="bold"
             android:textSize="14sp" />
     </LinearLayout>
@@ -194,8 +195,7 @@
         android:layout_width="0dp"
         android:layout_height="55dp"
         android:layout_margin="16dp"
-        android:background="@drawable/bg"
-        android:backgroundTint="#7B5CC9"
+        android:backgroundTint="@color/Primary_color"
         android:text="Save Changes"
         android:textAllCaps="false"
         android:textColor="@color/white"

@@ -1,6 +1,7 @@
 package com.hstan.autoservify.ui.main.Shops
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.ImageView
@@ -21,6 +22,7 @@ class ShopActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     lateinit var binding: ActivityShopBinding
     private var currentShop: Shop? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

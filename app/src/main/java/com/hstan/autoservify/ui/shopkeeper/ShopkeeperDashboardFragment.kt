@@ -31,13 +31,13 @@ class ShopkeeperDashboardFragment : Fragment() {
     lateinit var dashboardOrderAdapter: DashboardOrderAdapter
     lateinit var dashboardAppointmentAdapter: DashboardAppointmentAdapter
     lateinit var binding: FragmentShopkeeperDashboardBinding
-    
+
     private var currentShop: Shop? = null
-    
+
     // Data loading state management
     private var isDataLoaded = false
     private var isDataLoading = false
-    
+
     // Sales calculation variables
     private var todayOrdersAmount = 0
     private var todayAppointmentsAmount = 0
@@ -60,7 +60,7 @@ class ShopkeeperDashboardFragment : Fragment() {
         // Setup RecyclerViews for orders and appointments
         binding.recentOrdersRecyclerview.adapter = dashboardOrderAdapter
         binding.recentOrdersRecyclerview.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        
+
         binding.recentAppointmentsRecyclerview.adapter = dashboardAppointmentAdapter
         binding.recentAppointmentsRecyclerview.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
@@ -111,12 +111,10 @@ class ShopkeeperDashboardFragment : Fragment() {
     private fun showLoadingState() {
         // Hide content while loading to prevent flash of old data
         binding.root.alpha = 0.3f
-        
+
         // Set loading placeholders
         binding.shopkeeperNameText.text = "Loading..."
-        binding.shopNameText.text = "Loading shop info..."
-        binding.shopLocationText.text = ""
-        
+
         // Set loading stats
         binding.salesCount.text = "--"
         binding.ordersPendingCount.text = "--"
@@ -135,20 +133,20 @@ class ShopkeeperDashboardFragment : Fragment() {
 
     private fun loadShopkeeperData() {
         if (isDataLoading) return // Prevent multiple simultaneous loads
-        
+
         isDataLoading = true
         lifecycleScope.launch {
             try {
                 val authRepository = AuthRepository()
                 val currentUser = authRepository.getCurrentUser()
-                
+
                 if (currentUser != null) {
                     val result = authRepository.getUserProfile(currentUser.uid)
                     if (result.isSuccess) {
                         val userProfile = result.getOrThrow()
                         // Update shopkeeper name
                         updateShopkeeperName(userProfile.name ?: userProfile.email ?: "Shopkeeper")
-                        
+
                         if (userProfile.userType == "shop_owner") {
                             userProfile.shopId?.let { shopId ->
                                 // Load all data concurrently but wait for completion
@@ -156,7 +154,7 @@ class ShopkeeperDashboardFragment : Fragment() {
                                 loadDashboardStats(shopId)
                                 loadRecentOrders(shopId)
                                 loadRecentAppointments(shopId)
-                                
+
                                 // Mark as loaded and show content
                                 isDataLoaded = true
                                 showLoadedState()
@@ -193,7 +191,7 @@ class ShopkeeperDashboardFragment : Fragment() {
             try {
                 val authRepository = AuthRepository()
                 val currentUser = authRepository.getCurrentUser()
-                
+
                 if (currentUser != null) {
                     val result = authRepository.getUserProfile(currentUser.uid)
                     if (result.isSuccess) {
@@ -221,19 +219,14 @@ class ShopkeeperDashboardFragment : Fragment() {
                 val userShop = shops.find { it.id == shopId }
                 userShop?.let { shop ->
                     currentShop = shop
-                    updateShopInfo(shop)
+
                 }
             }
         }
     }
 
-    private fun updateShopInfo(shop: Shop) {
-        binding.shopNameText.text = shop.title
-        binding.shopLocationText.text = shop.address
-        // You can load shop image here if needed
-        // Glide.with(this).load(shop.imageUrl).into(binding.shopImage)
-    }
-    
+
+
     private fun updateShopkeeperName(userName: String) {
         binding.shopkeeperNameText.text = userName.ifEmpty { "Shopkeeper" }
     }
@@ -241,11 +234,11 @@ class ShopkeeperDashboardFragment : Fragment() {
     private fun loadDashboardStats(shopId: String) {
         val orderRepository = OrderRepository()
         val appointmentRepository = AppointmentRepository()
-        
+
         // Get today's date for filtering
         val today = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
             .format(java.util.Date())
-        
+
         // Launch orders collection in separate coroutine
         lifecycleScope.launch {
             try {
@@ -254,18 +247,18 @@ class ShopkeeperDashboardFragment : Fragment() {
                     val todayOrders = orders.filter { order ->
                         order.orderDate.contains(today)
                     }
-                    
+
                     // Calculate total amount from today's orders
                     todayOrdersAmount = todayOrders.sumOf { order ->
                         (order.item?.price ?: 0) * order.quantity
                     }
-                    
+
                     // Orders pending (orders with "pending" or "Order Placed" status)
                     val pendingOrders = orders.count { order ->
-                        order.status.contains("pending", ignoreCase = true) || 
-                        order.status.contains("Order Placed", ignoreCase = true)
+                        order.status.contains("pending", ignoreCase = true) ||
+                                order.status.contains("Order Placed", ignoreCase = true)
                     }
-                    
+
                     // Update UI with total sales amount
                     updateTotalSales()
                     binding.ordersPendingCount.text = pendingOrders.toString()
@@ -276,14 +269,14 @@ class ShopkeeperDashboardFragment : Fragment() {
                 binding.ordersPendingCount.text = "0"
             }
         }
-        
+
         // Launch appointments collection in separate coroutine
         lifecycleScope.launch {
             try {
                 appointmentRepository.getShopAppointments(shopId).collect { appointments ->
                     try {
                         println("ShopkeeperDashboard: Received ${appointments.size} appointments from Firestore")
-                        
+
                         // Filter appointments that actually match our shopId (in case of data inconsistencies)
                         // Also handle null/empty shopId values from old data
                         val validAppointments = appointments.filter { appointment ->
@@ -291,31 +284,31 @@ class ShopkeeperDashboardFragment : Fragment() {
                             val currentShopId = shopId.trim()
                             appointmentShopId.isNotEmpty() && appointmentShopId == currentShopId
                         }
-                        
+
                         println("ShopkeeperDashboard: ${validAppointments.size} valid appointments for this shop")
-                        
+
                         // Filter today's appointments for sales calculation
                         val todayAppointments = validAppointments.filter { appointment ->
                             appointment.appointmentDate == today
                         }
-                        
+
                         // Calculate total amount from today's appointments
                         todayAppointmentsAmount = todayAppointments.sumOf { appointment ->
                             appointment.bill.toIntOrNull() ?: 0
                         }
-                        
+
                         // Update UI with total booked appointments count (not just today's)
                         // Count all appointments that are not cancelled
                         val totalBookedAppointments = validAppointments.filter { appointment ->
                             !appointment.status.contains("cancelled", ignoreCase = true) &&
-                            !appointment.status.contains("canceled", ignoreCase = true)
+                                    !appointment.status.contains("canceled", ignoreCase = true)
                         }
-                        
+
                         println("ShopkeeperDashboard: ${totalBookedAppointments.size} total booked appointments")
-                        
+
                         // Always show a number, even if 0
                         binding.appointmentsPendingCount.text = totalBookedAppointments.size.toString()
-                        
+
                         // Update total sales with appointments amount
                         updateTotalSales()
                     } catch (e: Exception) {
@@ -331,11 +324,11 @@ class ShopkeeperDashboardFragment : Fragment() {
                 binding.appointmentsPendingCount.text = "0"
             }
         }
-        
+
         // Set default review score (you can implement actual review system later)
         binding.averageReview.text = "4.8"
     }
-    
+
     private fun updateTotalSales() {
         val totalSales = todayOrdersAmount + todayAppointmentsAmount
         binding.salesCount.text = "Rs $totalSales"

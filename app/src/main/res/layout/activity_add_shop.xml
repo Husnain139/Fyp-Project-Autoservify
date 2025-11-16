@@ -5,21 +5,33 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.shop.AddShopActivity">
+    tools:context=".ui.main.Shops.AddShopActivity">
 
+
+    <ImageView
+        android:id="@+id/backArrow"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/arroww2" />
     <!-- Title -->
     <TextView
         android:id="@+id/headerText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="Add Shop Details"
-        android:textAlignment="center"
-        android:textSize="30sp"
+        android:textAlignment="viewStart"
+        android:textColor="@color/black"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/backArrow" />
 
     <!-- Shop Name -->
     <com.google.android.material.textfield.TextInputLayout
@@ -27,19 +39,23 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:textColorHint="@color/Light_primary"
+        app:hintTextColor="@color/Light_primary"
         android:hint="Shop Name"
-        app:layout_constraintTop_toBottomOf="@id/headerText"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/AddShopImage">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/titleInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:background="@drawable/input_bg"
+            android:textColorHint="@color/Light_primary"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Shop Description -->
@@ -51,6 +67,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:textColorHint="@color/Light_primary"
+        app:hintTextColor="@color/Light_primary"
         android:hint="Shop Description"
         app:layout_constraintTop_toBottomOf="@id/titleInputLayout"
         app:layout_constraintStart_toStartOf="parent"
@@ -60,7 +78,9 @@
             android:id="@+id/descriptionInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textMultiLine" />
+            android:inputType="textMultiLine"
+            android:background="@drawable/input_bg"
+            android:textColorHint="@color/Light_primary"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Shop Address -->
@@ -72,6 +92,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:textColorHint="@color/Light_primary"
+        app:hintTextColor="@color/Light_primary"
         android:hint="Shop Address"
         app:layout_constraintTop_toBottomOf="@id/descriptionInputLayout"
         app:layout_constraintStart_toStartOf="parent"
@@ -81,7 +103,9 @@
             android:id="@+id/addressInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPostalAddress" />
+            android:inputType="textPostalAddress"
+            android:background="@drawable/input_bg"
+            android:textColorHint="@color/Light_primary"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Shop Phone -->
@@ -93,6 +117,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:textColorHint="@color/Light_primary"
+        app:hintTextColor="@color/Light_primary"
         android:hint="Shop Phone"
         app:layout_constraintTop_toBottomOf="@id/addressInputLayout"
         app:layout_constraintStart_toStartOf="parent"
@@ -102,7 +128,9 @@
             android:id="@+id/phoneInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="phone" />
+            android:inputType="phone"
+            android:background="@drawable/input_bg"
+            android:textColorHint="@color/Light_primary"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Shop Email -->
@@ -114,6 +142,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:textColorHint="@color/Light_primary"
+        app:hintTextColor="@color/Light_primary"
         android:hint="Shop Email"
         app:layout_constraintTop_toBottomOf="@id/phoneInputLayout"
         app:layout_constraintStart_toStartOf="parent"
@@ -123,7 +153,9 @@
             android:id="@+id/emailInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"
+            android:background="@drawable/input_bg"
+            android:textColorHint="@color/Light_primary"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Add Shop Button -->
@@ -131,13 +163,35 @@
         android:id="@+id/submitButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/custom_button"
         android:backgroundTint="@null"
+        app:backgroundTint="@null"
         android:text="Add Shop"
         android:textSize="16sp"
         app:layout_constraintTop_toBottomOf="@id/emailInputLayout"
         app:layout_constraintStart_toStartOf="@id/emailInputLayout"
         app:layout_constraintEnd_toEndOf="@id/emailInputLayout" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="Enter your shop details to create Shop"
+        android:textColor="@color/Light_primary"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/headerText"
+        app:layout_constraintTop_toBottomOf="@+id/headerText" />
+
+    <ImageView
+        android:id="@+id/AddShopImage"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/addimage2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

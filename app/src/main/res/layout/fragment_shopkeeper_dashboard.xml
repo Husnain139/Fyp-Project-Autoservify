@@ -9,491 +9,465 @@
     android:clipToPadding="false"
     tools:context=".ui.shopkeeper.ShopkeeperDashboardFragment">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:layout_height="match_parent">
 
-        <!-- Welcome Section - Clean & Minimal -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="28dp"
-            android:orientation="vertical">
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/headerCard"
+            android:layout_width="0dp"
+            android:layout_height="430dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:cardBackgroundColor="@color/Primary_color"
+            app:shapeAppearanceOverlay="@style/BottomRoundedCard">
 
-            <!-- Welcome Message -->
-            <TextView
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Welcome back,"
-                android:textColor="#49454F"
-                android:textSize="16sp"
-                android:fontFamily="sans-serif"
-                android:layout_marginBottom="4dp" />
+                android:layout_height="match_parent">
 
-            <!-- Shopkeeper Name -->
-            <TextView
-                android:id="@+id/shopkeeper_name_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="M Arslan Sarwar"
-                android:textColor="#1C1B1F"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                android:fontFamily="sans-serif"
-                android:layout_marginBottom="8dp" />
-
-            <!-- You have text -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="You have"
-                android:textColor="#49454F"
-                android:textSize="14sp"
-                android:fontFamily="sans-serif" />
-
-        </LinearLayout>
-
-        <!-- Statistics Grid - Clean Material 3 -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="28dp"
-            android:baselineAligned="false">
-
-            <!-- Left Column -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginEnd="10dp">
-
-                <!-- Today's Sales Card -->
-                <com.google.android.material.card.MaterialCardView
+                <TextView
+                    android:id="@+id/textView9"
                     android:layout_width="match_parent"
-                    android:layout_height="160dp"
-                    android:layout_marginBottom="12dp"
-                    app:cardBackgroundColor="#FFFFFF"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:strokeWidth="0dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground">
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:fontFamily="@font/outfit"
+                    android:text="Welcome Back 👋"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                    <LinearLayout
+                <TextView
+                    android:id="@+id/shopkeeper_name_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/outfit"
+                    android:text="Shop Name"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/editShopButton"
+                    app:layout_constraintStart_toStartOf="@+id/textView9"
+                    app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+                <ImageView
+                    android:id="@+id/editShopButton"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/edit"
+                    app:layout_constraintEnd_toEndOf="@+id/textView9"
+                    app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+                <TextView
+                    android:id="@+id/textView10"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/outfit"
+                    android:text="You have"
+                    android:textColor="@color/Light_primary"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="@+id/editShopButton"
+                    app:layout_constraintStart_toStartOf="@+id/shopkeeper_name_text"
+                    app:layout_constraintTop_toBottomOf="@+id/shopkeeper_name_text" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card1"
+                    android:layout_width="149dp"
+                    android:layout_height="123dp"
+                    android:layout_marginTop="16dp"
+                    app:cardBackgroundColor="@color/Primary_color"
+                    app:layout_constraintStart_toStartOf="@+id/textView10"
+                    app:layout_constraintTop_toBottomOf="@+id/textView10"
+                    app:shapeAppearanceOverlay="@style/RoundedCard">
+
+                    <ImageView
+                        android:id="@+id/imageView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/rect" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:padding="16dp"
-                        android:gravity="center">
+                        android:layout_height="match_parent">
 
-                        <!-- Icon -->
                         <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:src="@drawable/baseline_attach_money_24"
-                            android:layout_marginBottom="8dp"
-                            app:tint="#6750A4" />
+                            android:id="@+id/rect"
+                            android:layout_width="27dp"
+                            android:layout_height="42dp"
+                            android:layout_marginTop="8dp"
+                            android:src="@drawable/cashand"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                        <!-- Number -->
                         <TextView
                             android:id="@+id/sales_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="6dp"
-                            android:fontFamily="sans-serif"
-                            android:text="4"
-                            android:textColor="#1C1B1F"
-                            android:textSize="24sp"
-                            android:textStyle="bold"
+                            android:layout_marginTop="8dp"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/outfit"
                             android:maxLines="1"
-                            android:ellipsize="end" />
+                            android:text="--"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="@+id/rect"
+                            app:layout_constraintStart_toStartOf="@+id/rect"
+                            app:layout_constraintTop_toBottomOf="@+id/rect" />
 
-                        <!-- Label -->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/outfit"
+                            android:gravity="center"
+                            android:maxLines="2"
                             android:text="Sales Amount"
-                            android:textColor="#49454F"
-                            android:textSize="11sp"
-                            android:fontFamily="sans-serif"
-                            android:gravity="center"
-                            android:maxLines="2"
-                            android:ellipsize="end" />
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            app:layout_constraintEnd_toEndOf="@+id/sales_count"
+                            app:layout_constraintStart_toStartOf="@+id/sales_count"
+                            app:layout_constraintTop_toBottomOf="@+id/sales_count" />
 
-                    </LinearLayout>
-
+                    </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Appointments Card -->
                 <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="160dp"
-                    app:cardBackgroundColor="#FFFFFF"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:strokeWidth="0dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground">
+                    android:id="@+id/card2"
+                    android:layout_width="149dp"
+                    android:layout_height="123dp"
+                    android:layout_marginTop="16dp"
+                    app:cardBackgroundColor="@color/Primary_color"
+                    app:layout_constraintEnd_toEndOf="@+id/textView10"
+                    app:layout_constraintTop_toBottomOf="@+id/textView10"
+                    app:shapeAppearanceOverlay="@style/RoundedCard">
 
-                    <LinearLayout
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/rect" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:padding="16dp"
-                        android:gravity="center">
+                        android:layout_height="match_parent">
 
-                        <!-- Icon -->
                         <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:src="@drawable/baseline_event_24"
-                            android:layout_marginBottom="8dp"
-                            app:tint="#6750A4" />
+                            android:id="@+id/staricon"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_marginTop="16dp"
+                            android:src="@drawable/star"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                        <!-- Number -->
-                        <TextView
-                            android:id="@+id/appointments_pending_count"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="7"
-                            android:textColor="#1C1B1F"
-                            android:textSize="24sp"
-                            android:textStyle="bold"
-                            android:fontFamily="sans-serif"
-                            android:layout_marginBottom="6dp"
-                            android:maxLines="1"
-                            android:ellipsize="end" />
-
-                        <!-- Label -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Appointments"
-                            android:textColor="#49454F"
-                            android:textSize="11sp"
-                            android:fontFamily="sans-serif"
-                            android:gravity="center"
-                            android:maxLines="2"
-                            android:ellipsize="end" />
-
-                    </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-
-            </LinearLayout>
-
-            <!-- Right Column -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginStart="10dp">
-
-                <!-- Orders Card -->
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="160dp"
-                    android:layout_marginBottom="12dp"
-                    app:cardBackgroundColor="#FFFFFF"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:strokeWidth="0dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:padding="16dp"
-                        android:gravity="center">
-
-                        <!-- Icon -->
-                        <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:src="@drawable/baseline_shopping_cart_24"
-                            android:layout_marginBottom="8dp"
-                            app:tint="#6750A4" />
-
-                        <!-- Number -->
-                        <TextView
-                            android:id="@+id/orders_pending_count"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="7"
-                            android:textColor="#1C1B1F"
-                            android:textSize="28sp"
-                            android:textStyle="bold"
-                            android:fontFamily="sans-serif"
-                            android:layout_marginBottom="6dp" />
-
-                        <!-- Label -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Orders"
-                            android:textColor="#49454F"
-                            android:textSize="11sp"
-                            android:fontFamily="sans-serif"
-                            android:gravity="center"
-                            android:maxLines="2"
-                            android:ellipsize="end" />
-
-                    </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- Reviews Card -->
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="160dp"
-                    app:cardBackgroundColor="#FFFFFF"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:strokeWidth="0dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:padding="16dp"
-                        android:gravity="center">
-
-                        <!-- Icon -->
-                        <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:src="@drawable/baseline_star_24"
-                            android:layout_marginBottom="8dp"
-                            app:tint="#6750A4" />
-
-                        <!-- Number -->
                         <TextView
                             android:id="@+id/average_review"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="4.8"
-                            android:textColor="#1C1B1F"
-                            android:textSize="28sp"
+                            android:layout_marginTop="8dp"
+                            android:fontFamily="@font/outfit"
+                            android:text="--"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"
                             android:textStyle="bold"
-                            android:fontFamily="sans-serif"
-                            android:layout_marginBottom="6dp" />
+                            app:layout_constraintEnd_toEndOf="@+id/staricon"
+                            app:layout_constraintStart_toStartOf="@+id/staricon"
+                            app:layout_constraintTop_toBottomOf="@+id/staricon" />
 
-                        <!-- Label -->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Reviews"
-                            android:textColor="#49454F"
-                            android:textSize="11sp"
-                            android:fontFamily="sans-serif"
+                            android:layout_marginTop="8dp"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/outfit"
                             android:gravity="center"
                             android:maxLines="2"
-                            android:ellipsize="end" />
+                            android:text="Reviews"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            app:layout_constraintEnd_toEndOf="@+id/average_review"
+                            app:layout_constraintStart_toStartOf="@+id/average_review"
+                            app:layout_constraintTop_toBottomOf="@+id/average_review" />
 
-                    </LinearLayout>
-
+                    </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-            </LinearLayout>
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card3"
+                    android:layout_width="149dp"
+                    android:layout_height="123dp"
+                    android:layout_marginTop="24dp"
+                    app:cardBackgroundColor="@color/Primary_color"
+                    app:layout_constraintStart_toStartOf="@+id/card1"
+                    app:layout_constraintTop_toBottomOf="@+id/card1"
+                    app:shapeAppearanceOverlay="@style/RoundedCard">
 
-        </LinearLayout>
-
-        <!-- Shop Info Card - Clean Design -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="28dp"
-            app:cardBackgroundColor="#FFFFFF"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="3dp"
-            app:strokeWidth="0dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="20dp"
-                android:gravity="center_vertical">
-
-                <!-- Shop Image Circle -->
-                <ImageView
-                    android:id="@+id/shop_image"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:background="@drawable/circle_background"
-                    android:contentDescription="Shop Image"
-                    android:padding="14dp"
-                    android:src="@drawable/baseline_store_24"
-                    app:tint="#6750A4" />
-
-                <!-- Shop Info -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/shop_name_text"
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="My Auto Shop"
-                        android:textColor="#1C1B1F"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:fontFamily="sans-serif" />
+                        android:src="@drawable/rect" />
 
-                    <TextView
-                        android:id="@+id/shop_location_text"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/appIcon"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_marginTop="16dp"
+                            android:src="@drawable/apt"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/appointments_pending_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:fontFamily="@font/outfit"
+                            android:text="--"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="@+id/appIcon"
+                            app:layout_constraintStart_toStartOf="@+id/appIcon"
+                            app:layout_constraintTop_toBottomOf="@+id/appIcon" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/outfit"
+                            android:gravity="center"
+                            android:maxLines="2"
+                            android:text="Appointments"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            app:layout_constraintEnd_toEndOf="@+id/appointments_pending_count"
+                            app:layout_constraintStart_toStartOf="@+id/appointments_pending_count"
+                            app:layout_constraintTop_toBottomOf="@+id/appointments_pending_count" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card4"
+                    android:layout_width="149dp"
+                    android:layout_height="123dp"
+                    android:layout_marginTop="24dp"
+                    app:cardBackgroundColor="@color/Primary_color"
+                    app:layout_constraintEnd_toEndOf="@+id/card2"
+                    app:layout_constraintTop_toBottomOf="@+id/card2"
+                    app:shapeAppearanceOverlay="@style/RoundedCard">
+
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="Lahore, Pakistan"
-                        android:textColor="#49454F"
-                        android:textSize="14sp"
-                        android:fontFamily="sans-serif" />
+                        android:src="@drawable/rect" />
 
-                </LinearLayout>
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
-                <!-- Edit Button -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/edit_shop_button"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:minWidth="80dp"
-                    android:text="Edit"
-                    android:textSize="14sp"
-                    android:textColor="#6750A4"
-                    android:fontFamily="sans-serif"
-                    app:strokeColor="#6750A4"
-                    app:cornerRadius="20dp" />
+                        <ImageView
+                            android:id="@+id/carticon"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_marginTop="16dp"
+                            android:src="@drawable/cart"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-            </LinearLayout>
+                        <TextView
+                            android:id="@+id/orders_pending_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:fontFamily="@font/outfit"
+                            android:text="--"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="@+id/carticon"
+                            app:layout_constraintStart_toStartOf="@+id/carticon"
+                            app:layout_constraintTop_toBottomOf="@+id/carticon" />
 
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/outfit"
+                            android:gravity="center"
+                            android:maxLines="2"
+                            android:text="Active Orders"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            app:layout_constraintEnd_toEndOf="@+id/orders_pending_count"
+                            app:layout_constraintStart_toStartOf="@+id/orders_pending_count"
+                            app:layout_constraintTop_toBottomOf="@+id/orders_pending_count" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
         <!-- Recent Orders Section -->
-        <LinearLayout
-            android:id="@+id/recent_orders_section"
-            android:layout_width="match_parent"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/recent_orders_card"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:orientation="vertical">
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="12dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/headerCard"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:padding="12dp">
 
-                <TextView
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Recent Orders"
-                    android:textColor="#1C1B1F"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:fontFamily="sans-serif" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
 
-                <TextView
-                    android:id="@+id/view_all_orders_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
-                    android:padding="12dp"
-                    android:text="View all"
-                    android:textColor="#6750A4"
-                    android:textSize="14sp"
-                    android:fontFamily="sans-serif"
-                    android:minHeight="48dp"
-                    android:gravity="center" />
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_marginEnd="8dp"
+                        android:src="@drawable/orders" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Recent Orders"
+                        android:textColor="@color/Primary_color"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/outfit" />
+
+                    <TextView
+                        android:id="@+id/view_all_orders_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="View All"
+                        android:textColor="@color/Primary_color"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/outfit"
+                        android:padding="8dp" />
+
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recent_orders_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:clipToPadding="false"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    tools:listitem="@layout/item_order" />
 
             </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recent_orders_recyclerview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:clipToPadding="false"
-                android:paddingStart="4dp"
-                android:paddingEnd="4dp"
-                tools:listitem="@layout/item_order" />
-
-        </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
         <!-- Recent Appointments Section -->
-        <LinearLayout
-            android:id="@+id/recent_appointments_section"
-            android:layout_width="match_parent"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/recent_appointments_card"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:orientation="vertical">
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recent_orders_card">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:padding="12dp">
 
-                <TextView
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Recent Appointments"
-                    android:textColor="#1C1B1F"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:fontFamily="sans-serif" />
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/view_all_appointments_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
-                    android:padding="12dp"
-                    android:text="View all"
-                    android:textColor="#6750A4"
-                    android:textSize="14sp"
-                    android:fontFamily="sans-serif"
-                    android:minHeight="48dp"
-                    android:gravity="center" />
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_marginEnd="8dp"
+                        android:src="@drawable/serviceapt" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/outfit"
+                        android:text="Recent Appointments"
+                        android:textColor="@color/Primary_color"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/view_all_appointments_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/outfit"
+                        android:padding="8dp"
+                        android:text="View All"
+                        android:textColor="@color/Primary_color"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recent_appointments_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:clipToPadding="false"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    tools:listitem="@layout/item_order" />
 
             </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recent_appointments_recyclerview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:clipToPadding="false"
-                android:paddingStart="4dp"
-                android:paddingEnd="4dp"
-                tools:listitem="@layout/item_order" />
 
-        </LinearLayout>
 
-    </LinearLayout>
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
