@@ -335,15 +335,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
             android:layout_marginTop="24dp"
-            android:layout_marginBottom="12dp"
+            android:layout_marginEnd="16dp"
+            app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="20dp"
             app:cardElevation="2dp"
-            app:cardBackgroundColor="@color/white"
-            app:layout_constraintTop_toBottomOf="@id/headerCard"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/headerCard">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -354,9 +353,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="8dp">
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="35dp"
@@ -368,28 +367,28 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:fontFamily="@font/outfit"
                         android:text="Recent Orders"
                         android:textColor="@color/Primary_color"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:fontFamily="@font/outfit" />
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/view_all_orders_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/outfit"
+                        android:padding="8dp"
                         android:text="View All"
                         android:textColor="@color/Primary_color"
-                        android:textSize="14sp"
-                        android:fontFamily="@font/outfit"
-                        android:padding="8dp" />
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recent_orders_recyclerview"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
+                    android:layout_height="wrap_content"
                     android:clipToPadding="false"
                     android:paddingStart="4dp"
                     android:paddingEnd="4dp"
@@ -457,7 +456,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recent_appointments_recyclerview"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
+                    android:layout_height="wrap_content"
                     android:clipToPadding="false"
                     android:paddingStart="4dp"
                     android:paddingEnd="4dp"

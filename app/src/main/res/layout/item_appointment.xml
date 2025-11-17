@@ -125,10 +125,10 @@
                     android:id="@+id/appointmentDateText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="25/12/2023"
                     android:backgroundTint="@color/Light_primary"
+                    android:text="25/12/2023"
+                    android:textColor="@color/Primary_color"
                     android:textSize="14sp"
-                    android:textColor="@color/design_default_color_primary"
                     android:textStyle="bold"
                     tools:text="25/12/2023" />
 
@@ -153,8 +153,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="10:00 AM"
+                    android:textColor="@color/Primary_color"
                     android:textSize="14sp"
-                    android:textColor="@color/design_default_color_primary"
                     android:textStyle="bold"
                     tools:text="10:00 AM" />
 

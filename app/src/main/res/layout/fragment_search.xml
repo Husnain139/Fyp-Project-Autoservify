@@ -24,7 +24,7 @@
             app:boxCornerRadiusTopEnd="12dp"
             app:boxCornerRadiusBottomStart="12dp"
             app:boxCornerRadiusBottomEnd="12dp">
-            
+
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/search_edit_text"
                 android:layout_width="match_parent"
@@ -45,11 +45,14 @@
                 android:id="@+id/chip_shops"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/light_gray"
                 android:text="Shops"
                 android:layout_marginEnd="8dp"
                 android:checkable="true"
-                android:checked="true" />
+                android:checked="true"
+                android:textColor="@color/chip_text_color_selector"
+                app:chipBackgroundColor="@color/primary_color_selector"
+                app:checkedIconVisible="false"
+                app:rippleColor="@color/Primary_color" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_services"
@@ -57,14 +60,22 @@
                 android:layout_height="wrap_content"
                 android:text="Services"
                 android:layout_marginEnd="8dp"
-                android:checkable="true" />
+                android:checkable="true"
+                android:textColor="@color/chip_text_color_selector"
+                app:chipBackgroundColor="@color/primary_color_selector"
+                app:checkedIconVisible="false"
+                app:rippleColor="@color/Primary_color" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_parts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Spare Parts"
-                android:checkable="true" />
+                android:checkable="true"
+                android:textColor="@color/chip_text_color_selector"
+                app:chipBackgroundColor="@color/primary_color_selector"
+                app:checkedIconVisible="false"
+                app:rippleColor="@color/Primary_color" />
 
         </LinearLayout>
 

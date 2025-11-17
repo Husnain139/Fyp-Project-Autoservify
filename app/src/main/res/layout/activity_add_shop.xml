@@ -118,7 +118,6 @@
                         android:id="@+id/AddShopImage"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/circle_background"
                         android:contentDescription="Shop Image"
                         android:padding="8dp"
                         android:scaleType="centerCrop"
@@ -259,6 +258,7 @@
             app:hintTextColor="@color/Primary_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:startIconDrawable="@drawable/phone"
             app:layout_constraintTop_toBottomOf="@id/addressInputLayout">
 
             <com.google.android.material.textfield.TextInputEditText

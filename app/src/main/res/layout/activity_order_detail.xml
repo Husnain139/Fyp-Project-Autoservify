@@ -39,6 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#FFFFFFFF"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="4dp"
                 app:strokeWidth="0dp">
@@ -52,11 +53,11 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
                         android:text="Order Item"
                         android:textColor="@color/text_primary"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="16dp" />
+                        android:textStyle="bold" />
 
                     <!-- Single Item Section -->
                     <LinearLayout
@@ -99,22 +100,22 @@
                                     android:id="@+id/itemTitle"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginBottom="4dp"
                                     android:text="Item Title"
                                     android:textColor="@color/text_primary"
                                     android:textSize="16sp"
-                                    android:textStyle="bold"
-                                    android:layout_marginBottom="4dp" />
+                                    android:textStyle="bold" />
 
                                 <TextView
                                     android:id="@+id/itemDescription"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginBottom="8dp"
+                                    android:ellipsize="end"
+                                    android:maxLines="2"
                                     android:text="Item description"
                                     android:textColor="@color/text_secondary"
-                                    android:textSize="14sp"
-                                    android:layout_marginBottom="8dp"
-                                    android:maxLines="2"
-                                    android:ellipsize="end" />
+                                    android:textSize="14sp" />
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
@@ -125,11 +126,11 @@
                                         android:id="@+id/itemPrice"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:layout_marginEnd="16dp"
                                         android:text="₹0"
                                         android:textColor="@color/primary"
                                         android:textSize="16sp"
-                                        android:textStyle="bold"
-                                        android:layout_marginEnd="16dp" />
+                                        android:textStyle="bold" />
 
                                     <TextView
                                         android:id="@+id/orderQuantity"
@@ -149,18 +150,18 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
-                            android:background="@color/divider"
-                            android:layout_marginVertical="16dp" />
+                            android:layout_marginVertical="16dp"
+                            android:background="@color/divider" />
 
                         <TextView
                             android:id="@+id/totalPrice"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:gravity="end"
                             android:text="Total: ₹0"
                             android:textColor="@color/success_green"
                             android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:gravity="end" />
+                            android:textStyle="bold" />
 
                     </LinearLayout>
 
@@ -175,36 +176,36 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="12dp"
                             android:text="Order Parts"
                             android:textColor="@color/text_primary"
                             android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:layout_marginBottom="12dp" />
+                            android:textStyle="bold" />
 
                         <LinearLayout
                             android:id="@+id/partsListContainer"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
+                            android:layout_marginBottom="16dp"
                             android:divider="@android:drawable/divider_horizontal_bright"
-                            android:showDividers="middle"
-                            android:layout_marginBottom="16dp" />
+                            android:orientation="vertical"
+                            android:showDividers="middle" />
 
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
-                            android:background="@color/divider"
-                            android:layout_marginVertical="8dp" />
+                            android:layout_marginVertical="8dp"
+                            android:background="@color/divider" />
 
                         <TextView
                             android:id="@+id/multiPartTotal"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:gravity="end"
                             android:text="Total: ₹0"
                             android:textColor="@color/success_green"
                             android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:gravity="end" />
+                            android:textStyle="bold" />
 
                     </LinearLayout>
 
@@ -217,6 +218,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="4dp"
                 app:strokeWidth="0dp">
@@ -279,6 +281,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="4dp"
                 app:strokeWidth="0dp">
@@ -385,6 +388,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="4dp"
                 app:strokeWidth="0dp">
@@ -462,15 +466,15 @@
                     android:id="@+id/confirmOrderBtn"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
+                    android:layout_marginBottom="12dp"
                     android:text="Confirm Order"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    app:backgroundTint="@color/blue"
+                    android:visibility="gone"
+                    app:backgroundTint="@color/Primary_color"
                     app:cornerRadius="12dp"
                     app:icon="@drawable/ic_check"
-                    app:iconGravity="textStart"
-                    android:layout_marginBottom="12dp"
-                    android:visibility="gone" />
+                    app:iconGravity="textStart" />
 
                 <!-- Mark as Delivered Button (Shopkeeper) -->
                 <com.google.android.material.button.MaterialButton

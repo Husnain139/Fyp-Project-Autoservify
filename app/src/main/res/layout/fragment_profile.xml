@@ -167,9 +167,9 @@
                 android:paddingHorizontal="12dp">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/helpcenter" />
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/help" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -197,9 +197,9 @@
                 android:paddingHorizontal="12dp">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/about1" />
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/about" />
 
                 <TextView
                     android:layout_width="0dp"
