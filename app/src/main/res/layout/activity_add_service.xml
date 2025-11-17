@@ -122,6 +122,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/custom_button"
         android:backgroundTint="@null"
         android:text="Add Service"
@@ -130,5 +131,71 @@
         app:layout_constraintEnd_toEndOf="@+id/priceInputLayout"
         app:layout_constraintStart_toStartOf="@+id/priceInputLayout"
         app:layout_constraintTop_toBottomOf="@+id/priceInputLayout" />
+
+    <!-- Upload Progress Overlay (Small - for image upload only) -->
+    <FrameLayout
+        android:id="@+id/uploadProgressOverlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/srvImage"
+        app:layout_constraintStart_toStartOf="@+id/srvImage"
+        app:layout_constraintTop_toTopOf="@+id/srvImage"
+        app:layout_constraintBottom_toBottomOf="@+id/srvImage">
+
+        <ProgressBar
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/Primary_color" />
+    </FrameLayout>
+
+    <!-- Loading Overlay (Full screen - for saving/updating) -->
+    <FrameLayout
+        android:id="@+id/loadingOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#CC000000"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="8dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="32dp">
+
+                <ProgressBar
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:indeterminateTint="@color/Primary_color" />
+
+                <TextView
+                    android:id="@+id/loadingText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/outfit"
+                    android:text="Saving service..."
+                    android:textColor="@color/Primary_color"
+                    android:textSize="16sp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

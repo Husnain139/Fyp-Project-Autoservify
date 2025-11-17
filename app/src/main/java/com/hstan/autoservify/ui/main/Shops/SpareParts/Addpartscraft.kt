@@ -84,10 +84,11 @@ class Addpartscraft : AppCompatActivity() {
         lifecycleScope.launch {
             addViewModel.isSuccessfullySaved.collect {
                 it?.let {
+                    binding.loadingOverlay.visibility = View.GONE
                     if (it == true) {
                         Toast.makeText(
                             this@Addpartscraft,
-                            "Successfully saved",
+                            "Spare part saved successfully!",
                             Toast.LENGTH_SHORT
                         ).show()
                         finish()
@@ -116,7 +117,8 @@ class Addpartscraft : AppCompatActivity() {
         lifecycleScope.launch {
             addViewModel.failureMessage.collect {
                 it?.let {
-                    Toast.makeText(this@Addpartscraft, it, Toast.LENGTH_SHORT).show()
+                    binding.loadingOverlay.visibility = View.GONE
+                    Toast.makeText(this@Addpartscraft, "Error: $it", Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -217,10 +219,15 @@ class Addpartscraft : AppCompatActivity() {
                                 partsCraft.shopId = userProfile.shopId!!
                                 
                                 // Save the parts craft with shopId
-                                if (uri == null)
+                                if (uri == null) {
+                                    binding.loadingOverlay.visibility = View.VISIBLE
+                                    binding.loadingText.text = "Saving spare part..."
                                     addViewModel.saveHandCraft(partsCraft)
-                                else
-                                    addViewModel.uploadImageAndSaveHandCraft(getRealPathFromURI(uri!!)!!, partsCraft)
+                                } else {
+                                    binding.loadingOverlay.visibility = View.VISIBLE
+                                    binding.loadingText.text = "Uploading image..."
+                                    addViewModel.uploadImageAndSaveHandCraft(uri.toString(), partsCraft)
+                                }
                             } else {
                                 Toast.makeText(this@Addpartscraft, "Only shop owners can add spare parts", Toast.LENGTH_SHORT).show()
                             }
@@ -258,14 +265,4 @@ class Addpartscraft : AppCompatActivity() {
         }
     }
 
-    private fun getRealPathFromURI(uri: Uri): String? {
-        val projection = arrayOf(MediaStore.Images.Media.DATA)
-        contentResolver.query(uri, projection, null, null, null)?.use { cursor ->
-            val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-            if (cursor.moveToFirst()) {
-                return cursor.getString(columnIndex)
-            }
-        }
-        return null
-    }
 }

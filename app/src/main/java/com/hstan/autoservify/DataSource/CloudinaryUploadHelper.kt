@@ -9,18 +9,31 @@ import com.cloudinary.android.callback.UploadCallback
 class CloudinaryUploadHelper {
 
     companion object {
+        private var isInitialized = false
+
         fun initializeCloudinary(context: Context) {
-            val config = mapOf(
-                "cloud_name" to "dlhixad3n",
-                "api_key" to System.getenv("742872245591719"),
-                "api_secret" to System.getenv("5wTKcbrF0wyWhmO9FQIQtxxYWPI")
-            )
-            MediaManager.init(context, config)
+            if (isInitialized) {
+                Log.d("Cloudinary", "MediaManager already initialized")
+                return
+            }
+            
+            try {
+                val config = mapOf(
+                    "cloud_name" to "dlhixad3n",
+                    "api_key" to "742872245591719",
+                    "api_secret" to "5wTKcbrF0wyWhmO9FQIQtxxYWPI"
+                )
+                MediaManager.init(context, config)
+                isInitialized = true
+                Log.d("Cloudinary", "MediaManager initialized successfully")
+            } catch (e: Exception) {
+                Log.e("Cloudinary", "Error initializing MediaManager: ${e.message}")
+            }
         }
     }
 
     fun uploadFile(
-        fileUri: String, // Changed from filePath to URI
+        fileUri: String, // Content URI as string
         onComplete: (Boolean, String?) -> Unit
     ) {
         if (fileUri.isEmpty()) {
@@ -29,8 +42,13 @@ class CloudinaryUploadHelper {
             return
         }
 
-        MediaManager.get().upload(fileUri)
-            .callback(object : UploadCallback {
+        try {
+            // Handle content:// URIs properly by using the URI directly
+            Log.d("Cloudinary", "Starting upload for URI: $fileUri")
+            
+            MediaManager.get().upload(android.net.Uri.parse(fileUri))
+                .option("resource_type", "auto")
+                .callback(object : UploadCallback {
                 override fun onStart(requestId: String) {
                     Log.d("Cloudinary", "Upload started: $requestId")
                 }
@@ -60,5 +78,9 @@ class CloudinaryUploadHelper {
                     Log.e("Cloudinary", "Upload rescheduled: ${error?.description}")
                 }
             }).dispatch()
+        } catch (e: Exception) {
+            Log.e("Cloudinary", "Exception during upload setup: ${e.message}")
+            onComplete(false, "Upload setup failed: ${e.message}")
+        }
     }
 }

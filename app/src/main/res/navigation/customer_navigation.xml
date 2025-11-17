@@ -11,6 +11,11 @@
         android:label="item_home"
         tools:layout="@layout/fragment_customer_home" />
     <fragment
+        android:id="@+id/item_shops"
+        android:name="com.hstan.autoservify.ui.customer.CustomerShopsFragment"
+        android:label="item_shops"
+        tools:layout="@layout/fragment_customer_shops" />
+    <fragment
         android:id="@+id/item_search"
         android:name="com.hstan.autoservify.ui.main.home.SearchFragment"
         android:label="item_search"

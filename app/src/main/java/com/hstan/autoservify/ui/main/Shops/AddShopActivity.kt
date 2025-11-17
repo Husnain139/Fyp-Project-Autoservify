@@ -20,16 +20,17 @@ class AddShopActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddShopBinding
 
-    // ✅ Declare here — top level inside Activity class
-   // private val imagePicker = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-     //   uri?.let {
-         //   binding.AddShopImage.setImageURI(uri)
-           // uploadImageToCloudinary(uri)
-        //}
-    //}
+    // ✅ Image picker for gallery
+    private val imagePicker = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let {
+            binding.AddShopImage.setImageURI(uri)
+            uploadImageToCloudinary(uri)
+        }
+    }
 
     private lateinit var viewModel: AddShopViewModel
     private var uploadedImageUrl: String? = null   // ✅ store image URL
+    private var isImageUploading = false
 
 
 
@@ -64,9 +65,9 @@ class AddShopActivity : AppCompatActivity() {
         }
 
         // ✅ Pick image from gallery
-       // binding.AddShopImage.setOnClickListener {
-         //   imagePicker.launch("image/*")
-        //}
+        binding.AddShopImage.setOnClickListener {
+            imagePicker.launch("image/*")
+        }
 
         binding.backArrow.setOnClickListener {
             val intent = Intent(this, ShopkeeperDashboardFragment::class.java)
@@ -87,8 +88,8 @@ class AddShopActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            if (uploadedImageUrl.isNullOrEmpty()) {
-                Toast.makeText(this, "Please upload a shop image", Toast.LENGTH_SHORT).show()
+            if (isImageUploading) {
+                Toast.makeText(this, "Please wait, image is uploading...", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -104,7 +105,9 @@ class AddShopActivity : AppCompatActivity() {
                     this.email = email
                     this.ownerId = currentUser.uid
                     this.ownerName = currentUser.displayName ?: ""
-                    this.imageUrl = uploadedImageUrl ?: ""   // ✅ save Cloudinary image URL
+                    // Use uploaded image URL if available, otherwise use empty string
+                    // The app will show a default placeholder for shops without images
+                    this.imageUrl = uploadedImageUrl ?: ""
                 }
 
                 viewModel.saveShop(shop)
@@ -115,19 +118,34 @@ class AddShopActivity : AppCompatActivity() {
     }
 
     // ✅ upload image to Cloudinary
-    //private fun uploadImageToCloudinary(uri: Uri) {
-      //  val uploader = CloudinaryUploadHelper()
-        //Toast.makeText(this, "Uploading image...", Toast.LENGTH_SHORT).show()
+    private fun uploadImageToCloudinary(uri: Uri) {
+        val uploader = CloudinaryUploadHelper()
+        isImageUploading = true
+        
+        // Show uploading state
+        binding.uploadProgressText.visibility = android.view.View.VISIBLE
+        binding.uploadProgressBar.visibility = android.view.View.VISIBLE
+        binding.uploadSuccessIcon.visibility = android.view.View.GONE
+        Toast.makeText(this, "Uploading image...", Toast.LENGTH_SHORT).show()
 
-        //uploader.uploadFile(uri.toString()) { success, result ->
-          //  runOnUiThread {
-            //    if (success) {
-              //      uploadedImageUrl = result
-                //    Toast.makeText(this, "Image uploaded successfully!", Toast.LENGTH_SHORT).show()
-                //} else {
-                  //  Toast.makeText(this, "Upload failed: $result", Toast.LENGTH_SHORT).show()
-                //}
-            //}
-        //}
-    //}
+        uploader.uploadFile(uri.toString()) { success, result ->
+            runOnUiThread {
+                isImageUploading = false
+                binding.uploadProgressText.visibility = android.view.View.GONE
+                binding.uploadProgressBar.visibility = android.view.View.GONE
+                
+                if (success) {
+                    uploadedImageUrl = result
+                    Toast.makeText(this, "Image uploaded successfully!", Toast.LENGTH_SHORT).show()
+                    binding.uploadSuccessIcon.visibility = android.view.View.VISIBLE
+                } else {
+                    // Upload failed - but shop can still be created without image
+                    uploadedImageUrl = null
+                    Toast.makeText(this, "Image upload failed. You can continue without an image or try again.", Toast.LENGTH_LONG).show()
+                    binding.AddShopImage.setImageResource(com.hstan.autoservify.R.drawable.addimage2)
+                    binding.uploadSuccessIcon.visibility = android.view.View.GONE
+                }
+            }
+        }
+    }
 }

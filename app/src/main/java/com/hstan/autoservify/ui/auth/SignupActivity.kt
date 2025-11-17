@@ -48,6 +48,9 @@ class SignupActivity : AppCompatActivity() {
             }
         }
 
+        // Setup account type card selection
+        setupAccountTypeSelection()
+
         // Go to login
         binding.signupTxt.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
@@ -59,7 +62,6 @@ class SignupActivity : AppCompatActivity() {
             startActivity(intent)
             finish() // optional: closes current activity
         }
-
 
         // Sign up button click
         binding.loginbutton.setOnClickListener {
@@ -135,5 +137,57 @@ class SignupActivity : AppCompatActivity() {
         } else {
             "customer"
         }
+    }
+
+    private fun setupAccountTypeSelection() {
+        // Customer card click
+        binding.customerCard.setOnClickListener {
+            selectCustomerAccount()
+        }
+
+        // Shop owner card click
+        binding.shopOwnerCard.setOnClickListener {
+            selectShopOwnerAccount()
+        }
+
+        // Radio button clicks
+        binding.customerRadio.setOnClickListener {
+            selectCustomerAccount()
+        }
+
+        binding.shopOwnerRadio.setOnClickListener {
+            selectShopOwnerAccount()
+        }
+
+        // Initial selection
+        selectCustomerAccount()
+    }
+
+    private fun selectCustomerAccount() {
+        binding.customerRadio.isChecked = true
+        binding.shopOwnerRadio.isChecked = false
+        
+        // Update card styles
+        binding.customerCard.strokeWidth = 6
+        binding.customerCard.strokeColor = getColor(com.hstan.autoservify.R.color.Primary_color)
+        binding.customerCard.cardElevation = 4f
+        
+        binding.shopOwnerCard.strokeWidth = 2
+        binding.shopOwnerCard.strokeColor = getColor(com.hstan.autoservify.R.color.light_gray)
+        binding.shopOwnerCard.cardElevation = 2f
+    }
+
+    private fun selectShopOwnerAccount() {
+        binding.customerRadio.isChecked = false
+        binding.shopOwnerRadio.isChecked = true
+        
+        // Update card styles
+        binding.shopOwnerCard.strokeWidth = 6
+        binding.shopOwnerCard.strokeColor = getColor(com.hstan.autoservify.R.color.Primary_color)
+        binding.shopOwnerCard.cardElevation = 4f
+        
+        binding.customerCard.strokeWidth = 2
+        binding.customerCard.strokeColor = getColor(com.hstan.autoservify.R.color.light_gray)
+        binding.customerCard.cardElevation = 2f
     }
 }

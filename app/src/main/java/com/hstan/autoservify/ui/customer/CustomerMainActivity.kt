@@ -83,10 +83,22 @@ class CustomerMainActivity : AppCompatActivity(), NavigationView.OnNavigationIte
     }
 
     private fun navigateToFragment(fragmentId: Int) {
-        val navHostFragment = supportFragmentManager
-            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
-        navController.navigate(fragmentId)
+        try {
+            val navHostFragment = supportFragmentManager
+                .findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+            navHostFragment?.let {
+                val navController = it.navController
+                // Check if the destination exists before navigating
+                if (navController.graph.findNode(fragmentId) != null) {
+                    navController.navigate(fragmentId)
+                } else {
+                    Toast.makeText(this, "Navigation destination not found", Toast.LENGTH_SHORT).show()
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(this, "Navigation error: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun showLogoutConfirmationDialog() {

@@ -7,6 +7,11 @@
         android:icon="@drawable/baseline_home_filled_24"/>
 
     <item
+        android:id="@+id/item_shops"
+        android:title="Shops"
+        android:icon="@drawable/baseline_store_24"/>
+
+    <item
         android:id="@+id/item_search"
         android:title="Search"
         android:icon="@drawable/baseline_search_24"/>
