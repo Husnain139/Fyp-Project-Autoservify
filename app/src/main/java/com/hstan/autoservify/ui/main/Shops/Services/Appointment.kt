@@ -7,6 +7,7 @@ class Appointment(
     var userContact: String = "",
     var serviceId: String = "",
     var serviceName: String = "", //
+    var serviceImageUrl: String = "", // Service image URL
     var shopId: String = "",  // 🆕 Link appointment to specific shop
     var status: String = "Pending", // "Pending", "Confirmed", "Completed"
     var appointmentId: String = "",

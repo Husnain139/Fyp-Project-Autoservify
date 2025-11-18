@@ -37,6 +37,15 @@ class ShopActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             currentShop = shop // Store the shop for later use
             binding.titleInput.text = shop.title
             binding.descriptionInput.text = shop.description
+            binding.description.text = shop.description
+            
+            // Load shop image
+            com.bumptech.glide.Glide.with(this)
+                .load(shop.imageUrl.ifEmpty { R.drawable.logo })
+                .error(R.drawable.logo)
+                .placeholder(R.drawable.logo)
+                .centerCrop()
+                .into(binding.imageView2)
         }
 
         val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)

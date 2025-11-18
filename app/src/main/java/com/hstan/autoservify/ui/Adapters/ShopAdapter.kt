@@ -24,6 +24,13 @@ class ShopAdapter(private var items: List<Shop>) : RecyclerView.Adapter<ShopAdap
         holder.binding.description.text = shop.description
         holder.binding.location.text = "📍 ${shop.address}"
 
+        // Load shop image
+        com.bumptech.glide.Glide.with(holder.itemView.context)
+            .load(shop.imageUrl.ifEmpty { com.hstan.autoservify.R.drawable.logo })
+            .error(com.hstan.autoservify.R.drawable.logo)
+            .placeholder(com.hstan.autoservify.R.drawable.logo)
+            .into(holder.binding.imageView)
+
         holder.itemView.setOnClickListener {
             val context = holder.itemView.context
             val intent = Intent(context, ShopActivity::class.java)

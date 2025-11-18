@@ -7,5 +7,6 @@ data class Service(
     var description: String = "",
     var price: Double = 0.0,
     var rating: Double = 0.0,
-    var shopId: String = "" // Shop this service belongs to
+    var shopId: String = "", // Shop this service belongs to
+    var imageUrl: String = "" // Service image URL from Cloudinary
 )

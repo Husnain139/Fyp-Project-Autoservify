@@ -482,6 +482,7 @@ class ManualOrderServiceActivity : AppCompatActivity() {
             userContact = phone,
             serviceId = selectedService?.id ?: "",
             serviceName = selectedService?.name ?: "",
+            serviceImageUrl = selectedService?.imageUrl ?: "", // Include service image URL
             shopId = this.shopId,
             status = "Pending",
             appointmentDate = appointmentDate,

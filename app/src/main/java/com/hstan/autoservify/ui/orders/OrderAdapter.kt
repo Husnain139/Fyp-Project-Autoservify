@@ -121,9 +121,11 @@ class OrderAdapter(
             holder.binding.manualOrderBadge.visibility = View.GONE
         }
 
+        // Load service image for appointment
         Glide.with(holder.itemView.context)
-            .load(R.drawable.logo) // Appointment has no image field
+            .load(appointment.serviceImageUrl.ifEmpty { R.drawable.logo })
             .placeholder(R.drawable.logo)
+            .error(R.drawable.logo)
             .into(holder.binding.orderItemImage)
 
         holder.itemView.setOnClickListener { 

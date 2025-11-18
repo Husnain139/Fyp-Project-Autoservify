@@ -33,6 +33,14 @@ class Service_Detail_Activity : AppCompatActivity() {
                 service = it
                 binding.srvTitle.text = it.name
                 binding.srvDesc.text = it.description
+                binding.srvPrice.text = "Rs. ${it.price}"
+                
+                // Load service image
+                com.bumptech.glide.Glide.with(this)
+                    .load(it.imageUrl.ifEmpty { com.hstan.autoservify.R.drawable.logo })
+                    .error(com.hstan.autoservify.R.drawable.logo)
+                    .placeholder(com.hstan.autoservify.R.drawable.logo)
+                    .into(binding.ShopPic)
             }
         })
 

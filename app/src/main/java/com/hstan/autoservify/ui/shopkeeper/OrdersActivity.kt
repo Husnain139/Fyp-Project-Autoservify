@@ -46,10 +46,17 @@ class OrdersActivity : AppCompatActivity() {
 
     private fun setupFAB() {
         val fab = findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.fabCreateManualOrder)
-        fab.setOnClickListener {
-            val intent = Intent(this, com.hstan.autoservify.ui.orders.ManualOrderServiceActivity::class.java)
-            intent.putExtra("ENTRY_MODE", "ORDER")
-            startActivity(intent)
+        
+        // Hide FAB if this is customer view
+        val isCustomerView = intent.getBooleanExtra("IS_CUSTOMER_VIEW", false)
+        if (isCustomerView) {
+            fab.visibility = android.view.View.GONE
+        } else {
+            fab.setOnClickListener {
+                val intent = Intent(this, com.hstan.autoservify.ui.orders.ManualOrderServiceActivity::class.java)
+                intent.putExtra("ENTRY_MODE", "ORDER")
+                startActivity(intent)
+            }
         }
     }
 
@@ -149,14 +156,24 @@ class OrdersActivity : AppCompatActivity() {
                     val result = authRepository.getUserProfile(currentUser.uid)
                     if (result.isSuccess) {
                         val userProfile = result.getOrThrow()
-                        val shopId = userProfile.shopId
                         
-                        if (!shopId.isNullOrEmpty()) {
-                            println("OrdersActivity: Loading orders for shop: $shopId")
-                            loadOrdersByShopId(shopId)
+                        // Check if this is a customer viewing their order history
+                        val isCustomerView = intent.getBooleanExtra("IS_CUSTOMER_VIEW", false)
+                        
+                        if (isCustomerView) {
+                            println("OrdersActivity: Loading customer orders for user: ${currentUser.uid}")
+                            loadCustomerOrders(currentUser.uid)
                         } else {
-                            println("OrdersActivity: No shop ID found for user")
-                            Toast.makeText(this@OrdersActivity, "No shop found for your account", Toast.LENGTH_SHORT).show()
+                            // Shopkeeper view
+                            val shopId = userProfile.shopId
+                            
+                            if (!shopId.isNullOrEmpty()) {
+                                println("OrdersActivity: Loading orders for shop: $shopId")
+                                loadOrdersByShopId(shopId)
+                            } else {
+                                println("OrdersActivity: No shop ID found for user")
+                                Toast.makeText(this@OrdersActivity, "No shop found for your account", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     } else {
                         println("OrdersActivity: Failed to get user profile")
@@ -186,6 +203,23 @@ class OrdersActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 println("OrdersActivity: Error collecting orders: ${e.message}")
+                Toast.makeText(this@OrdersActivity, "Error loading orders", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun loadCustomerOrders(customerId: String) {
+        lifecycleScope.launch {
+            try {
+                orderRepository.getCustomerOrders(customerId).collect { customerOrders ->
+                    orders.clear()
+                    orders.addAll(customerOrders)
+                    orderAdapter.updateData(customerOrders as List<Any>)
+                    updateEmptyState()
+                    println("OrdersActivity: Loaded ${customerOrders.size} customer orders")
+                }
+            } catch (e: Exception) {
+                println("OrdersActivity: Error collecting customer orders: ${e.message}")
                 Toast.makeText(this@OrdersActivity, "Error loading orders", Toast.LENGTH_SHORT).show()
             }
         }

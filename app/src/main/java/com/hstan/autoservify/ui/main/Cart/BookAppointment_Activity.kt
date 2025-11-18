@@ -22,6 +22,7 @@ class BookAppointment_Activity : AppCompatActivity() {
 
     private var serviceId: String = ""
     private var serviceName: String = ""
+    private var serviceImageUrl: String = "" // Store service image URL
     private var shopId: String = "" // 🆕 Store shopId from service
     private lateinit var progressDialog: ProgressDialog
     private val calendar = Calendar.getInstance()
@@ -80,6 +81,7 @@ class BookAppointment_Activity : AppCompatActivity() {
                 status = "Pending",
                 serviceId = serviceId,
                 serviceName = serviceName,
+                serviceImageUrl = serviceImageUrl, // Include service image URL
                 shopId = shopId // 🆕 Include shopId from service
             )
 
@@ -167,13 +169,14 @@ class BookAppointment_Activity : AppCompatActivity() {
         timePicker.show()
     }
 
-    // 🆕 Fetch service details to get shopId
+    // 🆕 Fetch service details to get shopId and imageUrl
     private fun fetchServiceDetails() {
         lifecycleScope.launch {
             try {
                 val service = serviceRepository.getServiceById(serviceId)
                 if (service != null) {
                     shopId = service.shopId
+                    serviceImageUrl = service.imageUrl
                     println("Fetched shopId for service: $shopId")
                 } else {
                     println("Service not found for ID: $serviceId")

@@ -53,8 +53,10 @@ class ShopkeeperServicesFragment : Fragment() {
         adapter = ServiceAdapter(
             items = items,
             onItemClick = { service ->
-                // Handle service click if needed
-                Toast.makeText(context, "Service: ${service.name}", Toast.LENGTH_SHORT).show()
+                // Open service detail page
+                val intent = Intent(requireContext(), com.hstan.autoservify.ui.main.Shops.Services.Service_Detail_Activity::class.java)
+                intent.putExtra("data", com.google.gson.Gson().toJson(service))
+                startActivity(intent)
             },
             showEditDeleteButtons = true,
             onEditClick = { service ->

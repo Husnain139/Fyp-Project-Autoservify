@@ -84,7 +84,8 @@ class Add_Service_Activity : AppCompatActivity() {
                 val updatedService = serviceToEdit!!.copy(
                     name = binding.name.text.toString(),
                     description = binding.descript.text.toString(),
-                    price = binding.price1.text.toString().toDoubleOrNull() ?: 0.0
+                    price = binding.price1.text.toString().toDoubleOrNull() ?: 0.0,
+                    imageUrl = uploadedImageUrl ?: serviceToEdit!!.imageUrl // Keep existing image if not changed
                 )
                 binding.loadingOverlay.visibility = View.VISIBLE
                 binding.loadingText.text = "Updating service..."
@@ -107,7 +108,8 @@ class Add_Service_Activity : AppCompatActivity() {
                                 description = binding.descript.text.toString(),
                                 price = binding.price1.text.toString().toDoubleOrNull() ?: 0.0,
                                 rating = 0.0,
-                                shopId = shopId
+                                shopId = shopId,
+                                imageUrl = uploadedImageUrl ?: "" // Save uploaded image URL
                             )
                             
                             binding.loadingOverlay.visibility = View.VISIBLE

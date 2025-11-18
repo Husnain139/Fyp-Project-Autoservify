@@ -42,7 +42,9 @@ class ProfileFragment : Fragment() {
 
         // ✅ Orders
         binding.OrderHistory.setOnClickListener {
-            startActivity(Intent(requireContext(), OrdersActivity::class.java))
+            val intent = Intent(requireContext(), OrdersActivity::class.java)
+            intent.putExtra("IS_CUSTOMER_VIEW", true)
+            startActivity(intent)
         }
 
         // ✅ Help Center

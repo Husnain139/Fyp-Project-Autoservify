@@ -45,6 +45,13 @@ class Partscraftdetail :  AppCompatActivity() {
         binding.spDesc.text = partCraft.description ?: "No description"  
 		binding.spPrice.text = "Rs ${partCraft.price}"
 
+        // Load spare part image
+        com.bumptech.glide.Glide.with(this)
+            .load(partCraft.image.ifEmpty { com.hstan.autoservify.R.drawable.logo })
+            .error(com.hstan.autoservify.R.drawable.logo)
+            .placeholder(com.hstan.autoservify.R.drawable.logo)
+            .into(binding.ShopPic)
+
         // Show inventory status if managed
         if (partCraft.manageInventory) {
             binding.inventoryStatusContainer.visibility = View.VISIBLE

@@ -32,8 +32,9 @@ class ServiceAdapter(
         holder.binding.ServDesc.text = service.description
         holder.binding.ServPrice.text = "Rs. ${service.price}"
 
+        // Load service image from Cloudinary or use default logo
         Glide.with(holder.itemView.context)
-            .load(R.drawable.logo)
+            .load(service.imageUrl.ifEmpty { R.drawable.logo })
             .error(R.drawable.logo)
             .placeholder(R.drawable.logo)
             .into(holder.binding.ServicePic)

@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.gson.Gson
+import com.hstan.autoservify.R
 import com.hstan.autoservify.databinding.ItemOrderBinding
 import com.hstan.autoservify.ui.main.ViewModels.Order
 import com.hstan.autoservify.ui.orders.OrderDetailActivity
@@ -30,6 +32,13 @@ class DashboardOrderAdapter(
         holder.binding.orderPrice.text = "Total: ₹${(order.item?.price ?: 0) * order.quantity}"
         holder.binding.orderStatus.text = order.status.replaceFirstChar { it.uppercase() }
         holder.binding.orderDate.text = order.orderDate
+        
+        // Load spare part image
+        Glide.with(holder.itemView.context)
+            .load(order.item?.image.takeIf { !it.isNullOrEmpty() } ?: R.drawable.logo)
+            .placeholder(R.drawable.logo)
+            .error(R.drawable.logo)
+            .into(holder.binding.orderItemImage)
         
         // Hide cancel and delete buttons - dashboard is view-only
         holder.binding.orderCancelButton.visibility = View.GONE
