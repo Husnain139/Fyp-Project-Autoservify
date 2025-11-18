@@ -130,7 +130,7 @@ class OrdersFragment : Fragment() {
                     }
                 }
             } catch (e: Exception) {
-                println("Error collecting appointments: ${e.message}")
+                println(": ${e.message}")
             }
         }
 
@@ -399,7 +399,7 @@ class OrdersFragment : Fragment() {
                     }
                 }
             } catch (e: Exception) {
-                println("Error loading orders: ${e.message}")
+                println(" ${e.message}")
             }
         }
     }

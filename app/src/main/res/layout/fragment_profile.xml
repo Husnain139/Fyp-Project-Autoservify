@@ -20,9 +20,10 @@
             android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="56dp"
+            android:layout_marginTop="40dp"
             android:text="Profile"
             android:textAlignment="center"
+            android:textColor="@color/Primary_color"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -34,7 +35,7 @@
             android:id="@+id/profileHeader"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="11dp"
+            android:layout_marginTop="50dp"
             android:elevation="4dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
@@ -63,16 +64,16 @@
                     android:id="@+id/userName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="John Doe"
+                    android:text="Name"
                     android:textColor="@color/black"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/userPhone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Abc@gmai.com"
+                    android:text="__@gmai.com"
                     android:textColor="@color/Primary_color"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -119,7 +120,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="16dp"
                     android:text="My Account"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textColor="@color/black" />
 
                 <ImageView
@@ -148,7 +149,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="16dp"
                     android:text="Order History"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textColor="@color/black" />
 
                 <ImageView
@@ -177,7 +178,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="16dp"
                     android:text="Help Center"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textColor="@color/black" />
 
                 <ImageView
@@ -207,7 +208,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="16dp"
                     android:text="About Us"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textColor="@color/black" />
 
                 <ImageView

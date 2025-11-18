@@ -78,7 +78,7 @@ class AddShopActivity : AppCompatActivity() {
         // ✅ Submit button
         binding.submitButton.setOnClickListener {
             val title = binding.titleInput.text.toString().trim()
-            val description = binding.descriptionInput.text.toString().trim()
+            val description = binding.descript.text.toString().trim()
             val address = binding.addressInput.text.toString().trim()
             val phone = binding.phoneInput.text.toString().trim()
             val email = binding.emailInput.text.toString().trim()

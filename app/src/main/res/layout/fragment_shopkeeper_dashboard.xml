@@ -370,7 +370,7 @@
                         android:fontFamily="@font/outfit"
                         android:text="Recent Orders"
                         android:textColor="@color/Primary_color"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -381,7 +381,7 @@
                         android:padding="8dp"
                         android:text="View All"
                         android:textColor="@color/Primary_color"
-                        android:textSize="14sp" />
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 
@@ -438,7 +438,7 @@
                         android:fontFamily="@font/outfit"
                         android:text="Recent Appointments"
                         android:textColor="@color/Primary_color"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -449,7 +449,7 @@
                         android:padding="8dp"
                         android:text="View All"
                         android:textColor="@color/Primary_color"
-                        android:textSize="14sp" />
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 

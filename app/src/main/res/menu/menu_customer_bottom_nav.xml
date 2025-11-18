@@ -4,25 +4,30 @@
     <item
         android:id="@+id/item_home"
         android:title="Home"
-        android:icon="@drawable/baseline_home_filled_24"/>
+        android:icon="@drawable/baseline_home_filled_24"
+        android:iconTint="@color/Primary_color"/>
 
     <item
         android:id="@+id/item_shops"
         android:title="Shops"
-        android:icon="@drawable/baseline_store_24"/>
+        android:icon="@drawable/baseline_store_24"
+        android:iconTint="@color/Primary_color"/>
 
     <item
         android:id="@+id/item_search"
         android:title="Search"
-        android:icon="@drawable/baseline_search_24"/>
+        android:icon="@drawable/baseline_search_24"
+        android:iconTint="@color/Primary_color"/>
 
     <item
         android:id="@+id/item_cart"
         android:title="Orders"
-        android:icon="@drawable/baseline_shopping_cart_24"/>
+        android:icon="@drawable/baseline_shopping_cart_24"
+        android:iconTint="@color/Primary_color"/>
 
     <item
         android:id="@+id/item_profile"
         android:title="Profile"
-        android:icon="@drawable/baseline_person_24"/>
+        android:icon="@drawable/baseline_person_24"
+        android:iconTint="@color/Primary_color"/>
 </menu>

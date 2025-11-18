@@ -35,9 +35,9 @@ class OrderDetailActivity : AppCompatActivity() {
         authRepository = AuthRepository()
 
         // Setup toolbar
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Order Details"
+       // setSupportActionBar(binding.toolbar)
+        //supportActionBar?.setDisplayHomeAsUpEnabled(true)
+       // supportActionBar?.title = "Order Details"
 
         // Check if this is a multi-part order or single order
         val relatedOrderIds = intent.getStringArrayListExtra("related_order_ids")
@@ -71,7 +71,7 @@ class OrderDetailActivity : AppCompatActivity() {
                         orders.add(result.getOrThrow())
                     }
                 }
-                
+
                 if (orders.isNotEmpty()) {
                     relatedOrders = orders
                     currentOrder = orders.first() // Use first order for customer info
@@ -97,11 +97,11 @@ class OrderDetailActivity : AppCompatActivity() {
                         val userProfile = result.getOrThrow()
                         currentUserType = userProfile.userType ?: ""
                         currentUserId = currentUser.uid
-                        
+
                         println("OrderDetail: Current user type: '$currentUserType'")
                         println("OrderDetail: Current user ID: '$currentUserId'")
                         println("OrderDetail: Order status: '${currentOrder?.status}'")
-                        
+
                         // Load order details and setup UI
                         setupOrderDetails()
                         setupStatusButtons()
@@ -125,12 +125,12 @@ class OrderDetailActivity : AppCompatActivity() {
                 // Display single order
                 displaySingleOrder(order)
             }
-            
+
             // Customer details (same for both single and multi-part)
             binding.customerName.text = order.userName.ifBlank { "Unknown Customer" }
             binding.customerEmail.text = order.userEmail.ifBlank { "No email provided" }
             binding.customerContact.text = order.userContact.ifBlank { "No contact provided" }
-            
+
             // Delivery details
             binding.deliveryAddress.text = order.postalAddress.ifBlank { "No address provided" }
             binding.specialRequirements.text = if (order.specialRequirements.isBlank()) {
@@ -138,11 +138,11 @@ class OrderDetailActivity : AppCompatActivity() {
             } else {
                 order.specialRequirements
             }
-            
+
             // Order info
             binding.orderDate.text = order.orderDate.ifBlank { "No date" }
             binding.orderStatus.text = order.status.ifBlank { "pending" }.replaceFirstChar { it.uppercase() }
-            
+
             // Set status color
             updateStatusColor(order.status)
         }
@@ -152,14 +152,14 @@ class OrderDetailActivity : AppCompatActivity() {
         // Show single item section
         binding.singleItemSection.visibility = View.VISIBLE
         binding.multiPartSection.visibility = View.GONE
-        
+
         // Order item details
         binding.itemTitle.text = order.item?.title ?: "Unknown Item"
         binding.itemDescription.text = order.item?.description ?: "No description available"
         binding.itemPrice.text = "₹${order.item?.price ?: 0}"
         binding.orderQuantity.text = "Quantity: ${order.quantity}"
         binding.totalPrice.text = "Total: ₹${(order.item?.price ?: 0) * order.quantity}"
-        
+
         // Load item image
         Glide.with(this)
             .load(order.item?.image)
@@ -172,26 +172,26 @@ class OrderDetailActivity : AppCompatActivity() {
         // Hide single item views, show multi-part section
         binding.singleItemSection.visibility = View.GONE
         binding.multiPartSection.visibility = View.VISIBLE
-        
+
         // Clear previous parts
         binding.partsListContainer.removeAllViews()
-        
+
         // Display each part
         for (order in orders) {
             val partView = layoutInflater.inflate(android.R.layout.simple_list_item_2, binding.partsListContainer, false)
             val text1 = partView.findViewById<android.widget.TextView>(android.R.id.text1)
             val text2 = partView.findViewById<android.widget.TextView>(android.R.id.text2)
-            
+
             text1.text = "${order.item?.title ?: "Unknown"} x ${order.quantity}"
             text2.text = "₹${(order.item?.price ?: 0) * order.quantity}"
             text1.textSize = 16f
             text2.textSize = 14f
             text1.setTextColor(getColor(R.color.text_primary))
             text2.setTextColor(getColor(R.color.text_secondary))
-            
+
             binding.partsListContainer.addView(partView)
         }
-        
+
         // Calculate and display total
         val totalPrice = orders.sumOf { (it.item?.price ?: 0) * it.quantity }
         binding.multiPartTotal.text = "Total: ₹$totalPrice"
@@ -212,10 +212,10 @@ class OrderDetailActivity : AppCompatActivity() {
     private fun setupStatusButtons() {
         currentOrder?.let { order ->
             val status = order.status.lowercase().trim()
-            
+
             println("OrderDetail: Setting up buttons for user type: '$currentUserType', status: '$status'")
             println("OrderDetail: Raw status from order: '${order.status}'")
-            
+
             when (currentUserType) {
                 "shop_owner" -> {
                     println("OrderDetail: Setting up shopkeeper buttons")
@@ -294,9 +294,9 @@ class OrderDetailActivity : AppCompatActivity() {
     }
 
     private fun setupClickListeners() {
-        binding.toolbar.setNavigationOnClickListener {
-            onBackPressed()
-        }
+        //binding.toolbar.setNavigationOnClickListener {
+          //  onBackPressed()
+        //}
 
         binding.confirmOrderBtn.setOnClickListener {
             updateOrderStatus("Order Confirmed")

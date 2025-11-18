@@ -112,7 +112,7 @@
         </androidx.cardview.widget.CardView>
 
         <TextView
-            android:id="@+id/descriptionInput"
+            android:id="@+id/descript"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -128,8 +128,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="TextView"
-            app:layout_constraintStart_toStartOf="@+id/descriptionInput"
-            app:layout_constraintTop_toBottomOf="@+id/descriptionInput" />
+            app:layout_constraintStart_toStartOf="@+id/descript"
+            app:layout_constraintTop_toBottomOf="@+id/descript" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/services_card"

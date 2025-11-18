@@ -16,7 +16,8 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_margin="10dp"
+            app:cardBackgroundColor="@color/light_gray"
             app:cardCornerRadius="12dp"
             app:cardElevation="4dp">
 
@@ -24,25 +25,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="10dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="All Appointments"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:gravity="center" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Manage all your shop's appointments"
-                    android:textSize="14sp"
-                    android:textColor="@color/gray"
                     android:gravity="center"
-                    android:layout_marginTop="4dp" />
+                    android:text="All Appointments"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center"
+                    android:text="Manage all your shop's appointments"
+                    android:textColor="@color/gray"
+                    android:textSize="10sp" />
 
             </LinearLayout>
 
@@ -105,6 +106,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
+        android:backgroundTint="@color/Primary_color"
         android:src="@android:drawable/ic_input_add"
         android:contentDescription="Create Manual Appointment"
         app:tint="@android:color/white" />

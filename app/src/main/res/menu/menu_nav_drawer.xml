@@ -6,15 +6,18 @@
         <item
             android:id="@+id/home"
             android:icon="@drawable/baseline_home_filled_24"
-            android:title="Home" />
+            android:title="Home"
+            android:iconTint="@color/Primary_color"/>
         <item
             android:id="@+id/orders"
             android:icon="@drawable/order"
-            android:title="Your Orders" />
+            android:title="Your Orders"
+            android:iconTint="@color/Primary_color"/>
         <item
             android:id="@+id/check_stock"
             android:icon="@drawable/baseline_inventory_24"
-            android:title="Check Stock" />
+            android:title="Check Stock"
+            android:iconTint="@color/Primary_color"/>
     </group>
 
 
@@ -24,7 +27,8 @@
         <item
             android:id="@+id/profile"
             android:icon="@drawable/baseline_person_24"
-            android:title="Profile" />
+            android:title="Profile"
+            android:iconTint="@color/Primary_color"/>
     </group>
 
 
@@ -35,7 +39,8 @@
         <item
             android:id="@+id/about_us"
             android:icon="@drawable/baseline_info_24"
-            android:title="About Us" />
+            android:title="About Us"
+            android:iconTint="@color/Primary_color"/>
     </group>
 
     <!-- Divider -->
@@ -48,7 +53,8 @@
         <item
             android:id="@+id/logout"
             android:icon="@drawable/baseline_logout_24"
-            android:title="Logout" />
+            android:title="Logout"
+            android:iconTint="@color/Primary_color"/>
     </group>
 
 </menu>

@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/light_gray"
-            android:layout_margin="16dp"
+            android:layout_margin="10dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="4dp">
 
@@ -25,13 +25,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="10dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="All Orders"
-                    android:textSize="20sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:gravity="center" />
@@ -40,7 +40,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Manage all your shop's spare parts orders"
-                    android:textSize="14sp"
+                    android:textSize="10sp"
                     android:textColor="@color/gray"
                     android:gravity="center"
                     android:layout_marginTop="4dp" />

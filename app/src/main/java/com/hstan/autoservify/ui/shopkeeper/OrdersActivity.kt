@@ -186,7 +186,7 @@ class OrdersActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 println("OrdersActivity: Error loading orders: ${e.message}")
-                Toast.makeText(this@OrdersActivity, "Error loading orders", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@OrdersActivity, "", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -203,7 +203,7 @@ class OrdersActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 println("OrdersActivity: Error collecting orders: ${e.message}")
-                Toast.makeText(this@OrdersActivity, "Error loading orders", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@OrdersActivity, "", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -220,7 +220,7 @@ class OrdersActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 println("OrdersActivity: Error collecting customer orders: ${e.message}")
-                Toast.makeText(this@OrdersActivity, "Error loading orders", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@OrdersActivity, "", Toast.LENGTH_SHORT).show()
             }
         }
     }

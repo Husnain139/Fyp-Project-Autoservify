@@ -349,25 +349,25 @@
             android:id="@+id/confirmButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/custom_button"
+            android:backgroundTint="@color/Primary_color"
             android:text="Confirm"
             android:textSize="14sp"
-            android:textStyle="bold"
-            android:background="@drawable/custom_button"
-            android:backgroundTint="#4CAF50" />
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/markDeliveredButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/custom_button"
+            android:backgroundTint="@color/Primary_color"
             android:text="Mark as Delivered"
             android:textSize="14sp"
-            android:textStyle="bold"
-            android:background="@drawable/custom_button"
-            android:backgroundTint="#2196F3" />
+            android:textStyle="bold" />
 
     </LinearLayout>
 

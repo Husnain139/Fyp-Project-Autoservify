@@ -29,15 +29,36 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:contentDescription="Shopimg"
-                android:src="@drawable/logo"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/Img_card"
+                android:layout_width="104dp"
+                android:layout_height="0dp"
+                android:background="@drawable/left_rounded_8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="104dp"
+                        android:layout_height="100dp"
+                        android:contentDescription="Shopimg"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/logo"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:id="@+id/titleInput"
@@ -47,10 +68,10 @@
                 android:layout_marginTop="8dp"
                 android:text="Shop Title"
                 android:textColor="@color/black"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageView"
+                app:layout_constraintStart_toEndOf="@+id/Img_card"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -59,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
                 android:text="desc"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/titleInput"
                 app:layout_constraintTop_toBottomOf="@+id/titleInput" />
@@ -69,22 +90,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
+                android:layout_marginBottom="8dp"
                 android:text="Location..."
-                android:textSize="14sp"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/description"
                 app:layout_constraintTop_toBottomOf="@+id/description" />
 
-            <TextView
-                android:id="@+id/rating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="⭐4.5"
-                android:textColor="#FDD835"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@id/location"
-                app:layout_constraintTop_toBottomOf="@id/location" />
+
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

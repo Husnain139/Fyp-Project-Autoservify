@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    android:layout_margin="6dp"
     app:cardCornerRadius="16dp"
     app:cardElevation="4dp">
 
@@ -15,7 +16,7 @@
         <ImageView
             android:id="@+id/Sp_pic"
             android:layout_width="178dp"
-            android:layout_height="178dp"
+            android:layout_height="160dp"
             android:scaleType="centerCrop"
             android:src="@drawable/sparepic"
             app:layout_constraintEnd_toEndOf="parent"
@@ -47,7 +48,7 @@
             android:layout_marginTop="12dp"
             android:layout_marginEnd="12dp"
             android:text="Change Brake Pads"
-            android:textSize="16sp"
+            android:textSize="12sp"
             android:textStyle="bold"
             android:textColor="@color/black"
             app:layout_constraintTop_toBottomOf="@id/Sp_pic"
@@ -63,7 +64,7 @@
             android:layout_marginTop="4dp"
             android:layout_marginEnd="12dp"
             android:text="Brake System"
-            android:textSize="14sp"
+            android:textSize="11sp"
             android:textColor="#808080"
             android:maxLines="2"
             android:ellipsize="end"
@@ -80,7 +81,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:text="₹__"
-            android:textSize="15sp"
+            android:textSize="10sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -107,8 +108,8 @@
         <!-- EDIT TEXT -->
         <ImageView
             android:id="@+id/edit_sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:src="@drawable/baseline_edit_24"
@@ -121,9 +122,8 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginEnd="12dp"
-            android:layout_marginBottom="8dp"
             android:src="@drawable/baseline_delete_24"
-            app:layout_constraintBottom_toBottomOf="@id/edit_sp"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_sp"
             app:layout_constraintEnd_toStartOf="@id/edit_sp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
