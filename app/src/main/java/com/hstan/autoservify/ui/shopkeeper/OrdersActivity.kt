@@ -19,6 +19,7 @@ import com.hstan.autoservify.model.repositories.AuthRepository
 import com.hstan.autoservify.ui.orders.ManualOrderServiceActivity
 import androidx.appcompat.widget.Toolbar
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Job
 
 class OrdersActivity : AppCompatActivity() {
 
@@ -28,6 +29,7 @@ class OrdersActivity : AppCompatActivity() {
     private val authRepository = AuthRepository()
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyStateLayout: LinearLayout
+    private var ordersJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -186,41 +188,65 @@ class OrdersActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 println("OrdersActivity: Error loading orders: ${e.message}")
-                Toast.makeText(this@OrdersActivity, "", Toast.LENGTH_SHORT).show()
+                e.printStackTrace()
+                Toast.makeText(this@OrdersActivity, "Error loading orders: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     private fun loadOrdersByShopId(shopId: String) {
-        lifecycleScope.launch {
+        // Cancel any existing job to prevent "job was canceled" errors
+        ordersJob?.cancel()
+        
+        ordersJob = lifecycleScope.launch {
             try {
+                println("OrdersActivity: Loading orders for shop ID: $shopId")
                 orderRepository.getShopOrders(shopId).collect { shopOrders ->
                     orders.clear()
                     orders.addAll(shopOrders)
                     orderAdapter.updateData(shopOrders as List<Any>)
                     updateEmptyState()
-                    println("OrdersActivity: Loaded ${shopOrders.size} orders")
+                    println("OrdersActivity: Loaded ${shopOrders.size} shop orders")
                 }
             } catch (e: Exception) {
-                println("OrdersActivity: Error collecting orders: ${e.message}")
-                Toast.makeText(this@OrdersActivity, "", Toast.LENGTH_SHORT).show()
+                if (e is kotlinx.coroutines.CancellationException) {
+                    println("OrdersActivity: Order collection was cancelled (this is normal)")
+                    return@launch // Don't show error for cancellation
+                }
+                println("OrdersActivity: Error collecting shop orders: ${e.message}")
+                e.printStackTrace()
+                Toast.makeText(this@OrdersActivity, "Error loading shop orders: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     private fun loadCustomerOrders(customerId: String) {
-        lifecycleScope.launch {
+        // Cancel any existing job to prevent "job was canceled" errors
+        ordersJob?.cancel()
+        
+        ordersJob = lifecycleScope.launch {
             try {
+                println("OrdersActivity: Loading orders for customer ID: $customerId")
                 orderRepository.getCustomerOrders(customerId).collect { customerOrders ->
                     orders.clear()
                     orders.addAll(customerOrders)
                     orderAdapter.updateData(customerOrders as List<Any>)
                     updateEmptyState()
-                    println("OrdersActivity: Loaded ${customerOrders.size} customer orders")
+                    println("OrdersActivity: Loaded ${customerOrders.size} customer orders for user $customerId")
+                    
+                    // Debug: Log each order's details
+                    customerOrders.forEachIndexed { index, order ->
+                        println("OrdersActivity: Order $index - ID: ${order.id}, Item: ${order.item?.title}, UserId: ${order.userId}")
+                    }
                 }
             } catch (e: Exception) {
+                if (e is kotlinx.coroutines.CancellationException) {
+                    println("OrdersActivity: Order collection was cancelled (this is normal)")
+                    return@launch // Don't show error for cancellation
+                }
                 println("OrdersActivity: Error collecting customer orders: ${e.message}")
-                Toast.makeText(this@OrdersActivity, "", Toast.LENGTH_SHORT).show()
+                e.printStackTrace()
+                Toast.makeText(this@OrdersActivity, "Error loading your orders: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -237,8 +263,14 @@ class OrdersActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Refresh orders when returning from manual entry activity
-        loadShopkeeperOrders()
+        // No need to reload here - Flow automatically updates when data changes
+        // Calling loadShopkeeperOrders() here was causing "job was canceled" errors
+    }
+    
+    override fun onDestroy() {
+        super.onDestroy()
+        // Cancel the job when activity is destroyed
+        ordersJob?.cancel()
     }
 
     override fun onSupportNavigateUp(): Boolean {

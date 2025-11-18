@@ -130,7 +130,8 @@ class ManualOrderServiceActivity : AppCompatActivity() {
                     availableParts.addAll(parts)
                 }
             } catch (e: Exception) {
-                Toast.makeText(this@ManualOrderServiceActivity, "Error loading spare parts", Toast.LENGTH_SHORT).show()
+                println("ManualOrderServiceActivity: Error loading spare parts: ${e.message}")
+                // Silently handle error - no toast message
             }
         }
     }

@@ -8,12 +8,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import com.hstan.autoservify.ui.main.home.Profile.MyAccountActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import com.hstan.autoservify.databinding.FragmentProfileBinding
 import com.hstan.autoservify.ui.auth.LoginActivity
 import com.hstan.autoservify.ui.shopkeeper.OrdersActivity
+import com.hstan.autoservify.model.repositories.AuthRepository
+import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment() {
 
@@ -22,6 +25,7 @@ class ProfileFragment : Fragment() {
 
     private val firebaseAuth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
+    private var isCustomer = true // Default to customer
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,8 +33,11 @@ class ProfileFragment : Fragment() {
     ): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
 
-        // ✅ Load user info
-        firebaseAuth.currentUser?.uid?.let { loadUserProfile(it) }
+        // ✅ Load user info and detect user type
+        firebaseAuth.currentUser?.uid?.let { 
+            loadUserProfile(it)
+            detectUserType(it)
+        }
 
         // ✅ My Account
         binding.profileHeader.setOnClickListener {
@@ -40,10 +47,14 @@ class ProfileFragment : Fragment() {
             startActivity(Intent(requireContext(), MyAccountActivity::class.java))
         }
 
-        // ✅ Orders
+        // ✅ Orders - behavior depends on user type
         binding.OrderHistory.setOnClickListener {
             val intent = Intent(requireContext(), OrdersActivity::class.java)
-            intent.putExtra("IS_CUSTOMER_VIEW", true)
+            // Only pass IS_CUSTOMER_VIEW=true for actual customers
+            // Shopkeepers don't get this flag, so OrdersActivity shows shop orders
+            if (isCustomer) {
+                intent.putExtra("IS_CUSTOMER_VIEW", true)
+            }
             startActivity(intent)
         }
 
@@ -78,6 +89,24 @@ class ProfileFragment : Fragment() {
             .addOnFailureListener {
                 Toast.makeText(requireContext(), "Failed to load profile", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun detectUserType(uid: String) {
+        lifecycleScope.launch {
+            try {
+                val authRepository = AuthRepository()
+                val result = authRepository.getUserProfile(uid)
+                if (result.isSuccess) {
+                    val userProfile = result.getOrThrow()
+                    isCustomer = userProfile.userType != "shop_owner"
+                    println("ProfileFragment: User type detected - isCustomer: $isCustomer, userType: ${userProfile.userType}")
+                }
+            } catch (e: Exception) {
+                println("ProfileFragment: Error detecting user type: ${e.message}")
+                // Default to customer on error
+                isCustomer = true
+            }
+        }
     }
 
     private fun showLogoutDialog() {

@@ -13,9 +13,11 @@ import com.hstan.autoservify.databinding.ActivityAppointmentDetailBinding
 import com.hstan.autoservify.model.repositories.AppointmentRepository
 import com.hstan.autoservify.model.repositories.AuthRepository
 import com.hstan.autoservify.model.repositories.OrderRepository
+import com.hstan.autoservify.model.repositories.ReviewRepository
 import com.hstan.autoservify.model.repositories.ServiceRepository
 import com.hstan.autoservify.ui.main.Shops.Services.Appointment
 import com.hstan.autoservify.ui.main.ViewModels.Order
+import com.hstan.autoservify.ui.reviews.ReviewDialog
 import kotlinx.coroutines.launch
 
 class AppointmentDetailActivity : AppCompatActivity() {
@@ -26,9 +28,13 @@ class AppointmentDetailActivity : AppCompatActivity() {
     private val authRepository = AuthRepository()
     private val serviceRepository = ServiceRepository()
     private val appointmentRepository = AppointmentRepository()
+    private val reviewRepository = ReviewRepository()
     private lateinit var sparePartsAdapter: AppointmentSparePartsAdapter
     private val spareParts = mutableListOf<Order>()
     private var servicePrice: Double = 0.0
+    private var currentUserId: String = ""
+    private var currentUserType: String = ""
+    private var hasReviewed: Boolean = false
 
     companion object {
         const val EXTRA_APPOINTMENT = "extra_appointment"
@@ -70,6 +76,10 @@ class AppointmentDetailActivity : AppCompatActivity() {
 
         binding.markDeliveredButton.setOnClickListener {
             updateAppointmentStatus("Completed")
+        }
+        
+        binding.leaveReviewBtn.setOnClickListener {
+            showReviewDialog()
         }
     }
 
@@ -159,8 +169,8 @@ class AppointmentDetailActivity : AppCompatActivity() {
                     updatePrices()
                 }
             } catch (e: Exception) {
-                println("Error loading spare parts: ${e.message}")
-                Toast.makeText(this@AppointmentDetailActivity, "Error loading spare parts", Toast.LENGTH_SHORT).show()
+                println("AppointmentDetailActivity: Error loading spare parts: ${e.message}")
+                // Silently handle error - no toast message
             }
         }
     }
@@ -183,24 +193,80 @@ class AppointmentDetailActivity : AppCompatActivity() {
             try {
                 val currentUser = authRepository.getCurrentUser()
                 if (currentUser != null) {
+                    currentUserId = currentUser.uid
                     val result = authRepository.getUserProfile(currentUser.uid)
                     result.onSuccess { userProfile ->
+                        currentUserType = userProfile.userType ?: ""
                         if (userProfile.userType == "shop_owner") {
+                            // Shopkeeper view
                             binding.createOrderButton.visibility = View.VISIBLE
                             updateStatusButtonsVisibility()
+                            binding.leaveReviewBtn.visibility = View.GONE
                         } else {
+                            // Customer view
                             binding.createOrderButton.visibility = View.GONE
                             binding.statusButtonsContainer.visibility = View.GONE
+                            checkAndShowReviewButton()
                         }
                     }.onFailure {
                         binding.createOrderButton.visibility = View.GONE
                         binding.statusButtonsContainer.visibility = View.GONE
+                        binding.leaveReviewBtn.visibility = View.GONE
                     }
                 }
             } catch (e: Exception) {
                 println("Error checking user type: ${e.message}")
                 binding.createOrderButton.visibility = View.GONE
                 binding.statusButtonsContainer.visibility = View.GONE
+                binding.leaveReviewBtn.visibility = View.GONE
+            }
+        }
+    }
+    
+    private fun checkAndShowReviewButton() {
+        val status = appointment.status.lowercase()
+        if (status.contains("completed") || status.contains("delivered")) {
+            lifecycleScope.launch {
+                try {
+                    val result = reviewRepository.getReviewForItem(appointment.id, currentUserId)
+                    if (result.isSuccess) {
+                        hasReviewed = result.getOrNull() != null
+                        if (!hasReviewed) {
+                            binding.leaveReviewBtn.visibility = View.VISIBLE
+                        } else {
+                            binding.leaveReviewBtn.text = "Review Submitted ✓"
+                            binding.leaveReviewBtn.isEnabled = false
+                            binding.leaveReviewBtn.visibility = View.VISIBLE
+                        }
+                    }
+                } catch (e: Exception) {
+                    println("AppointmentDetail: Error checking review status: ${e.message}")
+                }
+            }
+        }
+    }
+    
+    private fun showReviewDialog() {
+        lifecycleScope.launch {
+            try {
+                val currentUser = authRepository.getCurrentUser()
+                val userProfile = authRepository.getUserProfile(currentUser?.uid ?: "").getOrNull()
+                
+                val dialog = ReviewDialog.newInstance(
+                    itemId = appointment.id,
+                    itemType = "APPOINTMENT",
+                    shopId = appointment.shopId ?: "",
+                    userId = currentUserId,
+                    userName = userProfile?.name ?: "Customer"
+                ) {
+                    // On review submitted
+                    binding.leaveReviewBtn.text = "Review Submitted ✓"
+                    binding.leaveReviewBtn.isEnabled = false
+                    hasReviewed = true
+                }
+                dialog.show(supportFragmentManager, "ReviewDialog")
+            } catch (e: Exception) {
+                Toast.makeText(this@AppointmentDetailActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }

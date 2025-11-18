@@ -120,7 +120,7 @@ class AppointmentsActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 println("AppointmentsActivity: Error collecting appointments: ${e.message}")
-                Toast.makeText(this@AppointmentsActivity, "Error loading appointments", Toast.LENGTH_SHORT).show()
+                // Silently handle error - no toast message
             }
         }
     }

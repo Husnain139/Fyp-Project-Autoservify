@@ -20,6 +20,7 @@ import com.hstan.autoservify.model.repositories.AuthRepository
 import com.hstan.autoservify.model.repositories.ShopRepository
 import com.hstan.autoservify.model.repositories.OrderRepository
 import com.hstan.autoservify.model.repositories.AppointmentRepository
+import com.hstan.autoservify.model.repositories.ReviewRepository
 import com.hstan.autoservify.ui.Adapters.DashboardOrderAdapter
 import com.hstan.autoservify.ui.Adapters.DashboardAppointmentAdapter
 import com.hstan.autoservify.ui.main.ViewModels.Order
@@ -154,6 +155,7 @@ class ShopkeeperDashboardFragment : Fragment() {
                                 loadDashboardStats(shopId)
                                 loadRecentOrders(shopId)
                                 loadRecentAppointments(shopId)
+                                loadAverageRating(shopId)
 
                                 // Mark as loaded and show content
                                 isDataLoaded = true
@@ -202,12 +204,43 @@ class ShopkeeperDashboardFragment : Fragment() {
                                 loadDashboardStats(shopId)
                                 loadRecentOrders(shopId)
                                 loadRecentAppointments(shopId)
+                                loadAverageRating(shopId)
                             }
                         }
                     }
                 }
             } catch (e: Exception) {
                 println("ShopkeeperDashboard: Error refreshing data: ${e.message}")
+            }
+        }
+    }
+    
+    private fun loadAverageRating(shopId: String) {
+        lifecycleScope.launch {
+            try {
+                val reviewRepository = ReviewRepository()
+                reviewRepository.getAverageRatingFlow(shopId).collect { averageRating ->
+                    // Count reviews
+                    reviewRepository.getReviewsForShop(shopId).collect { reviews ->
+                        val reviewCount = reviews.size
+                        
+                        // Update Card 2 average_review TextView
+                        binding.averageReview.text = if (averageRating > 0) {
+                            String.format("%.1f", averageRating)
+                        } else {
+                            "--"
+                        }
+                        
+                        // Update Card 2 review_count TextView
+                        binding.reviewCount.text = "$reviewCount ${if (reviewCount == 1) "Review" else "Reviews"}"
+                        
+                        println("ShopkeeperDashboard: Loaded rating: $averageRating from $reviewCount reviews")
+                    }
+                }
+            } catch (e: Exception) {
+                println("ShopkeeperDashboard: Error loading rating: ${e.message}")
+                binding.averageReview.text = "--"
+                binding.reviewCount.text = "0 Reviews"
             }
         }
     }

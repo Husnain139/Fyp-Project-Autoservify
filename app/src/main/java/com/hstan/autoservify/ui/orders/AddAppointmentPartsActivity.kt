@@ -90,8 +90,8 @@ class AddAppointmentPartsActivity : AppCompatActivity() {
                     setupSpinner()
                 }
             } catch (e: Exception) {
-                println("Error loading spare parts: ${e.message}")
-                Toast.makeText(this@AddAppointmentPartsActivity, "Error loading spare parts", Toast.LENGTH_SHORT).show()
+                println("AddAppointmentPartsActivity: Error loading spare parts: ${e.message}")
+                // Silently handle error - no toast message
             }
         }
     }

@@ -352,7 +352,8 @@
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
             android:background="@drawable/custom_button"
-            android:backgroundTint="@color/Primary_color"
+            android:backgroundTint="@null"
+            app:backgroundTint="@null"
             android:text="Confirm"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -364,7 +365,8 @@
             android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:background="@drawable/custom_button"
-            android:backgroundTint="@color/Primary_color"
+            android:backgroundTint="@null"
+            app:backgroundTint="@null"
             android:text="Mark as Delivered"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -378,6 +380,23 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:text="Create Order"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:background="@drawable/custom_button"
+        android:backgroundTint="@null"
+        app:backgroundTint="@null"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Leave Review Button (Only visible to customers for completed appointments) -->
+    <Button
+        android:id="@+id/leaveReviewBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="Leave Review"
         android:textSize="16sp"
         android:textStyle="bold"
         android:background="@drawable/custom_button"

@@ -107,7 +107,8 @@ class ShopkeeperPartsFragment : Fragment() {
                     }
                 }
             } catch (e: Exception) {
-                Toast.makeText(context, "Error loading parts", Toast.LENGTH_SHORT).show()
+                println("ShopkeeperPartsFragment: Error loading parts: ${e.message}")
+                // Silently handle error - no toast message
             }
         }
     }

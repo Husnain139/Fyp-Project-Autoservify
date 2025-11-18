@@ -11,7 +11,9 @@ import com.hstan.autoservify.R
 import com.hstan.autoservify.databinding.ActivityOrderDetailBinding
 import com.hstan.autoservify.model.repositories.AuthRepository
 import com.hstan.autoservify.model.repositories.OrderRepository
+import com.hstan.autoservify.model.repositories.ReviewRepository
 import com.hstan.autoservify.ui.main.ViewModels.Order
+import com.hstan.autoservify.ui.reviews.ReviewDialog
 import kotlinx.coroutines.launch
 
 class OrderDetailActivity : AppCompatActivity() {
@@ -19,11 +21,13 @@ class OrderDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityOrderDetailBinding
     private lateinit var orderRepository: OrderRepository
     private lateinit var authRepository: AuthRepository
+    private lateinit var reviewRepository: ReviewRepository
     private var currentOrder: Order? = null
     private var relatedOrders: List<Order> = emptyList() // For multi-part manual orders
     private var isMultiPartOrder: Boolean = false
     private var currentUserType: String = ""
     private var currentUserId: String = ""
+    private var hasReviewed: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +37,7 @@ class OrderDetailActivity : AppCompatActivity() {
         // Initialize repositories
         orderRepository = OrderRepository()
         authRepository = AuthRepository()
+        reviewRepository = ReviewRepository()
 
         // Setup toolbar
        // setSupportActionBar(binding.toolbar)
@@ -277,11 +282,42 @@ class OrderDetailActivity : AppCompatActivity() {
                 binding.confirmOrderBtn.visibility = View.GONE
                 binding.markDeliveredBtn.visibility = View.GONE
                 binding.markReceivedBtn.visibility = View.VISIBLE
+                checkAndShowReviewButton(false)
+            }
+            "received", "order received" -> {
+                // Order is completed, show review button
+                println("OrderDetail: Order received, checking review status")
+                hideAllButtons()
+                checkAndShowReviewButton(true)
             }
             else -> {
                 // Customer can't take action until order is delivered
                 println("OrderDetail: Customer cannot take action with status '$status', hiding all buttons")
                 hideAllButtons()
+            }
+        }
+    }
+    
+    private fun checkAndShowReviewButton(showNow: Boolean) {
+        currentOrder?.let { order ->
+            lifecycleScope.launch {
+                try {
+                    val result = reviewRepository.getReviewForItem(order.id, currentUserId)
+                    if (result.isSuccess) {
+                        hasReviewed = result.getOrNull() != null
+                        if (!hasReviewed && showNow) {
+                            binding.leaveReviewBtn.visibility = View.VISIBLE
+                        } else if (hasReviewed) {
+                            binding.leaveReviewBtn.text = "Review Submitted ✓"
+                            binding.leaveReviewBtn.isEnabled = false
+                            if (showNow) {
+                                binding.leaveReviewBtn.visibility = View.VISIBLE
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                    println("OrderDetail: Error checking review status: ${e.message}")
+                }
             }
         }
     }
@@ -291,6 +327,7 @@ class OrderDetailActivity : AppCompatActivity() {
         binding.confirmOrderBtn.visibility = View.GONE
         binding.markDeliveredBtn.visibility = View.GONE
         binding.markReceivedBtn.visibility = View.GONE
+        binding.leaveReviewBtn.visibility = View.GONE
     }
 
     private fun setupClickListeners() {
@@ -308,6 +345,37 @@ class OrderDetailActivity : AppCompatActivity() {
 
         binding.markReceivedBtn.setOnClickListener {
             updateOrderStatus("Order Received")
+        }
+        
+        binding.leaveReviewBtn.setOnClickListener {
+            showReviewDialog()
+        }
+    }
+    
+    private fun showReviewDialog() {
+        currentOrder?.let { order ->
+            lifecycleScope.launch {
+                try {
+                    val currentUser = authRepository.getCurrentUser()
+                    val userProfile = authRepository.getUserProfile(currentUser?.uid ?: "").getOrNull()
+                    
+                    val dialog = ReviewDialog.newInstance(
+                        itemId = order.id,
+                        itemType = "ORDER",
+                        shopId = order.shopId,
+                        userId = currentUserId,
+                        userName = userProfile?.name ?: "Customer"
+                    ) {
+                        // On review submitted
+                        binding.leaveReviewBtn.text = "Review Submitted ✓"
+                        binding.leaveReviewBtn.isEnabled = false
+                        hasReviewed = true
+                    }
+                    dialog.show(supportFragmentManager, "ReviewDialog")
+                } catch (e: Exception) {
+                    Toast.makeText(this@OrderDetailActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
