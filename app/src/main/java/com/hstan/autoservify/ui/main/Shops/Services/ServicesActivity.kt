@@ -27,6 +27,11 @@ class ServicesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_services)
 
+        // Setup back button
+        findViewById<android.widget.ImageView>(R.id.backBtn).setOnClickListener {
+            finish()
+        }
+
         // Check if we're viewing services for a specific shop
         specificShopId = intent.getStringExtra("shop_id")
         val shopName = intent.getStringExtra("shop_name")

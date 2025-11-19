@@ -6,20 +6,31 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import com.hstan.autoservify.databinding.ActivityPartscraftdetailBinding
+import com.hstan.autoservify.model.repositories.AuthRepository
 import com.hstan.autoservify.ui.orders.CreateOrderActivity
+import kotlinx.coroutines.launch
 
 class Partscraftdetail :  AppCompatActivity() {
 
     lateinit var binding: ActivityPartscraftdetailBinding;
     lateinit var partCraft: PartsCraft;
+    private val authRepository = AuthRepository()
+    private var isShopkeeper = false
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding= ActivityPartscraftdetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Setup back button
+        binding.backBtn.setOnClickListener {
+            finish()
+        }
 
         val partData = intent.getStringExtra("data")
         if (partData == null) {
@@ -52,20 +63,8 @@ class Partscraftdetail :  AppCompatActivity() {
             .placeholder(com.hstan.autoservify.R.drawable.logo)
             .into(binding.ShopPic)
 
-        // Show inventory status if managed
-        if (partCraft.manageInventory) {
-            binding.inventoryStatusContainer.visibility = View.VISIBLE
-            binding.availableStock.text = "Available Stock: ${partCraft.quantity} units"
-            
-            // Disable Add to Cart if out of stock
-            if (partCraft.quantity == 0) {
-                binding.AddtoCartButton.isEnabled = false
-                binding.AddtoCartButton.text = "Out of Stock"
-                binding.AddtoCartButton.alpha = 0.5f
-            }
-        } else {
-            binding.inventoryStatusContainer.visibility = View.GONE
-        }
+        // Check user type and show inventory status accordingly
+        checkUserTypeAndSetupInventory()
 
 //        binding.productImage.setImageResource(partCraft.image.toInt())
 
@@ -85,6 +84,58 @@ class Partscraftdetail :  AppCompatActivity() {
                 finish()
             } catch (e: Exception) {
                 Toast.makeText(this, "Error opening cart: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+    
+    private fun checkUserTypeAndSetupInventory() {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (currentUser == null) {
+            // Not logged in - hide inventory info
+            binding.inventoryStatusContainer.visibility = View.GONE
+            return
+        }
+        
+        lifecycleScope.launch {
+            try {
+                val result = authRepository.getUserProfile(currentUser.uid)
+                result.onSuccess { userProfile ->
+                    isShopkeeper = userProfile.userType == "shop_owner"
+                    setupInventoryDisplay()
+                }.onFailure {
+                    // Default to customer view if error
+                    isShopkeeper = false
+                    setupInventoryDisplay()
+                }
+            } catch (e: Exception) {
+                // Default to customer view if error
+                isShopkeeper = false
+                setupInventoryDisplay()
+            }
+        }
+    }
+    
+    private fun setupInventoryDisplay() {
+        // Only show inventory status for shopkeepers
+        if (isShopkeeper && partCraft.manageInventory) {
+            binding.inventoryStatusContainer.visibility = View.VISIBLE
+            binding.availableStock.text = "Available Stock: ${partCraft.quantity} units"
+            
+            // Disable Add to Cart if out of stock
+            if (partCraft.quantity == 0) {
+                binding.AddtoCartButton.isEnabled = false
+                binding.AddtoCartButton.text = "Out of Stock"
+                binding.AddtoCartButton.alpha = 0.5f
+            }
+        } else {
+            // Hide inventory info for customers
+            binding.inventoryStatusContainer.visibility = View.GONE
+            
+            // For customers, still disable button if out of stock but show different message
+            if (!isShopkeeper && partCraft.manageInventory && partCraft.quantity == 0) {
+                binding.AddtoCartButton.isEnabled = false
+                binding.AddtoCartButton.text = "Out of Stock"
+                binding.AddtoCartButton.alpha = 0.5f
             }
         }
     }

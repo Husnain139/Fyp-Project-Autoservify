@@ -20,6 +20,11 @@ class Service_Detail_Activity : AppCompatActivity() {
         binding = ActivityServiceDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Setup back button
+        binding.backBtn.setOnClickListener {
+            finish()
+        }
+
         // ✅ Get service object from intent
         val jsonData = intent.getStringExtra("data")
         service = Gson().fromJson(jsonData, Service::class.java)

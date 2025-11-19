@@ -6,9 +6,11 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.gson.Gson
+import com.hstan.autoservify.R
 import com.hstan.autoservify.databinding.ActivityCreateOrderBinding
 import com.hstan.autoservify.model.repositories.OrderRepository
 import com.hstan.autoservify.ui.main.ViewModels.Order
@@ -60,6 +62,14 @@ class CreateOrderActivity : AppCompatActivity() {
         binding.itemTitle.text = part.title ?: "Unknown Item"
         binding.itemPrice.text = "Rs. ${part.price}"
         binding.qtyValue.text = quantity.toString()
+        
+        // Load spare part image
+        Glide.with(this)
+            .load(part.image.ifEmpty { R.drawable.partimg })
+            .error(R.drawable.partimg)
+            .placeholder(R.drawable.partimg)
+            .centerCrop()
+            .into(binding.itemImage)
 
         // Initial totals
         try {

@@ -27,6 +27,11 @@ class PartsCraftActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_partscraft)
 
+        // Setup back button
+        findViewById<android.widget.ImageView>(R.id.backBtn).setOnClickListener {
+            finish()
+        }
+
         // Check if we're viewing parts for a specific shop
         specificShopId = intent.getStringExtra("shop_id")
         val shopName = intent.getStringExtra("shop_name")
