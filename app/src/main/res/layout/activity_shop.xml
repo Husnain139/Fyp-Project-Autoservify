@@ -137,6 +137,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
+            app:cardCornerRadius="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/description"
             app:layout_constraintTop_toBottomOf="@+id/description">
@@ -195,6 +196,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            app:cardCornerRadius="8dp"
             app:layout_constraintEnd_toEndOf="@+id/services_card"
             app:layout_constraintStart_toStartOf="@+id/services_card"
             app:layout_constraintTop_toBottomOf="@+id/services_card">

@@ -20,6 +20,7 @@ class BookAppointment_Activity : AppCompatActivity() {
     private lateinit var binding: ActivityBookAppointmentBinding
     private val viewModel: BookAppointmentViewModel by viewModels()
 
+    private var servicePrice: Int = 0
     private var serviceId: String = ""
     private var serviceName: String = ""
     private var serviceImageUrl: String = "" // Store service image URL
@@ -33,10 +34,19 @@ class BookAppointment_Activity : AppCompatActivity() {
         binding = ActivityBookAppointmentBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Auto-fill name and email into input boxes
+        val firebaseUser = viewModel.getCurrentUser()
+        binding.bMail.editText?.setText(firebaseUser?.email ?: "")
+        binding.name.editText?.setText(firebaseUser?.displayName ?: "")
+
+        servicePrice = intent.getIntExtra("service_price", 0)
+
+
+
         // ✅ Get service info from intent
         serviceId = intent.getStringExtra("service_id") ?: ""
         serviceName = intent.getStringExtra("service_name") ?: ""
-        
+
         // 🆕 Fetch service details to get shopId
         fetchServiceDetails()
 
@@ -61,19 +71,25 @@ class BookAppointment_Activity : AppCompatActivity() {
         }
 
         // ✅ Book button click
+
         binding.BookAppointmentButton.setOnClickListener {
-            val email = binding.bMail.editText?.text.toString()
-            val name = binding.name.editText?.text.toString()
+
+            val firebaseUser = viewModel.getCurrentUser()
+
+            // auto-fill user info from Firebase
+            val email = firebaseUser?.email ?: ""
+            val name = firebaseUser?.displayName ?: ""
+
             val date = binding.dateB.editText?.text.toString()
             val time = binding.time.editText?.text.toString()
 
-            if (email.isBlank() || name.isBlank() || date.isBlank() || time.isBlank()) {
-                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
+            if (date.isBlank() || time.isBlank()) {
+                Toast.makeText(this, "Please select date and time", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             val appointment = Appointment(
-                userId = viewModel.getCurrentUser()?.uid ?: "guest",
+                userId = firebaseUser?.uid ?: "guest",
                 userName = name,
                 userEmail = email,
                 appointmentDate = date,
@@ -81,12 +97,14 @@ class BookAppointment_Activity : AppCompatActivity() {
                 status = "Pending",
                 serviceId = serviceId,
                 serviceName = serviceName,
-                serviceImageUrl = serviceImageUrl, // Include service image URL
-                shopId = shopId // 🆕 Include shopId from service
+                serviceImageUrl = serviceImageUrl,
+                shopId = shopId,
+                bill = servicePrice.toString()
             )
 
             viewModel.saveAppointment(appointment)
         }
+
 
         // ✅ Observers
         lifecycleScope.launch {
@@ -175,17 +193,21 @@ class BookAppointment_Activity : AppCompatActivity() {
             try {
                 val service = serviceRepository.getServiceById(serviceId)
                 if (service != null) {
+
                     shopId = service.shopId
                     serviceImageUrl = service.imageUrl
-                    println("Fetched shopId for service: $shopId")
+
+                    // Load price from service model
+                    servicePrice = service.price.toInt()
+                    binding.servicePriceText.text = "Price: Rs. $servicePrice"
+
                 } else {
-                    println("Service not found for ID: $serviceId")
                     Toast.makeText(this@BookAppointment_Activity, "Service not found", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
-                println("Error fetching service details: ${e.message}")
                 Toast.makeText(this@BookAppointment_Activity, "Error loading service details", Toast.LENGTH_SHORT).show()
             }
         }
     }
+
 }

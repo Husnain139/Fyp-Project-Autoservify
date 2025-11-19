@@ -1,9 +1,10 @@
-
 package com.hstan.autoservify.ui.orders
 
 import android.app.ProgressDialog
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
@@ -15,6 +16,7 @@ import com.hstan.autoservify.databinding.ActivityCreateOrderBinding
 import com.hstan.autoservify.model.repositories.OrderRepository
 import com.hstan.autoservify.ui.main.ViewModels.Order
 import com.hstan.autoservify.ui.main.Shops.SpareParts.PartsCraft
+import com.hstan.autoservify.ui.main.Shops.SpareParts.Partscraftdetail
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -24,6 +26,7 @@ class CreateOrderActivity : AppCompatActivity() {
     lateinit var part: PartsCraft
     private val orderRepository = OrderRepository()
     lateinit var progressDialog: ProgressDialog
+
 
     private var quantity = 1
     private var shippingFee = 0.0
@@ -44,7 +47,7 @@ class CreateOrderActivity : AppCompatActivity() {
             finish()
             return
         }
-        
+
         try {
             part = Gson().fromJson(partData, PartsCraft::class.java)
             if (part == null) {
@@ -62,7 +65,7 @@ class CreateOrderActivity : AppCompatActivity() {
         binding.itemTitle.text = part.title ?: "Unknown Item"
         binding.itemPrice.text = "Rs. ${part.price}"
         binding.qtyValue.text = quantity.toString()
-        
+
         // Load spare part image
         Glide.with(this)
             .load(part.image.ifEmpty { R.drawable.partimg })
@@ -75,7 +78,8 @@ class CreateOrderActivity : AppCompatActivity() {
         try {
             updateTotals()
         } catch (e: Exception) {
-            Toast.makeText(this, "Error calculating totals: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Error calculating totals: ${e.message}", Toast.LENGTH_SHORT)
+                .show()
             finish()
             return
         }
@@ -96,26 +100,39 @@ class CreateOrderActivity : AppCompatActivity() {
 
         // Place order
         binding.placeOrderButton.setOnClickListener {
-            val address = binding.postalAddress.text.toString().trim()
-            val contact = binding.userContact.text.toString().trim()
-            val notes = binding.specialRequirements.text.toString().trim()
+            AlertDialog.Builder(this)
+                .setTitle("Place Order")
+                .setMessage("Are you sure you want to place the order?")
+                .setPositiveButton("Yes") { dialog, _ ->
+                    val address = binding.postalAddress.text.toString().trim()
+                    val contact = binding.userContact.text.toString().trim()
+                    val notes = binding.specialRequirements.text.toString().trim()
 
-            if (address.isEmpty() || contact.isEmpty()) {
-                Toast.makeText(this, "Please fill address and contact", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+                    if (address.isEmpty() || contact.isEmpty()) {
+                        Toast.makeText(this, "Please fill address and contact", Toast.LENGTH_SHORT)
+                            .show()
+                        return@setPositiveButton
+                    }
 
-            val user = FirebaseAuth.getInstance().currentUser
-            if (user == null) {
-                Toast.makeText(this, "Please sign in first", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+                    val user = FirebaseAuth.getInstance().currentUser
+                    if (user == null) {
+                        Toast.makeText(this, "Please sign in first", Toast.LENGTH_SHORT).show()
+                        return@setPositiveButton
+                    }
 
-            val order = buildOrder(user, address, contact, notes)
-            saveOrder(order)
+                    val order = buildOrder(user, address, contact, notes)
+                    saveOrder(order)
+                }
+                .setNegativeButton("No") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
         }
+
+
     }
 
+    // Functions moved outside onCreate
     private fun updateTotals() {
         try {
             val subtotal = part.price.toDouble() * quantity
@@ -124,7 +141,8 @@ class CreateOrderActivity : AppCompatActivity() {
             binding.summaryShipping.text = "Rs. ${String.format("%.2f", shippingFee)}"
             binding.summaryTotal.text = "Rs. ${String.format("%.2f", total)}"
         } catch (e: Exception) {
-            Toast.makeText(this, "Error calculating price: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Error calculating price: ${e.message}", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -146,7 +164,6 @@ class CreateOrderActivity : AppCompatActivity() {
         order.userEmail = user.email ?: ""
         order.userName = user.displayName ?: ""
         order.userId = user.uid
-        // Set the shopId from the spare part, fallback to empty string for older parts
         order.shopId = if (part.shopId.isNotEmpty()) part.shopId else ""
         return order
     }
@@ -159,16 +176,29 @@ class CreateOrderActivity : AppCompatActivity() {
                 progressDialog.dismiss()
 
                 result.onSuccess {
-                    Toast.makeText(this@CreateOrderActivity, "Order placed successfully!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@CreateOrderActivity,
+                        "Order placed successfully!",
+                        Toast.LENGTH_LONG
+                    ).show()
                     finish()
                 }.onFailure { e ->
-                    Toast.makeText(this@CreateOrderActivity, e.message ?: "Failed to place order", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@CreateOrderActivity,
+                        e.message ?: "Failed to place order",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             } catch (e: Exception) {
                 progressDialog.dismiss()
-                Toast.makeText(this@CreateOrderActivity, e.message ?: "Failed to place order", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this@CreateOrderActivity,
+                    e.message ?: "Failed to place order",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
-}
 
+
+}

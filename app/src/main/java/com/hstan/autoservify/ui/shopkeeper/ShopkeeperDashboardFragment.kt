@@ -60,11 +60,10 @@ class ShopkeeperDashboardFragment : Fragment() {
 
         // Setup RecyclerViews for orders and appointments
         binding.recentOrdersRecyclerview.adapter = dashboardOrderAdapter
-        binding.recentOrdersRecyclerview.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.recentOrdersRecyclerview.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
         binding.recentAppointmentsRecyclerview.adapter = dashboardAppointmentAdapter
-        binding.recentAppointmentsRecyclerview.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-
+        binding.recentAppointmentsRecyclerview.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         // Setup click listeners
         setupClickListeners()
 

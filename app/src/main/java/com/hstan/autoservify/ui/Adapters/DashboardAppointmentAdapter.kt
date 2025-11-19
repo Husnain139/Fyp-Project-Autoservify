@@ -38,7 +38,6 @@ class DashboardAppointmentAdapter(
             .into(holder.binding.orderItemImage)
         
         // Hide cancel and delete buttons - dashboard is view-only
-        holder.binding.orderCancelButton.visibility = View.GONE
         holder.binding.orderDelete.visibility = View.GONE
         
         // Set click listener

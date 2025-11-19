@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -24,6 +25,7 @@ import com.hstan.autoservify.ui.orders.ManualOrderServiceActivity
 import com.hstan.autoservify.model.repositories.AuthRepository
 import com.hstan.autoservify.model.AppUser
 import com.hstan.autoservify.R
+import com.hstan.autoservify.ui.main.Shops.SpareParts.PartsCraft
 import kotlinx.coroutines.launch
 
 class OrdersFragment : Fragment() {
@@ -189,6 +191,21 @@ class OrdersFragment : Fragment() {
         }
     }
 
+    
+    // Add this function inside OrdersFragment
+    private fun showDeleteOrderConfirmation(order: Order) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Delete Order")
+            .setMessage("Are you sure you want to delete this order?")
+            .setPositiveButton("Delete") { _, _ ->
+                // Call ViewModel to delete the order
+                viewModel.deleteOrder(order)
+                Toast.makeText(context, "Order deleted", Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
     private fun updateFilterChipsVisibility() {
         when (currentTab) {
             0 -> { // Orders tab
@@ -265,7 +282,7 @@ class OrdersFragment : Fragment() {
             onDeleteClick = { item ->
                 if (isShopkeeper) {
                     when (item) {
-                        is Order -> viewModel.deleteOrder(item)
+                        is Order -> showDeleteOrderConfirmation(item) // show dialog instead
                         is Appointment -> {
                             Toast.makeText(context, "Use cancel for appointments", Toast.LENGTH_SHORT).show()
                         }
@@ -278,6 +295,7 @@ class OrdersFragment : Fragment() {
             adapter = this@OrdersFragment.adapter
         }
     }
+
 
     private fun setupFAB() {
         fab.setOnClickListener {

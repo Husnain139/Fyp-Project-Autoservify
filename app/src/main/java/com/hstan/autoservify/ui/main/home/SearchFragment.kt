@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hstan.autoservify.databinding.FragmentSearchBinding
 import com.hstan.autoservify.ui.Adapters.ShopAdapter
@@ -15,11 +16,24 @@ import com.hstan.autoservify.ui.main.Shops.Shop
 import com.hstan.autoservify.model.repositories.ShopRepository
 import com.hstan.autoservify.model.repositories.ServiceRepository
 import com.hstan.autoservify.model.repositories.PartsCraftRepository
+import com.hstan.autoservify.ui.Adapters.PartsCraftAdapter
+import com.hstan.autoservify.ui.Adapters.ServiceAdapter
+import com.hstan.autoservify.ui.main.Shops.Services.Service
+import com.hstan.autoservify.ui.main.Shops.SpareParts.PartsCraft
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 
 class SearchFragment : Fragment() {
+
+    private lateinit var ShopAdapter: ShopAdapter
+    private lateinit var serviceAdapter: ServiceAdapter
+    private lateinit var partsAdapter: PartsCraftAdapter
+
+
+    private val shopResults = ArrayList<Shop>()
+    private val serviceResults = ArrayList<Service>()
+    private val partsResults = ArrayList<PartsCraft>()
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
@@ -50,12 +64,30 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
+        shopAdapter = ShopAdapter(shopResults)
+
+        serviceAdapter = ServiceAdapter(
+            items = serviceResults,
+            onItemClick = { service -> },
+            showEditDeleteButtons = false // customer view
+        )
+
+        partsAdapter = PartsCraftAdapter(
+            items = partsResults,
+            showEditDeleteButtons = false
+        )
+
+        // Use searchResults for shopAdapter
         shopAdapter = ShopAdapter(searchResults)
+
+        // Set default layout for shop adapter → Linear
         binding.searchResultsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = shopAdapter
         }
     }
+
+
 
     private fun setupSearchFunctionality() {
         binding.searchEditText.addTextChangedListener { text ->
@@ -77,6 +109,8 @@ class SearchFragment : Fragment() {
         binding.chipShops.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 uncheckOtherChips(binding.chipShops)
+                binding.searchResultsRecyclerView.layoutManager = LinearLayoutManager(context) // linear for shops
+                binding.searchResultsRecyclerView.adapter = shopAdapter
                 performSearch(binding.searchEditText.text.toString().trim())
             }
         }
@@ -84,8 +118,8 @@ class SearchFragment : Fragment() {
         binding.chipServices.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 uncheckOtherChips(binding.chipServices)
-                Toast.makeText(context, "Service search coming soon", Toast.LENGTH_SHORT).show()
-                // For now, show shops
+                binding.searchResultsRecyclerView.layoutManager = GridLayoutManager(context, 2) // grid for services
+                binding.searchResultsRecyclerView.adapter = serviceAdapter
                 performSearch(binding.searchEditText.text.toString().trim())
             }
         }
@@ -93,12 +127,15 @@ class SearchFragment : Fragment() {
         binding.chipParts.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 uncheckOtherChips(binding.chipParts)
-                Toast.makeText(context, "Parts search coming soon", Toast.LENGTH_SHORT).show()
-                // For now, show shops
+                binding.searchResultsRecyclerView.layoutManager = GridLayoutManager(context, 2) // grid for parts
+                binding.searchResultsRecyclerView.adapter = partsAdapter
                 performSearch(binding.searchEditText.text.toString().trim())
             }
         }
+
     }
+
+
 
     private fun uncheckOtherChips(selectedChip: View) {
         when (selectedChip.id) {
@@ -119,25 +156,79 @@ class SearchFragment : Fragment() {
 
     private fun performSearch(query: String) {
         viewLifecycleOwner.lifecycleScope.launch {
-            try {
-                if (!isAdded || _binding == null) {
-                    println("SearchFragment: Fragment not ready for search")
-                    return@launch
+
+            when {
+                binding.chipShops.isChecked -> {
+                    if (query.isEmpty()) loadAllShops()
+                    else searchShops(query)
                 }
-                
-                if (query.isEmpty()) {
-                    loadAllShops()
-                } else {
-                    searchShops(query)
+
+                binding.chipServices.isChecked -> {
+                    if (query.isEmpty()) loadAllServices()
+                    else searchServices(query)
                 }
-            } catch (e: Exception) {
-                println("SearchFragment: Search failed: ${e.message}")
-                if (isAdded && context != null) {
-                    Toast.makeText(context, "Search failed: ${e.message}", Toast.LENGTH_SHORT).show()
+
+                binding.chipParts.isChecked -> {
+                    if (query.isEmpty()) loadAllParts()
+                    else searchParts(query)
                 }
             }
         }
     }
+
+    private fun loadAllServices() = lifecycleScope.launch {
+        val list = serviceRepository.getServices()
+        updateServiceResults(list)
+    }
+
+    private fun searchServices(query: String) = lifecycleScope.launch {
+        val list = serviceRepository.getServices()
+
+        val filtered = list.filter { service ->
+            service.name.contains(query, true) ||
+                    service.description.contains(query, true)
+        }
+
+        updateServiceResults(filtered)
+    }
+
+
+    private fun loadAllParts() = lifecycleScope.launch {
+        partsCraftRepository.getPartsCrafts().collect { list ->
+            updatePartsResults(list)
+        }
+    }
+
+    private fun searchParts(query: String) = lifecycleScope.launch {
+        partsCraftRepository.getPartsCrafts().collect { list ->
+            val filtered = list.filter { part ->
+                part.title.contains(query, true) ||
+                        part.description.contains(query, true)
+            }
+            updatePartsResults(filtered)
+        }
+    }
+
+    private fun updateShopResults(results: List<Shop>) {
+        shopResults.clear()
+        shopResults.addAll(results)
+        shopAdapter.notifyDataSetChanged()
+    }
+
+    private fun updatePartsResults(results: List<PartsCraft>) {
+        partsResults.clear()
+        partsResults.addAll(results)
+        partsAdapter.notifyDataSetChanged()
+    }
+
+    private fun updateServiceResults(results: List<Service>) {
+        serviceResults.clear()
+        serviceResults.addAll(results)
+        serviceAdapter.notifyDataSetChanged()
+    }
+
+
+
 
     private fun loadAllShops() {
         viewLifecycleOwner.lifecycleScope.launch {

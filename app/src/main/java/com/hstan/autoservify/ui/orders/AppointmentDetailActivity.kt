@@ -74,10 +74,8 @@ class AppointmentDetailActivity : AppCompatActivity() {
             updateAppointmentStatus("Confirmed")
         }
 
-        binding.markDeliveredButton.setOnClickListener {
-            updateAppointmentStatus("Completed")
-        }
-        
+
+
         binding.leaveReviewBtn.setOnClickListener {
             showReviewDialog()
         }
@@ -89,7 +87,9 @@ class AppointmentDetailActivity : AppCompatActivity() {
             appointmentDateText.text = appointment.appointmentDate
             appointmentTimeText.text = appointment.appointmentTime
             customerNameText.text = appointment.userName
-            
+            binding.customerEmailText.text = appointment.userEmail
+
+
             // Set status with color
             statusText.text = appointment.status
             when (appointment.status.lowercase()) {
@@ -156,7 +156,7 @@ class AppointmentDetailActivity : AppCompatActivity() {
                     spareParts.clear()
                     spareParts.addAll(orders)
                     sparePartsAdapter.notifyDataSetChanged()
-                    
+
                     // Show/hide empty state
                     if (orders.isEmpty()) {
                         binding.sparePartsRecyclerView.visibility = View.GONE
@@ -165,7 +165,7 @@ class AppointmentDetailActivity : AppCompatActivity() {
                         binding.sparePartsRecyclerView.visibility = View.VISIBLE
                         binding.noPartsText.visibility = View.GONE
                     }
-                    
+
                     updatePrices()
                 }
             } catch (e: Exception) {
@@ -176,7 +176,7 @@ class AppointmentDetailActivity : AppCompatActivity() {
     }
 
     private fun updatePrices() {
-        val sparePartsTotal = spareParts.sumOf { 
+        val sparePartsTotal = spareParts.sumOf {
             (it.item?.price ?: 0) * it.quantity.toDouble()
         }
         val totalAmount = servicePrice + sparePartsTotal
@@ -205,24 +205,21 @@ class AppointmentDetailActivity : AppCompatActivity() {
                         } else {
                             // Customer view
                             binding.createOrderButton.visibility = View.GONE
-                            binding.statusButtonsContainer.visibility = View.GONE
                             checkAndShowReviewButton()
                         }
                     }.onFailure {
                         binding.createOrderButton.visibility = View.GONE
-                        binding.statusButtonsContainer.visibility = View.GONE
                         binding.leaveReviewBtn.visibility = View.GONE
                     }
                 }
             } catch (e: Exception) {
                 println("Error checking user type: ${e.message}")
                 binding.createOrderButton.visibility = View.GONE
-                binding.statusButtonsContainer.visibility = View.GONE
                 binding.leaveReviewBtn.visibility = View.GONE
             }
         }
     }
-    
+
     private fun checkAndShowReviewButton() {
         val status = appointment.status.lowercase()
         if (status.contains("completed") || status.contains("delivered")) {
@@ -245,13 +242,13 @@ class AppointmentDetailActivity : AppCompatActivity() {
             }
         }
     }
-    
+
     private fun showReviewDialog() {
         lifecycleScope.launch {
             try {
                 val currentUser = authRepository.getCurrentUser()
                 val userProfile = authRepository.getUserProfile(currentUser?.uid ?: "").getOrNull()
-                
+
                 val dialog = ReviewDialog.newInstance(
                     itemId = appointment.id,
                     itemType = "APPOINTMENT",
@@ -274,27 +271,25 @@ class AppointmentDetailActivity : AppCompatActivity() {
     private fun updateStatusButtonsVisibility() {
         // Show status buttons based on current status
         val status = appointment.status.lowercase()
-        binding.statusButtonsContainer.visibility = View.VISIBLE
-        
+
         when {
             status.contains("pending") || status.isBlank() -> {
                 // Show only confirm button
                 binding.confirmButton.visibility = View.VISIBLE
-                binding.markDeliveredButton.visibility = View.GONE
             }
             status.contains("confirmed") || status.contains("in progress") -> {
                 // Show only mark as delivered button
                 binding.confirmButton.visibility = View.GONE
-                binding.markDeliveredButton.visibility = View.VISIBLE
             }
             status.contains("completed") || status.contains("delivered") -> {
                 // Hide both buttons
-                binding.statusButtonsContainer.visibility = View.GONE
+                binding.confirmButton.visibility = View.GONE
+                binding.confirmButton.visibility = View.GONE
+
             }
             else -> {
                 // Show both by default
                 binding.confirmButton.visibility = View.VISIBLE
-                binding.markDeliveredButton.visibility = View.VISIBLE
             }
         }
     }
@@ -306,14 +301,14 @@ class AppointmentDetailActivity : AppCompatActivity() {
                 // Use appointment.id if available, otherwise use appointmentId
                 val id = appointment.id.ifEmpty { appointment.appointmentId }
                 val result = appointmentRepository.updateAppointmentStatus(id, newStatus)
-                
+
                 result.onSuccess {
                     Toast.makeText(
                         this@AppointmentDetailActivity,
                         "Status updated to $newStatus",
                         Toast.LENGTH_SHORT
                     ).show()
-                    
+
                     // Update UI
                     setupUI()
                     updateStatusButtonsVisibility()

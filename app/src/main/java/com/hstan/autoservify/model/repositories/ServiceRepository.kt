@@ -8,6 +8,7 @@ import kotlinx.coroutines.tasks.await
 class ServiceRepository {
     private val serviceCollection = FirebaseFirestore.getInstance().collection("Services")
 
+
     suspend fun saveService(service: Service): Boolean {
         return try {
             val doc = serviceCollection.document()

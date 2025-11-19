@@ -102,7 +102,6 @@ class OrderAdapter(
         }
         
         holder.itemView.setOnClickListener(clickListener)
-        holder.binding.orderCancelButton.setOnClickListener { onCancelClick?.invoke(order) }
         holder.binding.orderDelete.setOnClickListener { onDeleteClick?.invoke(order) }
     }
 
@@ -137,7 +136,6 @@ class OrderAdapter(
             intent.putExtra(AppointmentDetailActivity.EXTRA_APPOINTMENT, Gson().toJson(appointment))
             context.startActivity(intent)
         }
-        holder.binding.orderCancelButton.setOnClickListener { onCancelClick?.invoke(appointment) }
         holder.binding.orderDelete.setOnClickListener { onDeleteClick?.invoke(appointment) }
     }
 

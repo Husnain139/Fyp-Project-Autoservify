@@ -27,7 +27,8 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/arr"
-            android:contentDescription="Back" />
+            android:contentDescription="Back"
+            app:tint="@color/Primary_color"/>
 
         <TextView
             android:id="@+id/toolbarTitle"
@@ -39,7 +40,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:fontFamily="@font/outfit"
-            android:textColor="@color/black" />
+            android:textColor="@color/Primary_color" />
     </LinearLayout>
 
     <TextView

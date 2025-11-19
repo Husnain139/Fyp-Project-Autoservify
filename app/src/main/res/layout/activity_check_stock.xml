@@ -26,6 +26,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/arr"
+            app:tint="@color/Primary_color"
             android:contentDescription="Back" />
 
         <TextView
@@ -38,7 +39,7 @@
             android:textSize="24sp"
             android:textStyle="bold"
             android:fontFamily="@font/outfit"
-            android:textColor="@color/black" />
+            android:textColor="@color/Primary_color" />
     </LinearLayout>
 
     <!-- Content ScrollView -->

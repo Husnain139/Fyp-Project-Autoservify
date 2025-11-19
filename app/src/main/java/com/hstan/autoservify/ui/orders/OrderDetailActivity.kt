@@ -1,8 +1,10 @@
 package com.hstan.autoservify.ui.orders
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
@@ -12,18 +14,20 @@ import com.hstan.autoservify.databinding.ActivityOrderDetailBinding
 import com.hstan.autoservify.model.repositories.AuthRepository
 import com.hstan.autoservify.model.repositories.OrderRepository
 import com.hstan.autoservify.model.repositories.ReviewRepository
+import com.hstan.autoservify.ui.main.Shops.SpareParts.Partscraftdetail
 import com.hstan.autoservify.ui.main.ViewModels.Order
 import com.hstan.autoservify.ui.reviews.ReviewDialog
 import kotlinx.coroutines.launch
 
 class OrderDetailActivity : AppCompatActivity() {
 
+
     private lateinit var binding: ActivityOrderDetailBinding
     private lateinit var orderRepository: OrderRepository
     private lateinit var authRepository: AuthRepository
     private lateinit var reviewRepository: ReviewRepository
     private var currentOrder: Order? = null
-    private var relatedOrders: List<Order> = emptyList() // For multi-part manual orders
+    private var relatedOrders: List<Order> = emptyList() // For multi-part orders
     private var isMultiPartOrder: Boolean = false
     private var currentUserType: String = ""
     private var currentUserId: String = ""
@@ -39,19 +43,12 @@ class OrderDetailActivity : AppCompatActivity() {
         authRepository = AuthRepository()
         reviewRepository = ReviewRepository()
 
-        // Setup toolbar
-       // setSupportActionBar(binding.toolbar)
-        //supportActionBar?.setDisplayHomeAsUpEnabled(true)
-       // supportActionBar?.title = "Order Details"
-
-        // Check if this is a multi-part order or single order
+        // Check if multi-part order
         val relatedOrderIds = intent.getStringArrayListExtra("related_order_ids")
         if (relatedOrderIds != null && relatedOrderIds.isNotEmpty()) {
-            // Multi-part manual order
             isMultiPartOrder = true
             loadMultiPartOrder(relatedOrderIds)
         } else {
-            // Single order (existing logic)
             val orderJson = intent.getStringExtra("order_data")
             if (orderJson != null) {
                 currentOrder = Gson().fromJson(orderJson, Order::class.java)
@@ -107,7 +104,6 @@ class OrderDetailActivity : AppCompatActivity() {
                         println("OrderDetail: Current user ID: '$currentUserId'")
                         println("OrderDetail: Order status: '${currentOrder?.status}'")
 
-                        // Load order details and setup UI
                         setupOrderDetails()
                         setupStatusButtons()
                         startRealTimeUpdates()
@@ -124,48 +120,35 @@ class OrderDetailActivity : AppCompatActivity() {
     private fun setupOrderDetails() {
         currentOrder?.let { order ->
             if (isMultiPartOrder && relatedOrders.isNotEmpty()) {
-                // Display multi-part order
                 displayMultiPartOrder(relatedOrders)
             } else {
-                // Display single order
                 displaySingleOrder(order)
             }
 
-            // Customer details (same for both single and multi-part)
             binding.customerName.text = order.userName.ifBlank { "Unknown Customer" }
             binding.customerEmail.text = order.userEmail.ifBlank { "No email provided" }
             binding.customerContact.text = order.userContact.ifBlank { "No contact provided" }
 
-            // Delivery details
             binding.deliveryAddress.text = order.postalAddress.ifBlank { "No address provided" }
-            binding.specialRequirements.text = if (order.specialRequirements.isBlank()) {
-                "No special requirements"
-            } else {
-                order.specialRequirements
-            }
+            binding.specialRequirements.text = if (order.specialRequirements.isBlank()) "No special requirements" else order.specialRequirements
 
-            // Order info
             binding.orderDate.text = order.orderDate.ifBlank { "No date" }
             binding.orderStatus.text = order.status.ifBlank { "pending" }.replaceFirstChar { it.uppercase() }
 
-            // Set status color
             updateStatusColor(order.status)
         }
     }
 
     private fun displaySingleOrder(order: Order) {
-        // Show single item section
         binding.singleItemSection.visibility = View.VISIBLE
         binding.multiPartSection.visibility = View.GONE
 
-        // Order item details
         binding.itemTitle.text = order.item?.title ?: "Unknown Item"
         binding.itemDescription.text = order.item?.description ?: "No description available"
-        binding.itemPrice.text = "₹${order.item?.price ?: 0}"
+        binding.itemPrice.text = "Rs.${order.item?.price ?: 0}"
         binding.orderQuantity.text = "Quantity: ${order.quantity}"
-        binding.totalPrice.text = "Total: ₹${(order.item?.price ?: 0) * order.quantity}"
+        binding.totalPrice.text = "Total: Rs.${(order.item?.price ?: 0) * order.quantity}"
 
-        // Load item image
         Glide.with(this)
             .load(order.item?.image)
             .placeholder(R.drawable.logo)
@@ -173,22 +156,19 @@ class OrderDetailActivity : AppCompatActivity() {
             .into(binding.itemImage)
     }
 
+
     private fun displayMultiPartOrder(orders: List<Order>) {
-        // Hide single item views, show multi-part section
         binding.singleItemSection.visibility = View.GONE
         binding.multiPartSection.visibility = View.VISIBLE
-
-        // Clear previous parts
         binding.partsListContainer.removeAllViews()
 
-        // Display each part
         for (order in orders) {
             val partView = layoutInflater.inflate(android.R.layout.simple_list_item_2, binding.partsListContainer, false)
             val text1 = partView.findViewById<android.widget.TextView>(android.R.id.text1)
             val text2 = partView.findViewById<android.widget.TextView>(android.R.id.text2)
 
             text1.text = "${order.item?.title ?: "Unknown"} x ${order.quantity}"
-            text2.text = "₹${(order.item?.price ?: 0) * order.quantity}"
+            text2.text = "Rs.${(order.item?.price ?: 0) * order.quantity}"
             text1.textSize = 16f
             text2.textSize = 14f
             text1.setTextColor(getColor(R.color.text_primary))
@@ -197,9 +177,8 @@ class OrderDetailActivity : AppCompatActivity() {
             binding.partsListContainer.addView(partView)
         }
 
-        // Calculate and display total
         val totalPrice = orders.sumOf { (it.item?.price ?: 0) * it.quantity }
-        binding.multiPartTotal.text = "Total: ₹$totalPrice"
+        binding.multiPartTotal.text = "Total: Rs.$totalPrice"
     }
 
     private fun updateStatusColor(status: String) {
@@ -218,86 +197,65 @@ class OrderDetailActivity : AppCompatActivity() {
         currentOrder?.let { order ->
             val status = order.status.lowercase().trim()
 
-            println("OrderDetail: Setting up buttons for user type: '$currentUserType', status: '$status'")
-            println("OrderDetail: Raw status from order: '${order.status}'")
-
             when (currentUserType) {
-                "shop_owner" -> {
-                    println("OrderDetail: Setting up shopkeeper buttons")
-                    setupShopkeeperButtons(status)
-                }
-                "customer" -> {
-                    println("OrderDetail: Setting up customer buttons")
-                    setupCustomerButtons(status)
-                }
-                else -> {
-                    println("OrderDetail: Unknown user type, hiding all buttons")
-                    hideAllButtons()
-                }
+                "shop_owner" -> setupShopkeeperButtons(status)
+                "customer" -> setupCustomerButtons(status)
+                else -> hideAllButtons()
             }
-        } ?: run {
-            println("OrderDetail: Current order is null, hiding all buttons")
-            hideAllButtons()
-        }
+        } ?: hideAllButtons()
     }
 
     private fun setupShopkeeperButtons(status: String) {
-        println("OrderDetail: setupShopkeeperButtons called with status: '$status'")
         when (status) {
+            "cancelled", "order cancelled" -> {
+                // Order cancelled by customer, hide all action buttons
+                hideAllButtons()
+            }
             "pending", "", "order placed", "placed" -> {
-                // Show "Confirm Order" button for new orders
-                println("OrderDetail: Showing Confirm Order button")
                 binding.confirmOrderBtn.visibility = View.VISIBLE
                 binding.markDeliveredBtn.visibility = View.GONE
                 binding.markReceivedBtn.visibility = View.GONE
             }
             "confirmed", "order confirmed" -> {
-                // Show "Mark as Delivered" button for confirmed orders
-                println("OrderDetail: Showing Mark as Delivered button")
                 binding.confirmOrderBtn.visibility = View.GONE
                 binding.markDeliveredBtn.visibility = View.VISIBLE
                 binding.markReceivedBtn.visibility = View.GONE
             }
-            "delivered", "order delivered", "received", "order received" -> {
-                // Order is completed, hide all buttons
-                println("OrderDetail: Order completed, hiding all buttons")
-                hideAllButtons()
-            }
-            else -> {
-                println("OrderDetail: Unknown status '$status', showing confirm button as default")
-                // Default to showing confirm button for unknown statuses
-                binding.confirmOrderBtn.visibility = View.VISIBLE
-                binding.markDeliveredBtn.visibility = View.GONE
-                binding.markReceivedBtn.visibility = View.GONE
-            }
+            "delivered", "order delivered", "received", "order received" -> hideAllButtons()
+            else -> binding.confirmOrderBtn.visibility = View.VISIBLE
         }
     }
 
+
+
+
     private fun setupCustomerButtons(status: String) {
-        println("OrderDetail: setupCustomerButtons called with status: '$status'")
+        // Show Cancel button only for pending orders
+        binding.cancelButton.visibility = if (status == "pending" || status == "order placed" || status == "placed") {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+
         when (status) {
             "delivered", "order delivered" -> {
-                // Show "Mark as Received" button for delivered orders
-                println("OrderDetail: Showing Order Received button")
                 binding.confirmOrderBtn.visibility = View.GONE
                 binding.markDeliveredBtn.visibility = View.GONE
                 binding.markReceivedBtn.visibility = View.VISIBLE
                 checkAndShowReviewButton(false)
             }
             "received", "order received" -> {
-                // Order is completed, show review button
-                println("OrderDetail: Order received, checking review status")
                 hideAllButtons()
                 checkAndShowReviewButton(true)
             }
             else -> {
-                // Customer can't take action until order is delivered
-                println("OrderDetail: Customer cannot take action with status '$status', hiding all buttons")
-                hideAllButtons()
+                binding.confirmOrderBtn.visibility = View.GONE
+                binding.markDeliveredBtn.visibility = View.GONE
+                binding.markReceivedBtn.visibility = View.GONE
             }
         }
     }
-    
+
     private fun checkAndShowReviewButton(showNow: Boolean) {
         currentOrder?.let { order ->
             lifecycleScope.launch {
@@ -310,9 +268,7 @@ class OrderDetailActivity : AppCompatActivity() {
                         } else if (hasReviewed) {
                             binding.leaveReviewBtn.text = "Review Submitted ✓"
                             binding.leaveReviewBtn.isEnabled = false
-                            if (showNow) {
-                                binding.leaveReviewBtn.visibility = View.VISIBLE
-                            }
+                            if (showNow) binding.leaveReviewBtn.visibility = View.VISIBLE
                         }
                     }
                 } catch (e: Exception) {
@@ -323,18 +279,14 @@ class OrderDetailActivity : AppCompatActivity() {
     }
 
     private fun hideAllButtons() {
-        println("OrderDetail: hideAllButtons called")
         binding.confirmOrderBtn.visibility = View.GONE
         binding.markDeliveredBtn.visibility = View.GONE
         binding.markReceivedBtn.visibility = View.GONE
         binding.leaveReviewBtn.visibility = View.GONE
+        binding.cancelButton.visibility = View.GONE
     }
 
     private fun setupClickListeners() {
-        //binding.toolbar.setNavigationOnClickListener {
-          //  onBackPressed()
-        //}
-
         binding.confirmOrderBtn.setOnClickListener {
             updateOrderStatus("Order Confirmed")
         }
@@ -346,19 +298,38 @@ class OrderDetailActivity : AppCompatActivity() {
         binding.markReceivedBtn.setOnClickListener {
             updateOrderStatus("Order Received")
         }
-        
+
         binding.leaveReviewBtn.setOnClickListener {
             showReviewDialog()
         }
+
+        // --- New Cancel button listener ---
+        binding.cancelButton.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle("Cancel Order")
+                .setMessage("Are you sure you want to cancel this order?")
+                .setPositiveButton("Yes") { dialog, _ ->
+                    updateOrderStatus("Order Cancelled")
+
+                    val intent = Intent(this, Partscraftdetail::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    startActivity(intent)
+                    finish()
+                }
+                .setNegativeButton("No") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
+        }
     }
-    
+
     private fun showReviewDialog() {
         currentOrder?.let { order ->
             lifecycleScope.launch {
                 try {
                     val currentUser = authRepository.getCurrentUser()
                     val userProfile = authRepository.getUserProfile(currentUser?.uid ?: "").getOrNull()
-                    
+
                     val dialog = ReviewDialog.newInstance(
                         itemId = order.id,
                         itemType = "ORDER",
@@ -366,7 +337,6 @@ class OrderDetailActivity : AppCompatActivity() {
                         userId = currentUserId,
                         userName = userProfile?.name ?: "Customer"
                     ) {
-                        // On review submitted
                         binding.leaveReviewBtn.text = "Review Submitted ✓"
                         binding.leaveReviewBtn.isEnabled = false
                         hasReviewed = true
@@ -380,78 +350,42 @@ class OrderDetailActivity : AppCompatActivity() {
     }
 
     private fun updateOrderStatus(newStatus: String) {
-        // Show loading state
         setButtonsEnabled(false)
-        
         lifecycleScope.launch {
             try {
                 if (isMultiPartOrder && relatedOrders.isNotEmpty()) {
-                    // Update all related orders
                     var allSuccess = true
                     for (order in relatedOrders) {
                         order.status = newStatus
                         val result = orderRepository.updateOrder(order)
-                        if (result.isFailure) {
-                            allSuccess = false
-                            break
-                        }
+                        if (result.isFailure) allSuccess = false
                     }
-                    
                     if (allSuccess) {
-                        // Update current order reference
                         currentOrder?.status = newStatus
-                        
-                        Toast.makeText(
-                            this@OrderDetailActivity,
-                            "Order status updated to ${newStatus.replaceFirstChar { it.uppercase() }}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        
-                        // Update UI immediately
                         binding.orderStatus.text = newStatus.replaceFirstChar { it.uppercase() }
                         updateStatusColor(newStatus)
                         setupStatusButtons()
+                        Toast.makeText(this@OrderDetailActivity, "Order status updated to ${newStatus.replaceFirstChar { it.uppercase() }}", Toast.LENGTH_SHORT).show()
                     } else {
-                        Toast.makeText(
-                            this@OrderDetailActivity,
-                            "Failed to update order status",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(this@OrderDetailActivity, "Failed to update order status", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    // Update single order
                     currentOrder?.let { order ->
                         order.status = newStatus
                         val result = orderRepository.updateOrder(order)
-                        
                         if (result.isSuccess) {
-                            Toast.makeText(
-                                this@OrderDetailActivity,
-                                "Order status updated to ${newStatus.replaceFirstChar { it.uppercase() }}",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            
-                            // Update UI immediately
                             binding.orderStatus.text = newStatus.replaceFirstChar { it.uppercase() }
                             updateStatusColor(newStatus)
                             setupStatusButtons()
+                            Toast.makeText(this@OrderDetailActivity, "Order status updated to ${newStatus.replaceFirstChar { it.uppercase() }}", Toast.LENGTH_SHORT).show()
                         } else {
-                            Toast.makeText(
-                                this@OrderDetailActivity,
-                                "Failed to update order status",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            // Revert status change
+                            Toast.makeText(this@OrderDetailActivity, "Failed to update order status", Toast.LENGTH_SHORT).show()
                             order.status = binding.orderStatus.text.toString().lowercase()
                         }
                     }
                 }
             } catch (e: Exception) {
-                Toast.makeText(
-                    this@OrderDetailActivity,
-                    "Error updating order: ${e.message}",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(this@OrderDetailActivity, "Error updating order: ${e.message}", Toast.LENGTH_SHORT).show()
             } finally {
                 setButtonsEnabled(true)
             }
@@ -462,19 +396,16 @@ class OrderDetailActivity : AppCompatActivity() {
         binding.confirmOrderBtn.isEnabled = enabled
         binding.markDeliveredBtn.isEnabled = enabled
         binding.markReceivedBtn.isEnabled = enabled
-        
-        // Show loading indicator
+        binding.cancelButton.isEnabled = enabled
         binding.loadingIndicator.visibility = if (enabled) View.GONE else View.VISIBLE
     }
 
     private fun startRealTimeUpdates() {
         currentOrder?.let { order ->
             lifecycleScope.launch {
-                // Listen for real-time updates to this specific order
                 orderRepository.getOrders().collect { orders ->
                     val updatedOrder = orders.find { it.id == order.id }
                     if (updatedOrder != null && updatedOrder.status != currentOrder?.status) {
-                        // Order status changed, update UI
                         currentOrder = updatedOrder
                         runOnUiThread {
                             binding.orderStatus.text = updatedOrder.status.replaceFirstChar { it.uppercase() }
@@ -491,4 +422,6 @@ class OrderDetailActivity : AppCompatActivity() {
         onBackPressed()
         return true
     }
+
+
 }

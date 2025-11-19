@@ -9,16 +9,56 @@
 
 
 
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:background="@color/white"
+        android:elevation="4dp">
+
+        <!-- Back Button -->
+        <ImageView
+            android:id="@+id/backBtn"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/arr"
+            app:tint="@color/Primary_color"
+            android:contentDescription="Back"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <!-- Toolbar Title -->
+        <TextView
+            android:id="@+id/toolbarTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="16dp"
+            android:text="Order Details"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/outfit"
+            android:textColor="@color/Primary_color" />
+
+    </LinearLayout>
+
+
     <!-- Main Content -->
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/Nested"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:paddingTop="8dp"
             android:padding="16dp">
 
             <!-- Item Details Card -->
@@ -492,6 +532,20 @@
                     app:iconGravity="textStart"
                     android:visibility="gone" />
 
+                <!-- Mark as Received Button (Customer) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/cancelButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="Cancel Order"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="@color/Primary_color"
+                    app:cornerRadius="12dp"
+                    app:icon="@drawable/ic_done_all"
+                    app:iconGravity="textStart"
+                    android:visibility="gone" />
+
                 <!-- Leave Review Button (Customer) -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/leaveReviewBtn"
@@ -511,8 +565,13 @@
 
             </LinearLayout>
 
+
         </LinearLayout>
 
+
+
     </androidx.core.widget.NestedScrollView>
+
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

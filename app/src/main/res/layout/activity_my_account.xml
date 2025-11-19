@@ -24,7 +24,8 @@
             android:id="@+id/backBtn"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/arr" />
+            android:src="@drawable/arr"
+            app:tint="@color/Primary_color"/>
 
         <TextView
             android:id="@+id/title"
@@ -36,7 +37,7 @@
             android:fontFamily="@font/outfit"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@color/black" />
+            android:textColor="@color/Primary_color" />
     </LinearLayout>
 
     <!-- Profile Picture -->

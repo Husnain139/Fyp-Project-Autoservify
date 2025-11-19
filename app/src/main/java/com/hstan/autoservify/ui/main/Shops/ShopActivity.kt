@@ -36,7 +36,6 @@ class ShopActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val shop = Gson().fromJson(json, Shop::class.java)
             currentShop = shop // Store the shop for later use
             binding.titleInput.text = shop.title
-            binding.descript.text = shop.description
             binding.description.text = shop.description
             
             // Load shop image
