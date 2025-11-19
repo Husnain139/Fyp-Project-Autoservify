@@ -55,6 +55,22 @@ class OrderFragmentViewModel : ViewModel() {
         }
     }
 
+    // 🆕 Load appointments for a specific customer
+    fun loadCustomerAppointments(userId: String) {
+        viewModelScope.launch {
+            println("ViewModel: Loading appointments for customer: $userId")
+            appointmentRepository.getCustomerAppointments(userId)
+                .catch { 
+                    println("ViewModel: Error loading customer appointments: ${it.message}")
+                    failureMessage.value = it.message 
+                }
+                .collect { 
+                    println("ViewModel: Received ${it.size} customer appointments")
+                    appointments.value = it 
+                }
+        }
+    }
+
     fun readAppointments() {
         viewModelScope.launch {
             println("ViewModel: Starting to load all appointments")

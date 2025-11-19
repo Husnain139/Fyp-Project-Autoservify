@@ -375,13 +375,13 @@ class OrdersFragment : Fragment() {
                 if (currentUser != null) {
                     val result = authRepository.getUserProfile(currentUser.uid)
                     if (result.isSuccess) {
-                        val userProfile = result.getOrThrow()
-                        when (userProfile.userType) {
-                            "customer" -> {
-                                viewModel.loadCustomerOrders(userProfile.uid)
-                                viewModel.readAppointments()
-                            }
-                            "shop_owner" -> {
+                    val userProfile = result.getOrThrow()
+                    when (userProfile.userType) {
+                        "customer" -> {
+                            viewModel.loadCustomerOrders(userProfile.uid)
+                            viewModel.loadCustomerAppointments(userProfile.uid)
+                        }
+                        "shop_owner" -> {
                                 val shopId = userProfile.shopId
                                 if (!shopId.isNullOrEmpty()) {
                                     viewModel.loadShopOrders(shopId)

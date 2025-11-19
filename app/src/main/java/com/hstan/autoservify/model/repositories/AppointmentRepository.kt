@@ -101,6 +101,15 @@ class AppointmentRepository {
                 emit(enrichedAppointments)
             }
 
-
+    // 🆕 Get appointments for a specific customer
+    fun getCustomerAppointments(userId: String): Flow<List<Appointment>> =
+        appointmentCollection
+            .whereEqualTo("userId", userId)
+            .snapshots()
+            .transform { snapshot ->
+                val appointments = snapshot.toObjects(Appointment::class.java)
+                val enrichedAppointments = enrichAppointmentsWithServiceImages(appointments)
+                emit(enrichedAppointments)
+            }
 
 }
