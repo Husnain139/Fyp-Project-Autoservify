@@ -244,6 +244,32 @@
                 android:textSize="16sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Shop City -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/cityInputLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
+            android:hint="Shop Located City"
+            app:boxStrokeColor="@color/Primary_color"
+            app:hintTextColor="@color/Primary_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/addressInputLayout"
+            app:startIconDrawable="@drawable/baseline_store_24"
+            app:startIconTint="@color/Light_primary">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/cityInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords"
+                android:textSize="16sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
         <!-- Shop Phone -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/phoneInputLayout"
@@ -259,7 +285,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:startIconDrawable="@drawable/phone"
-            app:layout_constraintTop_toBottomOf="@id/addressInputLayout">
+            app:layout_constraintTop_toBottomOf="@id/cityInputLayout">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/phoneInput"

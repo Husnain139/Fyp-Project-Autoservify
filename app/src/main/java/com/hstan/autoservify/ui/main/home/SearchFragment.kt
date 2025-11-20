@@ -259,7 +259,8 @@ class SearchFragment : Fragment() {
                         val filteredShops = allShops.filter { shop ->
                             shop.title.contains(query, ignoreCase = true) ||
                             shop.description.contains(query, ignoreCase = true) ||
-                            shop.address.contains(query, ignoreCase = true)
+                            shop.address.contains(query, ignoreCase = true) ||
+                            shop.city.contains(query, ignoreCase = true)
                         }
                         updateResults(filteredShops)
                     }

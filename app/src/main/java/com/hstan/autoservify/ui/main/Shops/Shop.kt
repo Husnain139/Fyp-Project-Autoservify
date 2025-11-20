@@ -5,6 +5,7 @@ class Shop {
     var title: String = ""
     var description: String = ""
     var address: String = ""
+    var city: String = ""
     var phone: String = ""
     var email: String = ""
     var ownerId: String = "" // The user ID who owns this shop

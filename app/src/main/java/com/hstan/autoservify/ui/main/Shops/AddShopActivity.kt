@@ -80,10 +80,11 @@ class AddShopActivity : AppCompatActivity() {
             val title = binding.titleInput.text.toString().trim()
             val description = binding.descript.text.toString().trim()
             val address = binding.addressInput.text.toString().trim()
+            val city = binding.cityInput.text.toString().trim()
             val phone = binding.phoneInput.text.toString().trim()
             val email = binding.emailInput.text.toString().trim()
 
-            if (title.isEmpty() || description.isEmpty() || address.isEmpty() || phone.isEmpty() || email.isEmpty()) {
+            if (title.isEmpty() || description.isEmpty() || address.isEmpty() || city.isEmpty() || phone.isEmpty() || email.isEmpty()) {
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -101,6 +102,7 @@ class AddShopActivity : AppCompatActivity() {
                     this.title = title
                     this.description = description
                     this.address = address
+                    this.city = city
                     this.phone = phone
                     this.email = email
                     this.ownerId = currentUser.uid

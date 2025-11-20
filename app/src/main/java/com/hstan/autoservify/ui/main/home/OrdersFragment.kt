@@ -41,17 +41,19 @@ class OrdersFragment : Fragment() {
     
     private var isDataLoaded = false
     private var currentTab = 0 // 0 = Orders, 1 = Appointments
-    private var currentOrderStatusFilter = "Not Confirmed"
-    private var currentAppointmentStatusFilter = "Not Confirmed"
+    private var currentOrderStatusFilter = "All"
+    private var currentAppointmentStatusFilter = "All"
     private var isShopkeeper = false
 
     // Views
     private lateinit var tabLayout: TabLayout
     private lateinit var orderFilterChipsContainer: View
     private lateinit var appointmentFilterChipsContainer: View
+    private lateinit var chipOrderAll: Chip
     private lateinit var chipOrderNotConfirmed: Chip
     private lateinit var chipOrderInProcess: Chip
     private lateinit var chipOrderCompleted: Chip
+    private lateinit var chipAppointmentAll: Chip
     private lateinit var chipAppointmentNotConfirmed: Chip
     private lateinit var chipAppointmentInProcess: Chip
     private lateinit var chipAppointmentCompleted: Chip
@@ -147,9 +149,11 @@ class OrdersFragment : Fragment() {
         tabLayout = binding.tabLayout
         orderFilterChipsContainer = binding.orderFilterChipsContainer
         appointmentFilterChipsContainer = binding.appointmentFilterChipsContainer
+        chipOrderAll = binding.chipOrderAll
         chipOrderNotConfirmed = binding.chipOrderNotConfirmed
         chipOrderInProcess = binding.chipOrderInProcess
         chipOrderCompleted = binding.chipOrderCompleted
+        chipAppointmentAll = binding.chipAppointmentAll
         chipAppointmentNotConfirmed = binding.chipAppointmentNotConfirmed
         chipAppointmentInProcess = binding.chipAppointmentInProcess
         chipAppointmentCompleted = binding.chipAppointmentCompleted
@@ -237,6 +241,11 @@ class OrdersFragment : Fragment() {
 
     private fun setupFilterChips() {
         // Order filter chips
+        chipOrderAll.setOnClickListener {
+            currentOrderStatusFilter = "All"
+            filterAndDisplayData()
+        }
+
         chipOrderNotConfirmed.setOnClickListener {
             currentOrderStatusFilter = "Not Confirmed"
             filterAndDisplayData()
@@ -253,6 +262,11 @@ class OrdersFragment : Fragment() {
         }
 
         // Appointment filter chips
+        chipAppointmentAll.setOnClickListener {
+            currentAppointmentStatusFilter = "All"
+            filterAndDisplayData()
+        }
+
         chipAppointmentNotConfirmed.setOnClickListener {
             currentAppointmentStatusFilter = "Not Confirmed"
             filterAndDisplayData()
@@ -339,6 +353,7 @@ class OrdersFragment : Fragment() {
 
     private fun filterOrders(): List<Order> {
         return when (currentOrderStatusFilter) {
+            "All" -> allOrders
             "Not Confirmed" -> allOrders.filter {
                 it.status.contains("pending", ignoreCase = true) ||
                 it.status.contains("order placed", ignoreCase = true)
@@ -358,6 +373,7 @@ class OrdersFragment : Fragment() {
 
     private fun filterAppointments(): List<Appointment> {
         return when (currentAppointmentStatusFilter) {
+            "All" -> allAppointments
             "Not Confirmed" -> allAppointments.filter {
                 it.status.contains("pending", ignoreCase = true) ||
                 it.status.isBlank()
