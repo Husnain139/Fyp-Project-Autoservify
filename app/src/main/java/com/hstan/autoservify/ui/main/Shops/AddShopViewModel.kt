@@ -37,4 +37,20 @@ class AddShopViewModel : ViewModel() {
             }
         }
     }
+
+    fun updateShop(shop: Shop) {
+        viewModelScope.launch {
+            try {
+                // Update the shop
+                val result = shopRepository.updateShop(shop)
+                if (result.isSuccess) {
+                    isSuccessfullySaved.value = true
+                } else {
+                    failureMessage.value = result.exceptionOrNull()?.message
+                }
+            } catch (e: Exception) {
+                failureMessage.value = e.message
+            }
+        }
+    }
 }

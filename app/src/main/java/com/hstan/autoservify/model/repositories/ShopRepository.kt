@@ -21,6 +21,18 @@ class ShopRepository {
         }
     }
 
+    suspend fun updateShop(shop: Shop): Result<Boolean> {
+        return try {
+            if (shop.id.isEmpty()) {
+                return Result.failure(Exception("Shop ID is required for update"))
+            }
+            shopCollection.document(shop.id).set(shop).await()
+            Result.success(true)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     fun getShops(): Flow<List<Shop>> {
         return shopCollection.snapshots().map { it.toObjects(Shop::class.java) }
     }

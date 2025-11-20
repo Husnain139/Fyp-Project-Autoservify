@@ -15,6 +15,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.hstan.autoservify.DataSource.CloudinaryUploadHelper
 import com.hstan.autoservify.ui.auth.LoginActivity
 import com.hstan.autoservify.ui.shopkeeper.ShopkeeperDashboardFragment
+import com.google.gson.Gson
+import com.bumptech.glide.Glide
 
 class AddShopActivity : AppCompatActivity() {
 
@@ -31,6 +33,8 @@ class AddShopActivity : AppCompatActivity() {
     private lateinit var viewModel: AddShopViewModel
     private var uploadedImageUrl: String? = null   // ✅ store image URL
     private var isImageUploading = false
+    private var isEditMode = false
+    private var existingShop: Shop? = null
 
 
 
@@ -48,7 +52,8 @@ class AddShopActivity : AppCompatActivity() {
             viewModel.isSuccessfullySaved.collect {
                 it?.let {
                     if (it) {
-                        Toast.makeText(this@AddShopActivity, "Shop added successfully!", Toast.LENGTH_SHORT).show()
+                        val message = if (isEditMode) "Shop updated successfully!" else "Shop added successfully!"
+                        Toast.makeText(this@AddShopActivity, message, Toast.LENGTH_SHORT).show()
                         startActivity(Intent(this@AddShopActivity, com.hstan.autoservify.ui.shopkeeper.ShopkeeperMainActivity::class.java))
                         finish()
                     }
@@ -64,13 +69,21 @@ class AddShopActivity : AppCompatActivity() {
             }
         }
 
+        // Check if we're in edit mode
+        val shopDataJson = intent.getStringExtra("shopData")
+        if (shopDataJson != null) {
+            isEditMode = true
+            existingShop = Gson().fromJson(shopDataJson, Shop::class.java)
+            loadExistingShopData()
+        }
+
         // ✅ Pick image from gallery
         binding.AddShopImage.setOnClickListener {
             imagePicker.launch("image/*")
         }
 
         binding.backArrow.setOnClickListener {
-            val intent = Intent(this, ShopkeeperDashboardFragment::class.java)
+            val intent = Intent(this, com.hstan.autoservify.ui.shopkeeper.ShopkeeperMainActivity::class.java)
             startActivity(intent)
             finish() // optional: closes current activity
         }
@@ -98,23 +111,67 @@ class AddShopActivity : AppCompatActivity() {
             val currentUser = authRepository.getCurrentUser()
 
             if (currentUser != null) {
-                val shop = Shop().apply {
-                    this.title = title
-                    this.description = description
-                    this.address = address
-                    this.city = city
-                    this.phone = phone
-                    this.email = email
-                    this.ownerId = currentUser.uid
-                    this.ownerName = currentUser.displayName ?: ""
-                    // Use uploaded image URL if available, otherwise use empty string
-                    // The app will show a default placeholder for shops without images
-                    this.imageUrl = uploadedImageUrl ?: ""
+                if (isEditMode && existingShop != null) {
+                    // Update existing shop
+                    val shop = existingShop!!.apply {
+                        this.title = title
+                        this.description = description
+                        this.address = address
+                        this.city = city
+                        this.phone = phone
+                        this.email = email
+                        // Update image URL only if a new image was uploaded
+                        if (!uploadedImageUrl.isNullOrEmpty()) {
+                            this.imageUrl = uploadedImageUrl!!
+                        }
+                    }
+                    viewModel.updateShop(shop)
+                } else {
+                    // Create new shop
+                    val shop = Shop().apply {
+                        this.title = title
+                        this.description = description
+                        this.address = address
+                        this.city = city
+                        this.phone = phone
+                        this.email = email
+                        this.ownerId = currentUser.uid
+                        this.ownerName = currentUser.displayName ?: ""
+                        // Use uploaded image URL if available, otherwise use empty string
+                        // The app will show a default placeholder for shops without images
+                        this.imageUrl = uploadedImageUrl ?: ""
+                    }
+                    viewModel.saveShop(shop)
                 }
-
-                viewModel.saveShop(shop)
             } else {
                 Toast.makeText(this, "Please login first", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun loadExistingShopData() {
+        existingShop?.let { shop ->
+            // Update UI for edit mode
+            binding.headerText.text = "Edit Your Shop"
+            binding.submitButton.text = "Update Shop"
+
+            // Pre-fill all fields
+            binding.titleInput.setText(shop.title)
+            binding.descript.setText(shop.description)
+            binding.addressInput.setText(shop.address)
+            binding.cityInput.setText(shop.city)
+            binding.phoneInput.setText(shop.phone)
+            binding.emailInput.setText(shop.email)
+
+            // Load existing image
+            uploadedImageUrl = shop.imageUrl
+            if (shop.imageUrl.isNotEmpty()) {
+                Glide.with(this)
+                    .load(shop.imageUrl)
+                    .placeholder(com.hstan.autoservify.R.drawable.addimage2)
+                    .error(com.hstan.autoservify.R.drawable.addimage2)
+                    .centerCrop()
+                    .into(binding.AddShopImage)
             }
         }
     }
