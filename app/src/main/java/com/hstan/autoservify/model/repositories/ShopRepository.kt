@@ -36,4 +36,18 @@ class ShopRepository {
     fun getShops(): Flow<List<Shop>> {
         return shopCollection.snapshots().map { it.toObjects(Shop::class.java) }
     }
+
+    suspend fun getShopById(shopId: String): Result<Shop?> {
+        return try {
+            val document = shopCollection.document(shopId).get().await()
+            if (document.exists()) {
+                val shop = document.toObject(Shop::class.java)
+                Result.success(shop)
+            } else {
+                Result.success(null)
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

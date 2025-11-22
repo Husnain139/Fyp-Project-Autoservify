@@ -18,6 +18,7 @@ import com.hstan.autoservify.model.repositories.ServiceRepository
 import com.hstan.autoservify.ui.main.Shops.Services.Appointment
 import com.hstan.autoservify.ui.main.ViewModels.Order
 import com.hstan.autoservify.ui.reviews.ReviewDialog
+import com.hstan.autoservify.utils.NotificationSender
 import kotlinx.coroutines.launch
 
 class AppointmentDetailActivity : AppCompatActivity() {
@@ -308,6 +309,22 @@ class AppointmentDetailActivity : AppCompatActivity() {
                         "Status updated to $newStatus",
                         Toast.LENGTH_SHORT
                     ).show()
+
+                    // Send notification to customer when status is updated
+                    if (appointment.userId.isNotEmpty() && appointment.userId != "manual_entry") {
+                        val notificationSender = NotificationSender(this@AppointmentDetailActivity)
+                        val appointmentId = appointment.id.ifEmpty { appointment.appointmentId }
+                        notificationSender.sendAppointmentStatusUpdateToCustomer(
+                            customerUserId = appointment.userId,
+                            appointmentId = appointmentId,
+                            newStatus = newStatus,
+                            serviceName = appointment.serviceName,
+                            onSuccess = {},
+                            onFailure = { error ->
+                                android.util.Log.e("AppointmentDetailActivity", "Failed to send notification: $error")
+                            }
+                        )
+                    }
 
                     // Update UI
                     setupUI()

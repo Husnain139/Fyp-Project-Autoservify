@@ -106,6 +106,9 @@ class BookAppointment_Activity : AppCompatActivity() {
         }
 
 
+        // Set context for notifications
+        viewModel.setContext(this)
+
         // ✅ Observers
         lifecycleScope.launch {
             viewModel.isSaving.collect { saving ->

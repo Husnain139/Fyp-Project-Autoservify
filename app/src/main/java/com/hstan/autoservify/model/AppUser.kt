@@ -7,7 +7,8 @@ data class AppUser(
     var phone: String = "",
     var userType: String = "",
     var shopId: String? = null,
-    var profileImageUrl: String? = null
+    var profileImageUrl: String? = null,
+    var fcmToken: String = ""
 ) {
-    constructor() : this("", "", "", "", "", null, null)
+    constructor() : this("", "", "", "", "", null, null, "")
 }

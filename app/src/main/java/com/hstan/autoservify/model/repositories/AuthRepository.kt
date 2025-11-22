@@ -125,5 +125,16 @@ class AuthRepository {
         }
     }
 
+    suspend fun updateFCMToken(uid: String, fcmToken: String): Result<Boolean> {
+        return try {
+            db.collection("users").document(uid)
+                .update("fcmToken", fcmToken)
+                .await()
+            Result.success(true)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
 
 }

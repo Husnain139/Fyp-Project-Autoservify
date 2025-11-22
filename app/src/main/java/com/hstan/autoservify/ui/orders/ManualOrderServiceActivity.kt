@@ -19,6 +19,7 @@ import com.hstan.autoservify.ui.main.Shops.SpareParts.PartsCraft
 import com.hstan.autoservify.ui.main.Shops.Services.Service
 import com.hstan.autoservify.ui.main.ViewModels.Order
 import com.hstan.autoservify.ui.main.Shops.Services.Appointment
+import com.hstan.autoservify.utils.NotificationSender
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -442,6 +443,8 @@ class ManualOrderServiceActivity : AppCompatActivity() {
                 binding.loadingOverlay.visibility = View.GONE
 
                 if (allSuccess) {
+                    // Note: Manual orders are created by shopkeeper, so no notification needed
+                    // (shopkeeper is already aware of the order they created)
                     Toast.makeText(this@ManualOrderServiceActivity, "Order created successfully!", Toast.LENGTH_SHORT).show()
                     setResult(RESULT_OK)
                     finish()
@@ -498,6 +501,8 @@ class ManualOrderServiceActivity : AppCompatActivity() {
                 binding.loadingOverlay.visibility = View.GONE
 
                 if (result.isSuccess) {
+                    // Note: Manual appointments are created by shopkeeper, so no notification needed
+                    // (shopkeeper is already aware of the appointment they created)
                     Toast.makeText(this@ManualOrderServiceActivity, "Appointment created successfully!", Toast.LENGTH_SHORT).show()
                     setResult(RESULT_OK)
                     finish()

@@ -17,6 +17,7 @@ import com.hstan.autoservify.model.repositories.ReviewRepository
 import com.hstan.autoservify.ui.main.Shops.SpareParts.Partscraftdetail
 import com.hstan.autoservify.ui.main.ViewModels.Order
 import com.hstan.autoservify.ui.reviews.ReviewDialog
+import com.hstan.autoservify.utils.NotificationSender
 import kotlinx.coroutines.launch
 
 class OrderDetailActivity : AppCompatActivity() {
@@ -365,6 +366,24 @@ class OrderDetailActivity : AppCompatActivity() {
                         binding.orderStatus.text = newStatus.replaceFirstChar { it.uppercase() }
                         updateStatusColor(newStatus)
                         setupStatusButtons()
+                        
+                        // Send notification to customer when status is updated (for multi-part orders, use first order)
+                        val firstOrder = relatedOrders.firstOrNull()
+                        if (firstOrder != null && firstOrder.userId.isNotEmpty() && firstOrder.userId != "manual_entry") {
+                            val notificationSender = NotificationSender(this@OrderDetailActivity)
+                            val itemName = firstOrder.item?.title ?: "Item"
+                            notificationSender.sendOrderStatusUpdateToCustomer(
+                                customerUserId = firstOrder.userId,
+                                orderId = firstOrder.id,
+                                newStatus = newStatus,
+                                itemName = itemName,
+                                onSuccess = {},
+                                onFailure = { error ->
+                                    android.util.Log.e("OrderDetailActivity", "Failed to send notification: $error")
+                                }
+                            )
+                        }
+                        
                         Toast.makeText(this@OrderDetailActivity, "Order status updated to ${newStatus.replaceFirstChar { it.uppercase() }}", Toast.LENGTH_SHORT).show()
                     } else {
                         Toast.makeText(this@OrderDetailActivity, "Failed to update order status", Toast.LENGTH_SHORT).show()
@@ -377,6 +396,23 @@ class OrderDetailActivity : AppCompatActivity() {
                             binding.orderStatus.text = newStatus.replaceFirstChar { it.uppercase() }
                             updateStatusColor(newStatus)
                             setupStatusButtons()
+                            
+                            // Send notification to customer when status is updated
+                            if (order.userId.isNotEmpty() && order.userId != "manual_entry") {
+                                val notificationSender = NotificationSender(this@OrderDetailActivity)
+                                val itemName = order.item?.title ?: "Item"
+                                notificationSender.sendOrderStatusUpdateToCustomer(
+                                    customerUserId = order.userId,
+                                    orderId = order.id,
+                                    newStatus = newStatus,
+                                    itemName = itemName,
+                                    onSuccess = {},
+                                    onFailure = { error ->
+                                        android.util.Log.e("OrderDetailActivity", "Failed to send notification: $error")
+                                    }
+                                )
+                            }
+                            
                             Toast.makeText(this@OrderDetailActivity, "Order status updated to ${newStatus.replaceFirstChar { it.uppercase() }}", Toast.LENGTH_SHORT).show()
                         } else {
                             Toast.makeText(this@OrderDetailActivity, "Failed to update order status", Toast.LENGTH_SHORT).show()

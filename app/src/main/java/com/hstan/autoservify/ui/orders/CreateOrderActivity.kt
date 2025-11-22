@@ -17,6 +17,7 @@ import com.hstan.autoservify.model.repositories.OrderRepository
 import com.hstan.autoservify.ui.main.ViewModels.Order
 import com.hstan.autoservify.ui.main.Shops.SpareParts.PartsCraft
 import com.hstan.autoservify.ui.main.Shops.SpareParts.Partscraftdetail
+import com.hstan.autoservify.utils.NotificationSender
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -176,6 +177,25 @@ class CreateOrderActivity : AppCompatActivity() {
                 progressDialog.dismiss()
 
                 result.onSuccess {
+                    // Send notification to shopkeeper
+                    if (order.shopId.isNotEmpty()) {
+                        val notificationSender = NotificationSender(this@CreateOrderActivity)
+                        val itemName = order.item?.title ?: "Item"
+                        notificationSender.sendOrderNotificationToShopkeeper(
+                            shopId = order.shopId,
+                            orderId = order.id,
+                            customerName = order.userName.ifEmpty { "Customer" },
+                            itemName = itemName,
+                            onSuccess = {
+                                // Notification sent successfully
+                            },
+                            onFailure = { error ->
+                                // Log error but don't show to user
+                                android.util.Log.e("CreateOrderActivity", "Failed to send notification: $error")
+                            }
+                        )
+                    }
+                    
                     Toast.makeText(
                         this@CreateOrderActivity,
                         "Order placed successfully!",
